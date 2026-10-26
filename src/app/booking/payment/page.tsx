@@ -1,0 +1,69 @@
+import { pageEnabled } from "@/lib/website/pages";
+import { Heading } from "@/components/common/Heading";
+import { websiteClassName } from "@/lib/ui/websiteStyles";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { DemoPayment } from "@/components/booking/DemoPayment";
+import { HmsPayment } from "@/components/booking/HmsPayment";
+import { SiteShell } from "@/components/layout/SiteShell";
+import { getWebsiteProvider } from "@/lib/api/provider";
+import { isDemoPaymentMode } from "@/lib/payment/demoMode";
+import { cartSubtotal } from "@/lib/booking/cart";
+import { resolveDemoSelection } from "@/lib/booking/demoSelection";
+import { parseAvailabilitySearch } from "@/lib/booking/search";
+import { resolveTenant } from "@/lib/tenant/resolveTenant";
+
+type Params = Record<string, string | string[] | undefined>;
+
+export const metadata = { title: "Reservation payment", robots: "noindex, nofollow" };
+
+export default async function PaymentPage({ searchParams }: { searchParams: Promise<Params> }) {
+  const params = await searchParams;
+  const tenant = await resolveTenant();
+  const provider = getWebsiteProvider();
+  const hotel = await provider.getHotel(tenant);
+  if (!pageEnabled(hotel, "booking")) notFound();
+  if (!isDemoPaymentMode())
+    return (
+      <SiteShell hotel={hotel} showMobileBookingCta={false}>
+        <HmsPayment />
+      </SiteShell>
+    );
+  const { search } = parseAvailabilitySearch(params, hotel.bookingSettings, hotel.timeZone);
+  const rooms = search ? await provider.searchAvailability(tenant, search) : [];
+  const selection = resolveDemoSelection(params, hotel, rooms);
+
+  if (!selection) {
+    return (
+      <SiteShell hotel={hotel}>
+        <main className={websiteClassName("container py-20")}>
+          <Heading as="h1" className={websiteClassName("section-title")}>
+            This sample stay is no longer available.
+          </Heading>
+          <Link href="/booking" className={websiteClassName("brand-button mt-8")}>
+            <span className={websiteClassName("button-text-container")}>
+              <span className={websiteClassName("button-text")}>Search again</span>
+            </span>
+          </Link>
+        </main>
+      </SiteShell>
+    );
+  }
+
+  return (
+    <SiteShell hotel={hotel} showMobileBookingCta={false}>
+      <DemoPayment
+        hotelName={hotel.name}
+        lines={selection.lines}
+        search={selection.search}
+        nights={selection.nights}
+        extras={selection.extras}
+        roomSubtotal={cartSubtotal(selection.lines, selection.nights)}
+        estimate={selection.estimate}
+        currency={selection.currency}
+        backHref={`/booking/checkout?${selection.query}`}
+        selectionQuery={selection.query.toString()}
+      />
+    </SiteShell>
+  );
+}

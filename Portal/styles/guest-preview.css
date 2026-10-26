@@ -1,0 +1,271 @@
+/* Reference preview card and device presentation; the iframe keeps its real viewport. */
+.wm-studio-dashboard .wm-preview-dialog.wm-guest-preview-card {
+  width: 60vw;
+  max-width: 60vw;
+  height: 60dvh;
+  max-height: 60dvh;
+  margin: auto;
+}
+.wm-preview-workspace {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.wm-preview-devices {
+  width: 240px;
+  flex-shrink: 0;
+  padding: 18px 12px;
+  border-right: 1px solid var(--wm-line);
+  background: var(--wm-surface);
+  overflow-y: auto;
+}
+.wm-preview-devices h3 {
+  margin: 0 0 14px;
+  color: var(--wm-brand-navy);
+  font-size: 0.875rem;
+}
+.wm-preview-devices button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+  border: 1px solid var(--wm-line);
+  border-radius: 8px;
+  background: var(--wm-surface);
+  color: var(--wm-brand-navy);
+  text-align: left;
+}
+.wm-preview-devices button[aria-pressed="true"] {
+  background: var(--wm-brand-soft);
+  border-color: var(--wm-brand-navy);
+}
+.wm-preview-devices button > svg {
+  flex-shrink: 0;
+}
+.wm-preview-devices button span {
+  flex: 1;
+}
+.wm-preview-devices strong,
+.wm-preview-devices small {
+  display: block;
+  font-size: 0.8125rem;
+}
+.wm-preview-devices small {
+  margin-top: 4px;
+  color: var(--wm-muted);
+}
+.wm-device-selected {
+  padding: 3px;
+  border-radius: 50%;
+  color: var(--wm-surface);
+  background: var(--wm-brand-navy);
+}
+.wm-preview-workspace > .wm-full-preview {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  overflow: auto;
+}
+@media (max-width: 760px) {
+  .wm-preview-workspace {
+    flex-direction: column;
+  }
+  .wm-preview-devices {
+    width: 100%;
+    max-height: 170px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    border-right: 0;
+    border-bottom: 1px solid var(--wm-line);
+  }
+  .wm-preview-devices h3 {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .wm-preview-devices button {
+    gap: 6px;
+    padding: 8px;
+    margin: 0;
+  }
+}
+.wm-preview-dialog.wm-guest-preview-card > .wm-full-preview {
+  height: auto;
+  aspect-ratio: auto;
+}
+.wm-preview-dialog.wm-guest-preview-card > .wm-preview-caption {
+  flex-shrink: 0;
+}
+.wm-studio-dashboard .wm-guest-preview-card {
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--wm-line);
+  border-radius: 18px;
+  background: var(--wm-surface);
+  box-shadow: 0 4px 22px #1c355e06;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--wm-line);
+  background: var(--wm-surface);
+}
+.wm-guest-preview-title {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+.wm-root .wm-guest-preview-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--wm-brand-navy);
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.wm-studio-dashboard .wm-guest-preview-title h2 i {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: #16b978;
+}
+.wm-root .wm-guest-preview-title p {
+  margin-top: 5px;
+  padding-left: 22px;
+  color: var(--wm-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-device-switch {
+  display: flex;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 11px;
+  background: var(--wm-brand-cream);
+  padding: 3px;
+  gap: 3px;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-device-switch button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: var(--wm-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-device-switch button span {
+  display: inline;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-device-switch button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-device-switch button[aria-pressed="true"] {
+  background: var(--wm-brand-soft);
+  border-color: var(--wm-brand-navy);
+  color: var(--wm-brand-navy);
+  box-shadow: none;
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-preview-viewport:has(.wm-actual-preview) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  height: auto;
+  aspect-ratio: 1.45;
+  min-height: 360px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #f3f5f7;
+}
+.wm-guest-preview-card .wm-actual-preview,
+.wm-full-preview .wm-actual-preview {
+  background: radial-gradient(ellipse at center, #fff 0%, #f3f5f7 78%);
+}
+.wm-device-model.is-desktop .wm-device-shell {
+  border-radius: 28px;
+  background: linear-gradient(140deg, #232a34, #0c121a 65%, #171e27);
+  box-shadow:
+    inset 0 0 0 2px #49525f,
+    0 20px 44px #17203325;
+}
+.wm-device-model.is-desktop .wm-device-camera {
+  top: 9px;
+  width: 7px;
+  height: 7px;
+  left: calc(50% - 3.5px);
+}
+.wm-device-model.is-desktop .wm-device-screen {
+  border-radius: 3px;
+}
+.wm-device-model.is-desktop .wm-device-stand {
+  height: 96px;
+  position: relative;
+  z-index: -1;
+}
+.wm-device-model.is-desktop .wm-device-stand i {
+  height: 76px;
+  width: 220px;
+  background: linear-gradient(#8f98a4 0%, #dbe0e7 55%, #c3cbd4 95%);
+  clip-path: polygon(22% 0, 78% 0, 86% 100%, 14% 100%);
+}
+.wm-device-model.is-desktop .wm-device-stand > span {
+  width: 450px;
+  height: 20px;
+  border-radius: 50% 50% 9px 9px;
+  background: linear-gradient(#e6eaf0, #aeb8c5 55%, #d4dbe4);
+  box-shadow: 0 8px 12px #17203324;
+}
+.wm-guest-preview-card .wm-device-label,
+.wm-full-preview .wm-device-label {
+  color: var(--wm-muted);
+  bottom: 16px;
+  font-size: 0.875rem;
+}
+.wm-guest-preview-card .wm-device-label > span {
+  margin-left: 4px;
+  color: var(--wm-muted);
+}
+.wm-studio-dashboard .wm-guest-preview-card .wm-preview-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 20px;
+  margin: 0;
+  border-top: 1px solid var(--wm-line);
+  background: var(--wm-surface);
+  color: var(--wm-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+.wm-preview-caption svg {
+  flex-shrink: 0;
+}
+@media (max-width: 1400px) {
+  .wm-studio-dashboard .wm-guest-preview-card .wm-preview-heading {
+    padding: 18px;
+  }
+  .wm-studio-dashboard .wm-guest-preview-card .wm-device-switch {
+    width: 100%;
+  }
+  .wm-studio-dashboard .wm-guest-preview-card .wm-device-switch button {
+    flex: 1;
+  }
+}

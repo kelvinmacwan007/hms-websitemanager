@@ -1,0 +1,35 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.cursor[data-visible="true"]:not([data-text="true"]) {
+  opacity: 1;
+}
+.cursor span {
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: -16px;
+  border: 1px solid #1c355e80;
+  border-radius: 50%;
+  background: #ffd9c21a;
+  transition:
+    transform 220ms ease,
+    background 220ms ease,
+    border-color 220ms ease;
+}
+.cursor[data-interactive="true"] span {
+  transform: scale(1.6);
+  background: #ffd9c233;
+  border-color: #bd8f70;
+}
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

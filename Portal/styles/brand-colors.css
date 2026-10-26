@@ -1,0 +1,494 @@
+/* Palette reference layout with shared HMS manager surfaces and controls. */
+.wm-colors-design {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  container-type: inline-size;
+  color: var(--wm-brand-navy);
+}
+.wm-color-generate-card,
+.wm-colors-main-card {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--wm-line);
+  border-radius: 16px;
+  background: var(--wm-surface);
+  box-shadow: 0 4px 18px #1c355e05;
+}
+.wm-color-generate-banner {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #f0dfd3;
+  border-radius: 14px;
+  background: var(--wm-brand-cream);
+}
+.wm-color-generate-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  background: var(--wm-brand-peach);
+  border-radius: 13px;
+  color: var(--wm-brand-navy);
+}
+.wm-root .wm-colors-design h3 {
+  font-family: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--wm-brand-navy);
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+}
+.wm-root .wm-colors-design h4 {
+  font-family: inherit;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--wm-brand-navy);
+  line-height: 1.4;
+}
+.wm-root .wm-color-generate-banner p,
+.wm-root .wm-colors-main-card header p {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--wm-muted);
+  margin-top: 5px;
+}
+.wm-studio-dashboard .wm-color-generate-banner > .wm-button {
+  min-height: 48px;
+  padding: 12px 18px;
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  color: white;
+  font-size: 0.9375rem;
+  white-space: normal;
+}
+.wm-studio-dashboard .wm-color-generate-banner > .wm-button:hover:not(:disabled) {
+  background: #152c50;
+}
+.wm-current-palette-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.wm-current-palette-heading > div {
+  min-width: 0;
+}
+.wm-palette-generated {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  color: var(--wm-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+.wm-palette-generated > svg {
+  flex-shrink: 0;
+}
+.wm-palette-generated time {
+  display: block;
+}
+.wm-current-swatches {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+.wm-current-swatch {
+  min-width: 0;
+}
+.wm-current-color {
+  display: block;
+  height: 66px;
+  width: 100%;
+  border: 1px solid #1c355e12;
+  border-radius: 7px;
+}
+.wm-current-swatch > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 9px;
+}
+.wm-current-swatch strong {
+  font-size: 0.875rem;
+  letter-spacing: -0.3px;
+}
+.wm-root .wm-copy-swatch {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 32px;
+  padding: 0;
+  color: var(--wm-brand-navy);
+  border-radius: 6px;
+}
+.wm-root .wm-copy-swatch:hover {
+  background: var(--wm-brand-soft);
+}
+.wm-current-swatch small {
+  display: block;
+  color: var(--wm-muted);
+  font-size: 0.875rem;
+  margin-top: 2px;
+}
+.wm-suggested-palettes {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--wm-line);
+}
+.wm-suggested-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.wm-suggested-heading > div {
+  min-width: 0;
+}
+.wm-color-preset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.wm-studio-dashboard .wm-color-preset-actions .wm-button {
+  min-height: 42px;
+  font-size: 0.875rem;
+  gap: 7px;
+  padding: 10px 12px;
+}
+.wm-color-preset-actions .wm-button svg {
+  flex-shrink: 0;
+}
+.wm-palette-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.wm-palette-card {
+  padding: 16px;
+  min-width: 0;
+  border: 1px solid var(--wm-line);
+  border-radius: 12px;
+  background: var(--wm-surface);
+}
+.wm-palette-card.is-selected {
+  border-color: var(--wm-brand-navy);
+  box-shadow: 0 0 0 1px var(--wm-brand-navy);
+  background: linear-gradient(135deg, var(--wm-surface), var(--wm-brand-cream));
+}
+.wm-palette-card > header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.wm-palette-card > header > div {
+  min-width: 0;
+}
+.wm-palette-check {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: white;
+  background: var(--wm-brand-navy);
+  border-radius: 50%;
+}
+.wm-palette-card-bottom {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+.wm-palette-tones {
+  padding-right: 10px;
+  display: flex;
+  align-items: start;
+  min-width: 0;
+  flex: 1 1 180px;
+  max-width: 260px;
+}
+.wm-palette-tones > div {
+  min-width: 0;
+  flex: 1;
+  text-align: center;
+}
+.wm-palette-tones i {
+  display: block;
+  width: calc(100% + 10px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.wm-palette-tones small {
+  display: block;
+  margin-top: 7px;
+  font-size: 0.625rem;
+  font-weight: 650;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+.wm-studio-dashboard .wm-palette-card-bottom > .wm-button {
+  margin-left: auto;
+  min-height: 42px;
+  min-width: 78px;
+  padding: 9px 13px;
+  font-size: 0.875rem;
+}
+.wm-root .wm-palette-tone-note {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--wm-muted);
+  margin-top: 18px;
+}
+.wm-colors-design .wm-custom-palette {
+  padding: 20px;
+  border: 1px solid var(--wm-line);
+  border-radius: 14px;
+  background: var(--wm-surface);
+  margin-top: 20px;
+}
+.wm-colors-design .wm-custom-palette > .wm-custom-palette-intro {
+  margin: 0 0 20px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--wm-muted);
+}
+.wm-custom-color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.wm-colors-design .wm-custom-color-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--wm-line);
+  border-radius: 12px;
+  background: var(--wm-brand-cream);
+  gap: 14px;
+}
+.wm-colors-design .wm-custom-color-card > label {
+  color: var(--wm-brand-navy);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.wm-custom-color-card .wm-color {
+  min-width: 0;
+  padding: 0;
+  gap: 0;
+  min-height: 54px;
+  border-color: var(--wm-line);
+  border-radius: 10px;
+  background: var(--wm-surface);
+  align-items: stretch;
+}
+.wm-color-picker-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 62px;
+  padding: 10px 8px;
+  color: var(--wm-muted);
+}
+.wm-color-picker-area > span {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #1c355e12;
+  flex-shrink: 0;
+}
+.wm-color-picker-area > svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.wm-custom-color-card .wm-color-picker-area input[type="color"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.wm-color-picker-area:focus-within {
+  outline: 2px solid var(--wm-brand-navy);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.wm-custom-color-card .wm-color input:not([type="color"]) {
+  min-width: 0;
+  width: 100%;
+  padding: 10px 9px;
+  min-height: 52px;
+  border: 0;
+  border-left: 1px solid var(--wm-line);
+  border-radius: 9px;
+  font:
+    0.9375rem/1.4 "Segoe UI",
+    Arial,
+    sans-serif !important;
+  color: var(--wm-brand-navy);
+  text-transform: uppercase;
+}
+.wm-custom-color-card .wm-color input:not([type="color"]):focus {
+  outline: 2px solid var(--wm-brand-navy);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+.wm-custom-color-card .wm-color-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  align-items: center;
+  padding: 0;
+}
+.wm-root .wm-custom-color-card .wm-color-tools button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 5px 2px;
+  gap: 6px;
+  color: var(--wm-muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-radius: 0;
+}
+.wm-custom-color-card .wm-color-tools button + button {
+  border-left: 1px solid var(--wm-line);
+}
+.wm-custom-color-card .wm-color-tools button svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.wm-colors-design .wm-custom-palette > .wm-custom-palette-footnote {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  padding-top: 18px;
+  margin-top: 20px;
+  border-top: 1px solid var(--wm-line);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--wm-muted);
+}
+.wm-custom-palette-footnote > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+@container (max-width: 620px) {
+  .wm-custom-color-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wm-root .wm-custom-color-card .wm-color-tools button {
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+  .wm-custom-color-card .wm-color-picker-area {
+    flex-basis: 82px;
+    gap: 10px;
+  }
+  .wm-custom-color-card .wm-color-picker-area > span {
+    width: 30px;
+    height: 30px;
+  }
+  .wm-custom-color-card .wm-color input:not([type="color"]) {
+    font-size: 1rem !important;
+  }
+}
+@container (max-width: 380px) {
+  .wm-colors-design .wm-custom-palette {
+    padding: 14px;
+  }
+  .wm-colors-design .wm-custom-color-card {
+    padding: 14px;
+  }
+  .wm-custom-color-card .wm-color-picker-area {
+    flex-basis: 68px;
+    gap: 6px;
+  }
+}
+@container (max-width: 720px) {
+  .wm-color-generate-banner {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .wm-color-generate-icon {
+    width: 56px;
+    height: 56px;
+  }
+  .wm-color-generate-banner > .wm-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  .wm-current-palette-heading {
+    flex-wrap: wrap;
+  }
+}
+@container (max-width: 550px) {
+  .wm-palette-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wm-current-swatches {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .wm-current-swatch strong {
+    font-size: 0.8125rem;
+  }
+}
+@container (max-width: 380px) {
+  .wm-color-generate-card,
+  .wm-colors-main-card {
+    padding: 16px;
+  }
+  .wm-color-generate-banner {
+    padding: 14px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .wm-color-generate-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .wm-color-generate-icon svg {
+    width: 25px;
+    height: 25px;
+  }
+  .wm-root .wm-color-generate-banner h3 {
+    font-size: 1.125rem;
+  }
+  .wm-current-swatches {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .wm-color-preset-actions {
+    width: 100%;
+  }
+  .wm-color-preset-actions > .wm-button {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+  .wm-palette-tones {
+    max-width: 230px;
+    flex-basis: 100%;
+  }
+  .wm-root .wm-copy-swatch {
+    width: 32px;
+    height: 44px;
+  }
+}

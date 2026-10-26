@@ -1,0 +1,153 @@
+.site {
+  --site-content-width: 100%;
+  --site-gutter: 5vw;
+  --site-section-space: clamp(3rem, 5.5vw, 5rem);
+  --site-title-size: clamp(2rem, 3.5vw, 3rem);
+  --site-section-title: clamp(1.875rem, 3vw, 2.75rem);
+  --site-hero-title: clamp(2.375rem, 4.2vw, 3.75rem);
+  --site-body-size: 1.125rem;
+  --site-small-size: 1rem;
+  --site-card-title: 1.5rem;
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: var(--site-body-size);
+  line-height: 1.65;
+}
+
+.site :global(.container) {
+  width: calc(100% - 2 * var(--site-gutter));
+  max-width: none;
+  margin-inline: auto;
+}
+
+.site :global(:is(.premium-card, .surface-panel, .glow-card, .booking-widget)),
+.site :global(.premium-card:hover),
+.site :global(.home-review-grid blockquote) {
+  border-radius: var(--site-card-radius);
+  box-shadow: var(--site-card-shadow);
+}
+
+.site :global(main.container) {
+  padding-block: var(--site-section-space);
+}
+
+.site :global(.eyebrow) {
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.16em;
+}
+
+.site :global(.section-title) {
+  font-size: var(--site-section-title);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.site :global(main h1[data-title]) {
+  font-size: var(--site-title-size);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.site :global(main h1.display[data-title]) {
+  font-size: var(--site-hero-title);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.site :global(#stay-cta-title) {
+  font-size: var(--site-title-size);
+  line-height: 1.15;
+}
+.site :global(.home-section) {
+  padding-block: var(--site-section-space);
+}
+.site :global(.hero-hotel-name) {
+  font-size: 1.125rem;
+  letter-spacing: 0.14em;
+}
+
+.site :global(.text-lg) {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.site :global(.home-section-heading) {
+  margin-bottom: 2rem;
+}
+
+.site :global(.home-story-description) {
+  font-size: var(--site-body-size);
+  line-height: 1.8;
+}
+
+.site :global(.home-text-link) {
+  font-size: 1.125rem;
+}
+
+.site :global(.hotel-footer) {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.site :global(.hotel-footer h3) {
+  font-size: 1.125rem;
+}
+
+.site :global(:is(.brand-button, .accent-button, [data-shimmer])) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.site
+  :global(
+    :is(.brand-button, .accent-button, [data-shimmer]):not(:disabled):not([aria-disabled="true"])
+  )::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -60%;
+  width: 40%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent, rgb(255 255 255 / 25%), transparent);
+  transform: translateX(0) skewX(-15deg);
+  animation: none;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .site
+    :global(
+      :is(.brand-button, .accent-button, [data-shimmer]):not(:disabled):not(
+          [aria-disabled="true"]
+        ):hover
+    )::after {
+    animation: buttonShimmer 850ms ease-in-out both;
+  }
+}
+
+@keyframes buttonShimmer {
+  0% {
+    transform: translateX(0) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(450%) skewX(-15deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .site
+    :global(
+      :is(.brand-button, .accent-button, [data-shimmer]):not(:disabled):not([aria-disabled="true"])
+    )::after {
+    content: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 40rem) {
+  .site :global(.home-section-heading) {
+    margin-bottom: 1.5rem;
+  }
+}

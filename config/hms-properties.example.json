@@ -1,0 +1,29 @@
+{
+  "hotel-a": {
+    "id": "REPLACE_WITH_PROPERTY_ID",
+    "tenantId": "hotel-a",
+    "template": "default",
+    "name": "Your hotel name",
+    "description": "Your hotel description",
+    "configured": true,
+    "timeZone": "Asia/Kolkata",
+    "currency": "INR",
+    "branding": {},
+    "location": { "address": "Your address", "city": "Your city", "country": "India" },
+    "contact": {},
+    "rooms": [],
+    "gallery": [],
+    "amenities": [],
+    "policies": [],
+    "bookingSettings": {
+      "minStay": 1,
+      "maxStay": 30,
+      "advanceWindow": 365,
+      "minAdvanceDays": 0,
+      "maxRooms": 10,
+      "requirePhone": true,
+      "requireAddress": true
+    },
+    "paymentSettings": { "mode": "full", "depositPercent": 100 }
+  }
+}

@@ -1,0 +1,532 @@
+/* Address and setup layout from the reference, using the shared HMS theme. */
+.wm-studio-dashboard .wm-address-panel {
+  padding: 24px;
+  border-color: var(--wm-line);
+  border-radius: var(--wm-radius-card);
+}
+.wm-address-panel .wm-domain-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.wm-address-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: var(--wm-brand-soft);
+  color: var(--wm-brand-navy);
+}
+.wm-address-title {
+  flex: 1;
+  min-width: 0;
+}
+.wm-address-panel .wm-domain-heading h2 {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--wm-brand-navy);
+}
+.wm-address-panel .wm-domain-heading p {
+  font-size: 1rem;
+  color: var(--wm-muted);
+}
+.wm-address-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f3f4f6;
+  color: var(--wm-muted);
+  border-radius: 11px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.wm-address-status i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #8593a8;
+}
+.wm-address-status.is-published {
+  background: #e9faf1;
+  color: #098951;
+  border: 1px solid #d5f5e5;
+  border-radius: 30px;
+}
+.wm-address-status.is-published > svg {
+  padding: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #09945a;
+  color: white;
+}
+.wm-live-address {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f1faf5;
+  position: relative;
+}
+.wm-live-address::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--wm-line);
+}
+.wm-live-address-icon {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: grid;
+  place-items: center;
+  color: #10915b;
+  background: #dcf6e9;
+  border-radius: 50%;
+}
+.wm-live-address-info {
+  flex: 1;
+  min-width: 0;
+}
+.wm-live-address-info > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--wm-muted);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+.wm-root .wm-live-address-info > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--wm-brand-navy);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+.wm-live-address-info svg {
+  flex-shrink: 0;
+}
+.wm-live-address-actions {
+  display: flex;
+  gap: 12px;
+  padding-left: 18px;
+  border-left: 1px solid #dce8e1;
+}
+.wm-root .wm-live-address-actions .wm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 44px;
+  min-height: 44px;
+  text-decoration: none;
+}
+@media (max-width: 1100px) {
+  .wm-live-address {
+    flex-wrap: wrap;
+  }
+  .wm-live-address-actions {
+    flex-basis: 100%;
+    padding: 12px 0 0;
+    border-left: 0;
+    border-top: 1px solid #dce8e1;
+  }
+}
+@media (max-width: 480px) {
+  .wm-live-address {
+    padding: 14px;
+    gap: 12px;
+  }
+  .wm-live-address-icon {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+  .wm-live-address-actions {
+    flex-direction: column;
+  }
+  .wm-live-address-actions .wm-button {
+    justify-content: center;
+  }
+}
+.wm-address-status.is-published i {
+  background: #25945b;
+}
+.wm-address-panel .wm-address-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.wm-address-panel .wm-domain-controls {
+  gap: 12px;
+}
+.wm-address-panel .wm-domain-input {
+  border-color: var(--wm-line);
+}
+.wm-address-panel .wm-domain-input input {
+  padding: 14px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--wm-brand-navy);
+  min-height: 52px;
+}
+.wm-address-panel .wm-domain-input span {
+  padding: 14px 18px;
+  background: var(--wm-brand-cream);
+  font-size: 1rem;
+  color: var(--wm-muted);
+  font-weight: 600;
+}
+.wm-address-protocol {
+  border-right: 1px solid var(--wm-line);
+}
+.wm-address-suffix {
+  border-left: 1px solid var(--wm-line);
+}
+.wm-studio-dashboard .wm-address-save {
+  min-width: 104px;
+  min-height: 52px;
+  font-size: 1rem;
+  padding: 12px 22px;
+}
+.wm-address-panel .wm-domain-status {
+  margin-top: 14px;
+  color: var(--wm-muted);
+  font-size: 1rem;
+}
+.wm-studio-dashboard .wm-colors-notice {
+  padding: 16px 20px;
+  gap: 18px;
+  background: var(--wm-brand-soft);
+  border-color: #f1ddcf;
+  color: var(--wm-brand-navy);
+  border-radius: 12px;
+}
+.wm-colors-notice > span {
+  min-width: 0;
+  font-weight: 600;
+}
+.wm-colors-notice > span > svg {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  border-radius: 50%;
+  background: var(--wm-brand-navy);
+  color: white;
+}
+.wm-root .wm-adjust-colors {
+  border-left: 1px solid #ddcbbf;
+  padding: 4px 0 4px 20px;
+  color: var(--wm-brand-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  flex-shrink: 0;
+  min-height: 32px;
+}
+.wm-colors-notice > .wm-icon-button {
+  border-left: 1px solid #ddcbbf;
+  border-radius: 0;
+  width: 40px;
+  flex-shrink: 0;
+}
+.wm-studio-dashboard .wm-setup-reference.wm-setup-stepper {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.8fr) auto;
+  gap: 24px;
+  padding: 24px;
+  align-items: center;
+}
+.wm-setup-reference.wm-setup-stepper .wm-setup-overview {
+  width: auto;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.wm-setup-reference .wm-setup-icon {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  background: var(--wm-brand-soft);
+  color: var(--wm-brand-navy);
+  border-radius: 15px;
+}
+.wm-setup-reference .wm-setup-icon svg {
+  width: 32px;
+  height: 32px;
+}
+.wm-setup-reference .wm-setup-intro {
+  min-width: 0;
+  flex: 1;
+}
+.wm-setup-reference.wm-setup-stepper .wm-setup-intro > div {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+}
+.wm-root .wm-setup-reference .wm-setup-intro h2 {
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--wm-brand-navy);
+  font-size: 1.25rem;
+}
+.wm-setup-reference .wm-setup-badge {
+  background: var(--wm-brand-peach);
+  color: var(--wm-brand-navy);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.wm-setup-reference progress {
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e8ebf0;
+}
+.wm-setup-reference progress::-webkit-progress-bar {
+  background: #e8ebf0;
+  border-radius: 10px;
+}
+.wm-setup-reference progress::-webkit-progress-value {
+  background: var(--wm-brand-navy);
+  border-radius: 10px 0 0 10px;
+}
+.wm-setup-reference progress::-moz-progress-bar {
+  background: var(--wm-brand-navy);
+}
+.wm-setup-reference .wm-setup-journey {
+  border-left: 1px solid var(--wm-line);
+  padding-left: 24px;
+  min-width: 0;
+  order: initial;
+  flex-basis: auto;
+}
+.wm-setup-reference .wm-setup-count {
+  margin-bottom: 18px;
+  color: var(--wm-muted);
+  font-size: 0.9375rem;
+}
+.wm-setup-reference.wm-setup-stepper .wm-setup-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+.wm-setup-reference.wm-setup-stepper .wm-setup-steps li::after {
+  top: 18px;
+  left: calc(50% + 24px);
+  width: calc(100% - 44px);
+  background: #dce1e8;
+}
+.wm-setup-reference.wm-setup-stepper .wm-setup-steps li.is-complete::after {
+  background: #dce1e8;
+}
+.wm-setup-reference.wm-setup-stepper .wm-step-number {
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  border-color: #d5dce8;
+  color: var(--wm-brand-navy);
+  background: #f3f5f8;
+}
+.wm-studio-dashboard .wm-setup-reference .is-complete .wm-step-number {
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  color: white;
+}
+.wm-studio-dashboard .wm-setup-reference .is-current .wm-step-number {
+  border-color: var(--wm-brand-navy);
+  background: var(--wm-brand-cream);
+  color: var(--wm-brand-navy);
+  outline: none;
+}
+.wm-studio-dashboard .wm-setup-reference .is-warning .wm-step-number {
+  background: #fff0db;
+  color: #b56c18;
+  border-color: #eed4b4;
+}
+.wm-setup-reference .wm-setup-step-link > div {
+  min-width: 0;
+}
+.wm-setup-reference .wm-setup-step-link strong {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-setup-reference .wm-setup-steps .wm-setup-rate-warning {
+  display: block;
+  color: #a15b10;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+.wm-setup-reference .wm-setup-continue {
+  padding-left: 24px;
+  border-color: var(--wm-line);
+}
+.wm-studio-dashboard .wm-setup-reference .wm-setup-continue .wm-button {
+  min-height: 50px;
+  gap: 10px;
+  padding: 12px 18px;
+}
+@media (max-width: 1450px) {
+  .wm-studio-dashboard .wm-setup-reference.wm-setup-stepper {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .wm-setup-reference .wm-setup-overview {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .wm-setup-reference .wm-setup-journey {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .wm-setup-reference .wm-setup-continue {
+    grid-column: 2;
+    grid-row: 2;
+    border-left: 1px solid var(--wm-line);
+  }
+}
+@media (max-width: 1100px) {
+  .wm-studio-dashboard .wm-setup-reference.wm-setup-stepper {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wm-setup-reference .wm-setup-overview {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .wm-setup-reference .wm-setup-journey {
+    grid-column: 1;
+    grid-row: 2;
+    border-left: 0;
+    border-top: 1px solid var(--wm-line);
+    padding: 18px 0 0;
+  }
+  .wm-setup-reference .wm-setup-continue {
+    grid-column: 1;
+    grid-row: 3;
+    border: 0;
+    padding: 0;
+  }
+}
+@media (max-width: 760px) {
+  .wm-setup-reference .wm-setup-step-link strong {
+    font-size: 0.8125rem;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .wm-studio-dashboard .wm-address-panel {
+    padding: 18px;
+  }
+  .wm-address-panel .wm-domain-heading {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .wm-address-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .wm-address-panel .wm-domain-heading h2 {
+    font-size: 1.25rem;
+  }
+  .wm-address-panel .wm-domain-heading p {
+    font-size: 0.875rem;
+  }
+  .wm-address-status {
+    margin-left: 60px;
+  }
+  .wm-studio-dashboard .wm-colors-notice {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 14px;
+  }
+  .wm-colors-notice > span {
+    flex-basis: calc(100% - 52px);
+  }
+  .wm-colors-notice > .wm-icon-button {
+    order: 1;
+    border: 0;
+  }
+  .wm-root .wm-adjust-colors {
+    order: 2;
+    margin-left: 40px;
+    border: 0;
+    padding: 0;
+    min-height: 44px;
+  }
+  .wm-studio-dashboard .wm-setup-reference.wm-setup-stepper {
+    padding: 18px;
+    gap: 16px;
+  }
+  .wm-setup-reference .wm-setup-icon {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+  .wm-setup-reference.wm-setup-stepper .wm-setup-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 8px;
+  }
+  .wm-setup-reference.wm-setup-stepper .wm-setup-steps li:nth-child(3n)::after {
+    display: none;
+  }
+  .wm-studio-dashboard .wm-setup-reference .wm-setup-continue .wm-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (max-width: 640px) {
+  .wm-address-panel .wm-domain-controls {
+    flex-direction: column;
+  }
+  .wm-address-panel .wm-domain-input {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .wm-address-panel .wm-domain-input span {
+    padding: 12px;
+    font-size: 0.875rem;
+  }
+  .wm-address-panel .wm-domain-input input {
+    padding: 12px;
+  }
+  .wm-address-panel .wm-address-suffix {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--wm-line);
+    text-align: right;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .wm-studio-dashboard .wm-address-save {
+    width: 100%;
+    min-height: 44px;
+  }
+}

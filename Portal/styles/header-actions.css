@@ -1,0 +1,214 @@
+/* Saved status, actions and publishing state share a single header rhythm. */
+.wm-root.wm-studio-dashboard .wm-publish-menu-actions {
+  width: min(460px, calc(100vw - 32px));
+  padding: 10px;
+  border: 1px solid #dce3ed;
+  border-radius: 14px;
+  box-shadow: 0 12px 36px #17335b18;
+  top: calc(100% + 16px);
+  z-index: 50;
+}
+.wm-publish-menu-actions::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 28px;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  border-top: 1px solid #dce3ed;
+  border-left: 1px solid #dce3ed;
+  background: white;
+}
+.wm-publish-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: #edf9f3;
+  border-radius: 11px;
+  color: #123a39;
+}
+.wm-publish-status p {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--wm-muted);
+}
+.wm-publish-action-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #f3f5f8;
+}
+.wm-publish-status .wm-publish-action-icon {
+  border-radius: 50%;
+  background: #d4f4e5;
+  color: #00965f;
+}
+.wm-root.wm-studio-dashboard .wm-publish-menu-actions > button,
+.wm-root.wm-studio-dashboard .wm-publish-visit {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  padding: 18px 10px;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  text-decoration: none;
+  background: white;
+  color: var(--wm-brand-navy);
+  font-weight: 600;
+}
+.wm-publish-menu-actions > :is(button, a) > span:not(.wm-publish-action-icon) {
+  flex: 1;
+  min-width: 0;
+}
+.wm-root.wm-studio-dashboard .wm-publish-menu-actions small {
+  margin-top: 5px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--wm-muted);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.wm-root.wm-studio-dashboard .wm-publish-menu-actions .wm-take-offline {
+  color: #d52a30;
+  border-top: 1px solid #e2e7ef;
+}
+.wm-take-offline .wm-publish-action-icon {
+  background: #fff1f1;
+}
+.wm-root.wm-studio-dashboard .wm-publish-visit {
+  border-top: 1px solid #e2e7ef;
+}
+.wm-publish-visit > svg:first-child {
+  margin-inline: 12px;
+  flex-shrink: 0;
+}
+.wm-publish-menu[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+@media (max-width: 760px) {
+  .wm-root.wm-studio-dashboard .wm-publish-menu-actions {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: calc(170px + env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 210px);
+    overflow-y: auto;
+  }
+  .wm-publish-menu-actions::before {
+    display: none;
+  }
+}
+.wm-root.wm-studio-dashboard .wm-heading-actions {
+  gap: 14px;
+  align-items: center;
+}
+.wm-root.wm-studio-dashboard .wm-draft-state {
+  padding-right: 18px;
+  border-right: 1px solid var(--wm-line);
+  color: #168951;
+  font-weight: 600;
+}
+.wm-root.wm-studio-dashboard .wm-draft-state.is-dirty {
+  color: var(--wm-brand-navy);
+}
+.wm-root.wm-studio-dashboard .wm-draft-state small {
+  margin-top: 5px;
+  font-weight: 400;
+}
+.wm-root.wm-studio-dashboard .wm-heading-actions > .wm-button {
+  min-height: 46px;
+}
+.wm-live-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border: 1px solid #def2e7;
+  border-radius: 14px;
+  background: #f1faf5;
+}
+.wm-root .wm-live-switch {
+  display: flex;
+  align-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  min-height: 28px;
+  padding: 3px;
+  border: 0;
+  border-radius: 30px;
+  background: #24b36c;
+}
+.wm-live-switch > span {
+  width: 22px;
+  height: 22px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px #0002;
+}
+.wm-root.wm-studio-dashboard .wm-live-control .wm-button-live {
+  display: flex;
+  padding: 0;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #153f45;
+  gap: 14px;
+  box-shadow: none;
+}
+.wm-live-control .wm-button-live strong {
+  display: block;
+  font-weight: 700;
+}
+.wm-live-control .wm-button-live small {
+  display: block;
+  margin-top: 4px;
+  color: #2ca56a;
+  font-weight: 400;
+  font-size: 0.8125rem;
+}
+.wm-root.wm-studio-dashboard .wm-account-bar {
+  border-left: 1px solid var(--wm-line);
+  padding-left: 18px;
+}
+@media (min-width: 1101px) and (max-width: 1450px) {
+  .wm-root.wm-studio-dashboard .wm-page-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wm-root.wm-studio-dashboard .wm-page-heading > .wm-heading-actions {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: flex-end;
+  }
+  .wm-root.wm-studio-dashboard .wm-page-heading > .wm-account-bar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+@media (max-width: 760px) {
+  .wm-root.wm-studio-dashboard .wm-heading-actions {
+    gap: 8px;
+  }
+  .wm-root.wm-studio-dashboard .wm-draft-state {
+    border: 0;
+    padding: 0;
+  }
+  .wm-root.wm-studio-dashboard .wm-account-bar {
+    border: 0;
+    padding: 0;
+  }
+  .wm-live-control {
+    grid-column: 1 / -1;
+    justify-content: center;
+    padding: 4px 12px;
+  }
+}

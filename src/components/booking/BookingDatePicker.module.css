@@ -1,0 +1,227 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.trigger:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 5px;
+}
+.dialog {
+  width: min(660px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  margin: auto;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--site-card-radius, 1.5rem);
+  background: var(--color-surface, white);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  box-shadow: var(--site-card-shadow, 0 0.75rem 2.25rem rgb(25 30 28 / 6%));
+}
+.dialog::backdrop {
+  background: #16202c66;
+  backdrop-filter: blur(3px);
+}
+.dialog[open] {
+  animation: enter 180ms ease-out;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+  gap: 16px;
+}
+.title span {
+  color: var(--color-text-muted);
+  font-size: 1.125rem;
+}
+.title h2 {
+  margin: 4px 0 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dialog button {
+  cursor: pointer;
+  font-family: inherit;
+}
+.dialog button:focus-visible,
+.dialog select:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+.dialog button:disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+.title button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: var(--color-background);
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--color-brand-soft);
+}
+.toolbar button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--color-brand);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.toolbar button:hover:not(:disabled) {
+  background: var(--color-surface);
+}
+.calendars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 22px 14px;
+}
+.month {
+  padding: 0 12px;
+  min-width: 0;
+}
+.secondMonth {
+  border-left: 1px solid var(--color-border);
+}
+.monthHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 40px;
+  margin-bottom: 14px;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.monthHeading select {
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 2px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  font: inherit;
+  max-width: 65%;
+}
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px 0;
+}
+.weekday {
+  text-align: center;
+  font-size: 1.125rem;
+  padding-bottom: 10px;
+  color: var(--color-text-muted);
+}
+.days button {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 9px;
+  color: var(--color-text);
+  background: transparent;
+  font-size: 1.125rem;
+}
+.days button[data-range="true"] {
+  background: var(--color-brand-soft);
+  border-radius: 0;
+}
+.days button[data-endpoint="true"] {
+  background: var(--color-brand-soft);
+}
+.days button[aria-current="date"] {
+  box-shadow: inset 0 0 0 1px var(--color-brand);
+}
+.days button:hover:not(:disabled) {
+  background: var(--color-brand-soft);
+}
+.days button[aria-pressed="true"],
+.days button[aria-pressed="true"]:hover {
+  background: var(--color-brand);
+  color: white;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--color-border);
+  padding: 16px 24px;
+}
+.footer span {
+  font-size: 1.125rem;
+  color: var(--color-text-muted);
+}
+.footer button {
+  background: var(--color-brand);
+  color: white;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 22px;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .calendars {
+    grid-template-columns: 1fr;
+    padding: 18px 16px;
+  }
+  .secondMonth {
+    display: none;
+  }
+  .title {
+    padding: 18px 20px;
+  }
+  .title h2 {
+    font-size: 1.125rem;
+  }
+  .days button {
+    min-height: 40px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+}

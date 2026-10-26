@@ -1,0 +1,33 @@
+.viewport {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #8cadd4 #edf2f8;
+  padding-right: 8px;
+}
+
+.viewport > :first-child {
+  margin: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.viewport:focus-visible {
+  outline: 2px solid #1d4779;
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.viewport::-webkit-scrollbar {
+  width: 7px;
+}
+
+.viewport::-webkit-scrollbar-track {
+  background: #edf2f8;
+  border-radius: 8px;
+}
+
+.viewport::-webkit-scrollbar-thumb {
+  background: #8cadd4;
+  border-radius: 8px;
+}

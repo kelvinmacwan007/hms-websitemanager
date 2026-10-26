@@ -1,0 +1,18 @@
+export const AMENITY_PRESETS = [
+  { iconKey: "wifi", label: "Wi-Fi" },
+  { iconKey: "pool", label: "Swimming pool" },
+  { iconKey: "restaurant", label: "Restaurant" },
+  { iconKey: "spa", label: "Spa & wellness" },
+  { iconKey: "parking", label: "Parking" },
+  { iconKey: "transfer", label: "Airport transfer" },
+  { iconKey: "gym", label: "Fitness centre" },
+  { iconKey: "luggage", label: "Luggage storage" },
+  { iconKey: "air-conditioning", label: "Air conditioning" },
+  { iconKey: "breakfast", label: "Breakfast" },
+  { iconKey: "accessible", label: "Accessible facilities" },
+  { iconKey: "pets", label: "Pet friendly" },
+  { iconKey: "business", label: "Business centre" },
+  { iconKey: "reception", label: "24-hour reception" },
+  { iconKey: "laundry", label: "Laundry service" },
+  { iconKey: "room-service", label: "Room service" },
+] as const;

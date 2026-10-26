@@ -1,0 +1,552 @@
+.manager-login {
+  --ml-navy: #102f60;
+  --ml-muted: #6c80a5;
+  height: 100dvh;
+  min-height: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 5dvh, 74px) 40px;
+  background: radial-gradient(ellipse at 95% 0%, #fff0e550, transparent 50%), #fffdfa;
+  color: var(--ml-navy);
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+.manager-login * {
+  box-sizing: border-box;
+}
+.ml-layout {
+  width: min(100%, 1376px);
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid #e6e2df;
+  border-radius: 22px;
+  box-shadow: 0 16px 44px #242c421c;
+  background: #fff;
+}
+.ml-intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 70px 68px;
+  background: linear-gradient(145deg, #073d7c, #052c62 75%, #073973);
+  color: #fff;
+}
+.ml-intro::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 1000px;
+  height: 1000px;
+  left: -520px;
+  bottom: -620px;
+  border: 1px solid #4387c688;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    transparent 0 135px,
+    #4387c666 136px 137px,
+    transparent 138px 140px
+  );
+}
+.ml-brand {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  margin-bottom: 94px;
+}
+.ml-brand img {
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+.manager-login .ml-intro h1 {
+  color: #ffd5af;
+  font:
+    700 clamp(1.875rem, 2.6vw, 2.5rem)/1.22 Arial,
+    sans-serif;
+  letter-spacing: -0.9px;
+  margin: 0;
+}
+.manager-login .ml-lead {
+  color: #afcaec;
+  font-size: 1.375rem;
+  line-height: 1.35;
+  margin: 20px 0 36px;
+  max-width: 530px;
+}
+.ml-features {
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 28px;
+}
+.ml-features li {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 1.125rem;
+}
+.ml-features svg {
+  flex-shrink: 0;
+}
+.ml-card {
+  padding: 138px 80px 52px 114px;
+  background: linear-gradient(120deg, #fcfdff, #fff 55%);
+}
+.ml-card-heading {
+  margin-bottom: 38px;
+}
+.manager-login .ml-card-heading h2 {
+  color: var(--ml-navy);
+  font:
+    700 clamp(1.75rem, 2.3vw, 2.25rem)/1.2 Arial,
+    sans-serif;
+  letter-spacing: -0.8px;
+  margin: 0 0 4px;
+}
+.ml-card-heading p {
+  font-size: 1.125rem;
+  color: var(--ml-muted);
+  margin: 0;
+}
+.ml-card form {
+  display: grid;
+  gap: 22px;
+}
+.ml-card label {
+  display: grid;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.ml-card label small {
+  font-size: 1rem;
+  color: var(--ml-muted);
+  font-weight: 400;
+  margin-top: -3px;
+}
+.ml-input {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 54px;
+  padding: 0 16px;
+  border: 1px solid #ced9eb;
+  border-radius: 9px;
+  background: #ffffffa8;
+}
+.ml-input > svg {
+  flex-shrink: 0;
+}
+.ml-input input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 14px 0;
+  background: transparent;
+  color: var(--ml-navy);
+  font:
+    400 1.125rem/1.5 Arial,
+    sans-serif;
+}
+.ml-input input::placeholder {
+  color: #8497b7;
+  opacity: 1;
+}
+.ml-input:focus-within {
+  border-color: var(--ml-navy);
+  box-shadow: 0 0 0 3px #102f6012;
+}
+.ml-card select {
+  width: 100%;
+  min-height: 54px;
+  border: 1px solid #ced9eb;
+  border-radius: 9px;
+  background: white;
+  color: var(--ml-navy);
+  font: inherit;
+  padding: 12px;
+}
+.ml-password-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.ml-text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0065e8;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.125rem;
+}
+.ml-text-button:hover {
+  color: var(--ml-navy);
+  text-decoration: underline;
+}
+.ml-eye {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  padding: 6px;
+  margin-right: -6px;
+  color: var(--ml-navy);
+  cursor: pointer;
+}
+.ml-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  min-height: 62px;
+  border: 1px solid #125799;
+  border-radius: 10px;
+  background: linear-gradient(115deg, #173e75, #103064 65%, #074b86);
+  box-shadow: 0 3px 5px #102f6010;
+  color: white;
+  font:
+    600 1.25rem/1.4 Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.ml-submit:hover {
+  background: var(--ml-navy);
+}
+.ml-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.manager-login button:focus-visible,
+.ml-card select:focus-visible {
+  outline: 2px solid var(--ml-navy);
+  outline-offset: 4px;
+}
+.ml-error {
+  color: #b42318;
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.ml-card-footer {
+  margin-top: 38px;
+  text-align: center;
+  color: var(--ml-muted);
+  font-size: 1rem;
+}
+.ml-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.ml-secure svg {
+  color: var(--ml-navy);
+  flex-shrink: 0;
+}
+.ml-card-footer > p {
+  margin: 14px 0 0;
+}
+.ml-card-footer .ml-help {
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff0e6;
+  text-align: left;
+}
+.ml-orbit {
+  position: absolute;
+  z-index: -1;
+  width: 1000px;
+  height: 1000px;
+  border: 1px solid #ffddc8;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 95px #fff4eb65,
+    0 0 0 180px #fff7f04d;
+  pointer-events: none;
+}
+.ml-orbit-top {
+  right: -760px;
+  top: -800px;
+}
+.ml-orbit-bottom {
+  width: 720px;
+  height: 720px;
+  left: -430px;
+  bottom: -470px;
+}
+@media (max-width: 1250px) {
+  .manager-login {
+    padding: 40px 28px;
+  }
+  .ml-layout {
+    min-height: 790px;
+  }
+  .ml-intro {
+    padding: 48px 40px;
+  }
+  .ml-card {
+    padding: 110px 40px 45px;
+  }
+  .ml-brand {
+    margin-bottom: 80px;
+  }
+  .manager-login .ml-lead {
+    font-size: 1.4375rem;
+  }
+  .ml-card-heading p {
+    font-size: 1.125rem;
+  }
+}
+@media (max-width: 1000px) {
+  .manager-login {
+    padding: 24px 16px;
+  }
+  .ml-layout {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 540px;
+    min-height: auto;
+  }
+  .ml-intro {
+    padding: 30px;
+  }
+  .ml-brand {
+    margin-bottom: 32px;
+    gap: 12px;
+  }
+  .ml-brand img {
+    width: 150px;
+    height: auto;
+  }
+  .manager-login .ml-intro h1 {
+    font-size: 2.3125rem;
+  }
+  .manager-login .ml-lead {
+    font-size: 1.125rem;
+    margin-bottom: 0;
+  }
+  .ml-features {
+    display: none;
+  }
+  .ml-card {
+    padding: 34px 30px;
+  }
+  .manager-login .ml-card-heading h2 {
+    font-size: 1.875rem;
+  }
+  .ml-card-heading {
+    margin-bottom: 28px;
+  }
+}
+@media (max-width: 420px) {
+  .manager-login {
+    padding: 16px 12px;
+  }
+  .ml-intro,
+  .ml-card {
+    padding: 28px 22px;
+  }
+  .manager-login .ml-intro h1 {
+    font-size: 2rem;
+  }
+  .ml-input {
+    gap: 12px;
+    padding: 0 12px;
+  }
+  .ml-card-heading p {
+    font-size: 1.125rem;
+  }
+  .ml-password-label .ml-text-button {
+    font-size: 1rem;
+  }
+  .ml-card-footer {
+    font-size: 1rem;
+  }
+}
+/* Keep the complete sign-in surface inside the available viewport. */
+@media (min-width: 1001px) {
+  .manager-login {
+    padding: clamp(16px, 5dvh, 74px) 28px;
+  }
+  .ml-layout {
+    min-height: 0;
+    max-height: 870px;
+  }
+  .ml-intro {
+    min-height: 0;
+    padding-top: clamp(24px, 5dvh, 56px);
+    padding-bottom: clamp(24px, 5dvh, 68px);
+  }
+  .ml-brand {
+    margin-bottom: clamp(24px, 7dvh, 94px);
+  }
+  .ml-card {
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+}
+@media (min-width: 1001px) and (max-height: 800px) {
+  .ml-card form {
+    gap: 14px;
+  }
+  .ml-card-heading {
+    margin-bottom: 22px;
+  }
+  .manager-login .ml-card-heading h2 {
+    font-size: 2.125rem;
+  }
+  .ml-card-footer {
+    margin-top: 22px;
+  }
+  .ml-submit {
+    min-height: 52px;
+  }
+  .manager-login .ml-intro h1 {
+    font-size: clamp(1.875rem, 2.6vw, 2.375rem);
+  }
+  .manager-login .ml-lead {
+    font-size: 1.375rem;
+  }
+  .ml-features {
+    gap: 18px;
+  }
+}
+@media (max-width: 1000px) {
+  .manager-login {
+    padding: 12px;
+  }
+  .ml-layout {
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .ml-intro {
+    padding: 18px 22px;
+  }
+  .ml-brand {
+    margin: 0;
+  }
+  .ml-intro h1,
+  .manager-login .ml-lead {
+    display: none;
+  }
+  .ml-card {
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px 22px;
+  }
+  .ml-card-heading {
+    margin-bottom: 22px;
+  }
+  .ml-card form {
+    gap: 16px;
+  }
+  .ml-card-footer {
+    margin-top: 24px;
+  }
+}
+.ml-property-hint,
+.ml-caps-lock {
+  margin: 0 0 10px;
+  font-size: 1.125rem;
+  color: var(--ml-muted);
+}
+.ml-caps-lock {
+  margin: 8px 0 0;
+  color: #945311;
+}
+.ml-input input:autofill {
+  box-shadow: 0 0 0 1000px #f5f8ff inset;
+  border-radius: 4px;
+}
+.ml-input input:-webkit-autofill {
+  -webkit-text-fill-color: var(--ml-navy);
+  -webkit-box-shadow: 0 0 0 1000px #f5f8ff inset;
+  border-radius: 4px;
+}
+.ml-card {
+  scrollbar-width: thin;
+  scrollbar-color: #c8d3e2 transparent;
+  overscroll-behavior: contain;
+}
+.ml-eye {
+  min-width: 36px;
+  min-height: 40px;
+}
+.ml-card-footer .ml-text-button {
+  min-height: 32px;
+}
+@media (max-width: 1000px) and (max-height: 740px) {
+  .ml-intro {
+    padding: 12px 22px;
+  }
+  .ml-brand img {
+    width: 130px;
+  }
+  .ml-card {
+    padding: 20px 22px;
+  }
+  .manager-login .ml-card-heading h2 {
+    font-size: 1.875rem;
+  }
+  .ml-card-heading {
+    margin-bottom: 16px;
+  }
+  .ml-card form {
+    gap: 12px;
+  }
+  .ml-input {
+    min-height: 48px;
+  }
+  .ml-input input {
+    padding: 11px 0;
+    font-size: 1.125rem;
+  }
+  .ml-submit {
+    min-height: 48px;
+    font-size: 1.125rem;
+  }
+  .ml-card-footer {
+    margin-top: 20px;
+  }
+  .ml-card-footer > p {
+    margin-top: 8px;
+  }
+}
+.ml-layout > section {
+  min-width: 0;
+}
+.ml-card form,
+.ml-card label,
+.ml-password-field {
+  min-width: 0;
+}
+.ml-input {
+  width: 100%;
+}
+.ml-card {
+  scroll-padding-block: 24px;
+}

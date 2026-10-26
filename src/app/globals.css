@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.website-body {
+  --site-card-radius: var(--website-radius, 1.5rem);
+  --site-card-shadow: 0 0.75rem 2.25rem rgb(25 30 28 / 6%);
+}
+
+@layer base {
+  /* Supporting text must remain readable at the site's 16px minimum. */
+  small,
+  sub,
+  sup {
+    font-size: max(1rem, 0.875em);
+  }
+}
+/* Optional website appearance settings are scoped away from the editor. */
+[data-website-appearance]
+  .website-body:not(:has(.wm-root))
+  :is(.brand-button, .accent-button, .ghost-button, .light-button) {
+  border-radius: var(--website-button-radius, 12px);
+}
+[data-website-appearance] .website-body:not(:has(.wm-root)) .premium-card {
+  border-radius: var(--site-card-radius);
+}
+[data-website-appearance] .website-body:not(:has(.wm-root)) .image-frame {
+  border-radius: var(--website-image-radius, 0);
+  aspect-ratio: var(--website-image-ratio, auto);
+}
+[data-website-appearance] .website-body:not(:has(.wm-root)) :is(h1, h2, h3) {
+  letter-spacing: var(--website-heading-spacing, -0.015em);
+}

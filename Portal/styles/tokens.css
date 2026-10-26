@@ -1,0 +1,22 @@
+/* Shared portal tokens. Public hotel pages are outside this scope. */
+.wm-root {
+  --wm-surface: #ffffff;
+  --wm-brand-navy: #1c355e;
+  --wm-brand-cream: #fff8f3;
+  --wm-brand-peach: #ffd8c1;
+  --wm-brand-soft: #fff0e6;
+  --wm-radius-card: 14px;
+  --wm-radius-control: 8px;
+  --wm-space-page: 24px;
+  --wm-space-card: 24px;
+  --wm-space-section: 24px;
+  --wm-space-content: 16px;
+}
+
+@media (max-width: 760px) {
+  .wm-root {
+    --wm-space-page: 16px;
+    --wm-space-card: 16px;
+    --wm-space-section: 16px;
+  }
+}

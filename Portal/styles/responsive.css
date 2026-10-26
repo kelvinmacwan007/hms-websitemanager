@@ -1,0 +1,163 @@
+/* Final layout rules shared by every Studio section and authenticated account state. */
+.wm-studio-dashboard .wm-page-heading > .wm-heading-actions {
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-heading-actions > *,
+.wm-studio-dashboard .wm-inline-actions > * {
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-button,
+.wm-studio-dashboard .wm-card-heading,
+.wm-studio-dashboard .wm-toggle-row,
+.wm-studio-dashboard .wm-field {
+  overflow-wrap: anywhere;
+}
+.wm-studio-dashboard .wm-button svg,
+.wm-account-bar button svg {
+  flex-shrink: 0;
+}
+
+@media (min-width: 761px) and (max-width: 1450px) {
+  .wm-studio-dashboard .wm-page-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wm-studio-dashboard .wm-page-heading > .wm-heading-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-end;
+  }
+  .wm-studio-dashboard .wm-page-heading > .wm-account-bar {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 0;
+    border: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .wm-studio-dashboard {
+    padding-bottom: calc(180px + env(safe-area-inset-bottom, 0px));
+  }
+  .wm-studio-dashboard .wm-page-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 12px;
+  }
+  .wm-studio-dashboard .wm-page-heading h1 {
+    overflow-wrap: normal;
+  }
+  .wm-studio-dashboard .wm-account-bar button {
+    min-height: 44px;
+    padding: 10px 8px;
+  }
+  .wm-studio-dashboard .wm-heading-actions,
+  .wm-studio-dashboard .wm-heading-actions:not(:has(.wm-discard)) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: auto;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-draft-state {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: center;
+    margin: 0;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 8px;
+    font-size: 0.875rem;
+    white-space: normal;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button svg {
+    display: block;
+    width: 16px;
+  }
+  .wm-studio-dashboard .wm-heading-actions:not(:has(.wm-discard)) > .wm-publish-menu,
+  .wm-studio-dashboard .wm-heading-actions > .wm-button:last-child:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+  .wm-studio-dashboard .wm-publish-menu-actions {
+    width: min(300px, calc(100vw - 24px));
+    max-width: 100%;
+  }
+  .wm-studio-dashboard .wm-sidebar {
+    width: min(280px, calc(100vw - 44px));
+    height: 100dvh;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    overscroll-behavior: contain;
+  }
+  .wm-studio-dashboard .wm-brand-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 12px;
+    overflow: visible;
+  }
+  .wm-studio-dashboard .wm-brand-tabs button {
+    justify-content: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 4px;
+    white-space: normal;
+  }
+  .wm-studio-dashboard .wm-inline-actions {
+    flex-wrap: wrap;
+  }
+  .wm-studio-dashboard
+    .wm-field
+    input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+  .wm-studio-dashboard .wm-field textarea,
+  .wm-studio-dashboard .wm-field select,
+  .wm-studio-dashboard .wm-image-url,
+  .wm-studio-dashboard .wm-domain-input input {
+    min-width: 0;
+    min-height: 44px;
+    font-size: 1rem !important;
+  }
+  .wm-studio-dashboard .wm-preview-dialog {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .wm-studio-dashboard .wm-preview-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .wm-studio-dashboard .wm-preview-dialog > header {
+    flex-shrink: 0;
+    align-items: start;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-full-preview:has(.wm-actual-preview) {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+  }
+  .wm-studio-dashboard .wm-preview-dialog > header > .wm-inline-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    width: 100%;
+    gap: 8px;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-device-switch {
+    grid-column: 1 / -1;
+    display: flex;
+    min-width: 0;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-device-switch button {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 4px;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-preview-page {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 1rem;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-icon-button {
+    width: 44px;
+    height: 44px;
+  }
+}

@@ -1,0 +1,14 @@
+.next/
+node_modules/
+.data/
+.env*
+!.env.example
+artifacts/
+*.tsbuildinfo
+config/*.local.json
+
+# Generated reports and temporary work
+coverage/
+out/
+build/
+tmp/

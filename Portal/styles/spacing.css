@@ -1,0 +1,57 @@
+/* Shared spacing rhythm, applied after the individual section layouts. */
+.wm-root.wm-studio-dashboard .wm-workspace {
+  padding-inline: var(--wm-space-page);
+  padding-bottom: var(--wm-space-page);
+}
+.wm-root.wm-studio-dashboard .wm-page-heading {
+  padding-inline: var(--wm-space-page);
+}
+.wm-root.wm-studio-dashboard
+  .wm-workspace
+  > :is(.wm-address-panel, .wm-domain-card, .wm-setup-stepper, .wm-notice, .wm-workspace-banner) {
+  margin-bottom: var(--wm-space-section);
+}
+.wm-root.wm-studio-dashboard .wm-editor-grid {
+  gap: var(--wm-space-section);
+}
+.wm-root.wm-studio-dashboard .wm-editor-column {
+  display: grid;
+  gap: var(--wm-space-section);
+}
+.wm-root.wm-studio-dashboard
+  .wm-editor-column
+  > :is(.wm-section-header-card, .wm-section-help, .wm-info) {
+  margin: 0;
+}
+.wm-root.wm-studio-dashboard
+  :is(
+    .wm-editor-fields,
+    .wm-home-design,
+    .wm-contact-design,
+    .wm-identity-design,
+    .wm-colors-design
+  ) {
+  gap: var(--wm-space-section);
+}
+.wm-root.wm-studio-dashboard .wm-card {
+  margin-bottom: 0;
+}
+.wm-root.wm-studio-dashboard
+  :is(
+    .wm-section-header-card,
+    .wm-address-panel,
+    .wm-setup-reference.wm-setup-stepper,
+    .wm-id-card,
+    .wm-color-generate-card,
+    .wm-colors-main-card,
+    .wm-typography-design,
+    .wm-experience-design
+  ) {
+  padding: var(--wm-space-card);
+}
+.wm-root.wm-studio-dashboard .wm-card-heading {
+  padding: var(--wm-space-card) var(--wm-space-card) var(--wm-space-content);
+}
+.wm-root.wm-studio-dashboard .wm-card-body {
+  padding: 0 var(--wm-space-card) var(--wm-space-card);
+}

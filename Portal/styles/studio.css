@@ -1,0 +1,3293 @@
+/* Website Studio presentation: visual customization, identity, palettes,
+   setup journey and the actual website preview. Scoped to wm-studio-dashboard.
+   Conditional overrides retain source order; do not regroup them by breakpoint. */
+.wm-studio-dashboard .wm-topbar,
+.wm-studio-dashboard .wm-workspace-banner,
+.wm-studio-dashboard .wm-kicker {
+  display: none;
+}
+.wm-studio-dashboard .wm-workspace {
+  max-width: none;
+}
+.wm-studio-dashboard .wm-page-heading h1 {
+  margin: 0 0 4px;
+}
+.wm-studio-dashboard .wm-app-brand small {
+  letter-spacing: 0;
+}
+.wm-studio-dashboard .wm-nav-group p {
+  margin: 0 6px 9px;
+}
+.wm-studio-dashboard .wm-field {
+  margin-bottom: 10px;
+}
+.wm-studio-dashboard .wm-field label,
+.wm-studio-dashboard .wm-label {
+  margin-bottom: 6px;
+}
+.wm-studio-dashboard .wm-field input,
+.wm-studio-dashboard .wm-field select {
+  padding: 7px 9px;
+}
+.wm-studio-dashboard .wm-note {
+  font-size: 0.875rem;
+  margin: 10px 0 0;
+}
+.wm-studio-dashboard .wm-button-small {
+  padding: 5px 8px;
+}
+.wm-brand-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 9px 4px;
+  border-bottom: 1px solid #e3eaf4;
+  margin-bottom: 14px;
+  background: var(--wm-surface);
+  border-radius: 10px;
+}
+.wm-brand-tabs button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 0.875rem;
+  padding: 10px 4px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.wm-brand-tabs button[aria-current] {
+  background: #f0f6ff;
+  border-color: #0866eb;
+  color: #005fe8;
+}
+.wm-brand-dashboard [id] {
+  scroll-margin-top: 20px;
+}
+.wm-identity-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr 1.05fr;
+  gap: 14px;
+  align-items: start;
+}
+.wm-connected-logo label,
+.wm-small-label {
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 7px;
+}
+.wm-connected-logo > div {
+  height: 90px;
+  padding: 12px;
+  border: 1px dashed #cad6e6;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wm-connected-logo img {
+  max-height: 65px;
+  max-width: 100%;
+  object-fit: contain;
+}
+.wm-connected-logo small {
+  display: block;
+  font-size: 0.875rem;
+  color: #718099;
+  margin-top: 8px;
+}
+.wm-identity-grid .wm-image-well {
+  height: 90px;
+  min-height: 90px;
+}
+.wm-identity-grid .wm-image-well img {
+  max-height: 70px;
+}
+.wm-identity-grid .wm-image-placeholder span {
+  font-size: 0.875rem;
+}
+.wm-identity-grid .wm-advanced summary {
+  font-size: 0.875rem;
+  padding: 6px;
+}
+.wm-identity-grid .wm-advanced {
+  margin-top: 8px;
+}
+.wm-logo-generator {
+  background: #eff5ff;
+  padding: 14px;
+  border-radius: var(--wm-radius-control);
+  color: #0d3263;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wm-logo-generator strong {
+  font-size: 0.875rem;
+}
+.wm-logo-generator p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #65758c;
+}
+.wm-logo-generator .wm-button {
+  font-size: 0.875rem;
+  padding: 6px;
+}
+.wm-palette-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.wm-palette-layout .wm-three-columns {
+  gap: 8px;
+}
+.wm-palette-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.wm-palette-presets button {
+  padding: 8px 6px;
+  border: 1px solid #e0e8f3;
+  border-radius: 7px;
+  text-align: left;
+  min-width: 0;
+}
+.wm-palette-presets button[aria-pressed="true"] {
+  border-color: #0068ff;
+  box-shadow: 0 0 0 2px #edf5ff;
+}
+.wm-palette-presets button > span {
+  display: block;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+.wm-palette-presets button > div {
+  display: flex;
+  margin-top: 8px;
+}
+.wm-palette-presets i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: block;
+}
+.wm-type-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+.wm-type-layout .wm-two-columns {
+  gap: 10px;
+}
+.wm-font-samples > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid #e4ebf5;
+  border-radius: 7px;
+  background: #f9fbff;
+  min-width: 0;
+}
+.wm-font-samples b {
+  font-size: 2rem;
+  font-weight: 400;
+}
+.wm-font-samples span {
+  font-size: 0.875rem;
+}
+.wm-font-samples small {
+  display: block;
+  font-size: 0.875rem;
+  color: #74839c;
+  margin-top: 5px;
+}
+.wm-type-preview {
+  border: 1px solid #e7edf6;
+  padding: 14px;
+  border-radius: var(--wm-radius-control);
+}
+.wm-type-preview > small {
+  font-size: 0.875rem;
+  letter-spacing: 1.5px;
+  color: #62738c;
+}
+.wm-type-preview h3 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 6px 0 12px;
+}
+.wm-type-preview p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 5px 0 12px;
+}
+.wm-type-preview p:last-child {
+  color: #718099;
+  margin-bottom: 0;
+  max-height: 65px;
+  overflow: auto;
+}
+.wm-studio-dashboard .wm-browser-bar {
+  display: none;
+}
+.wm-studio-dashboard .wm-site-header nav button {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-site-hero {
+  min-height: 330px;
+  text-align: left;
+  padding: 35px;
+}
+.wm-studio-dashboard .wm-site-hero h2 {
+  font-size: 2.875rem;
+  max-width: 350px;
+}
+.wm-studio-dashboard .wm-site-hero p {
+  font-size: 0.875rem;
+  max-width: 320px;
+  margin: 0 0 20px;
+}
+.wm-studio-dashboard .wm-site-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.wm-studio-dashboard .wm-preview-viewport.is-mobile .wm-site-hero h2 {
+  font-size: 1.8125rem;
+}
+@media (max-width: 1250px) {
+  .wm-identity-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .wm-logo-generator {
+    grid-column: 1/-1;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .wm-logo-generator p {
+    flex: 1;
+  }
+  .wm-palette-layout,
+  .wm-type-layout {
+    grid-template-columns: 1fr;
+  }
+  .wm-palette-presets {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 1000px) {
+  .wm-studio-dashboard .wm-preview-viewport {
+    height: 600px;
+    min-height: 0;
+  }
+}
+@media (max-width: 760px) {
+  .wm-brand-tabs {
+    flex-wrap: wrap;
+  }
+  .wm-brand-tabs button {
+    flex-basis: 45%;
+  }
+  .wm-studio-dashboard .wm-heading-actions {
+    flex-wrap: wrap;
+  }
+  .wm-identity-grid {
+    grid-template-columns: 1fr;
+  }
+  .wm-logo-generator {
+    grid-column: auto;
+  }
+  .wm-studio-dashboard .wm-site-hero h2 {
+    font-size: 2rem;
+  }
+}
+.wm-studio-dashboard input,
+.wm-studio-dashboard select,
+.wm-studio-dashboard button {
+  font-family: inherit;
+}
+.wm-studio-dashboard .wm-card-body {
+  padding-top: 10px;
+}
+.wm-studio-dashboard .wm-editor-fields {
+  gap: 0;
+}
+.wm-studio-dashboard .wm-brand-dashboard .wm-card-heading {
+  border-bottom: 0;
+}
+.wm-studio-dashboard .wm-identity-grid .wm-advanced {
+  padding: 0;
+}
+.wm-studio-dashboard .wm-identity-grid .wm-advanced summary {
+  padding: 6px;
+}
+.wm-studio-dashboard .wm-image-actions {
+  margin-top: 6px;
+}
+.wm-studio-dashboard .wm-brand-dashboard .wm-toggle {
+  padding: 9px 0;
+}
+.wm-studio-dashboard .wm-site-header {
+  min-height: 85px;
+  padding: 14px 24px;
+}
+.wm-studio-dashboard .wm-site-logo {
+  max-height: 58px;
+  max-width: 105px;
+}
+.wm-studio-dashboard .wm-site-hero {
+  justify-content: flex-start;
+}
+.wm-studio-dashboard .wm-site-hero h2 {
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
+}
+.wm-studio-dashboard .wm-site-section {
+  padding: 25px;
+}
+.wm-studio-dashboard .wm-site-room img {
+  height: 115px;
+}
+.wm-studio-dashboard .wm-site-room h4 {
+  font-family: var(--preview-body), Arial, sans-serif;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-site-room > div {
+  padding: 12px;
+}
+.wm-studio-dashboard .wm-site-section h3 {
+  font-size: 1.875rem;
+}
+.wm-studio-dashboard .wm-page-heading {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin-bottom: 22px;
+}
+.wm-studio-dashboard .wm-page-heading h1 {
+  letter-spacing: -0.7px;
+}
+.wm-studio-dashboard .wm-page-heading p {
+  margin-top: 6px;
+}
+.wm-studio-dashboard .wm-app-brand strong {
+  letter-spacing: -0.4px;
+}
+.wm-studio-dashboard .wm-property {
+  margin-top: 8px;
+}
+.wm-studio-dashboard .wm-nav-group button {
+  box-shadow: none;
+}
+.wm-studio-dashboard .wm-sidebar-foot {
+  border-radius: var(--wm-radius-control);
+  background: #fafbfc;
+  box-shadow: none;
+}
+.wm-studio-dashboard .wm-section-heading h2 {
+  font-weight: 500;
+}
+.wm-studio-dashboard .wm-section-heading p {
+  line-height: 1.6;
+}
+.wm-studio-dashboard .wm-card-heading h2 {
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-card-body {
+  gap: 16px;
+}
+.wm-studio-dashboard .wm-field label,
+.wm-studio-dashboard .wm-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.wm-studio-dashboard .wm-field input,
+.wm-studio-dashboard .wm-field select {
+  font-size: 0.875rem;
+  min-height: 38px;
+  background: var(--wm-surface);
+  border-radius: 6px;
+}
+.wm-studio-dashboard .wm-button {
+  box-shadow: none;
+  min-height: 38px;
+}
+.wm-studio-dashboard .wm-button-small {
+  min-height: 30px;
+}
+.wm-studio-dashboard button:focus-visible,
+.wm-studio-dashboard summary:focus-visible {
+  outline: 2px solid #245c9a;
+  outline-offset: 3px;
+}
+.wm-studio-dashboard .wm-draft-state {
+  display: flex;
+  align-items: center;
+}
+.wm-studio-dashboard .wm-draft-state::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.wm-studio-dashboard .wm-draft-state.is-dirty {
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-brand-tabs {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+.wm-studio-dashboard .wm-brand-tabs button {
+  flex: none;
+  padding: 12px 0;
+  border-radius: 0;
+}
+.wm-studio-dashboard .wm-brand-tabs button[aria-selected="true"] {
+  background: transparent;
+  border-bottom-color: #0d3263;
+}
+.wm-studio-dashboard .wm-brand-dashboard [hidden] {
+  display: none;
+}
+.wm-studio-dashboard .wm-identity-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.wm-studio-dashboard .wm-logo-generator {
+  grid-column: 1/-1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid #e3eaf3;
+  border-radius: 6px;
+  padding: 14px;
+}
+.wm-studio-dashboard .wm-logo-generator p {
+  flex: 1;
+  min-width: 120px;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-logo-generator > svg {
+  width: 20px;
+}
+.wm-studio-dashboard .wm-connected-logo > div,
+.wm-studio-dashboard .wm-identity-grid .wm-image-well {
+  height: 110px;
+  min-height: 110px;
+  border: 1px solid #e1e6ed;
+}
+.wm-studio-dashboard .wm-palette-layout,
+.wm-studio-dashboard .wm-type-layout {
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+.wm-studio-dashboard .wm-palette-presets {
+  gap: 10px;
+}
+.wm-studio-dashboard .wm-palette-presets button {
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--wm-surface);
+}
+.wm-studio-dashboard .wm-palette-presets button[aria-pressed="true"] {
+  box-shadow: none;
+}
+.wm-studio-dashboard .wm-palette-presets i {
+  width: 22px;
+  height: 22px;
+}
+.wm-studio-dashboard .wm-small-label {
+  font-size: 0.875rem;
+  margin-bottom: 10px;
+  color: #67758a;
+}
+.wm-studio-dashboard .wm-type-preview {
+  border-radius: 6px;
+  padding: 24px;
+}
+.wm-studio-dashboard .wm-type-preview h3 {
+  font-size: 1.875rem;
+}
+.wm-studio-dashboard .wm-type-preview p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-preview-heading {
+  background: var(--wm-surface);
+  border-bottom: 1px solid #e1e6ed;
+}
+.wm-studio-dashboard .wm-site-room p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.6;
+}
+.wm-studio-dashboard .wm-backup {
+  margin-top: 24px;
+  border-radius: 6px;
+}
+@media (max-width: 1100px) {
+  .wm-studio-dashboard .wm-editor-grid {
+    gap: 16px;
+  }
+  .wm-studio-dashboard .wm-palette-presets button {
+    padding: 9px 6px;
+  }
+  .wm-studio-dashboard .wm-palette-presets button > span {
+    font-size: 0.875rem;
+  }
+}
+@media (max-width: 1000px) {
+  .wm-studio-dashboard .wm-editor-grid {
+    grid-template-columns: 1fr;
+  }
+  .wm-studio-dashboard .wm-preview-column {
+    position: static;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-page-heading {
+    position: static;
+  }
+  .wm-studio-dashboard .wm-brand-tabs {
+    flex-wrap: nowrap;
+  }
+  .wm-studio-dashboard .wm-brand-tabs button {
+    flex-basis: auto;
+    gap: 5px;
+  }
+  .wm-studio-dashboard .wm-card-heading {
+    padding: 16px 16px 10px;
+  }
+  .wm-studio-dashboard .wm-identity-grid {
+    grid-template-columns: 1fr;
+  }
+  .wm-studio-dashboard .wm-preview-viewport {
+    min-height: 0;
+    height: 500px;
+  }
+}
+.wm-studio-dashboard {
+  grid-template-columns: 280px minmax(0, 1fr);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+.wm-studio-dashboard .wm-sidebar {
+  padding: 24px 14px;
+  gap: 15px;
+}
+.wm-studio-dashboard .wm-app-brand {
+  flex: 0 0 auto;
+  min-height: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 8px 16px;
+}
+.wm-studio-dashboard .wm-app-brand > span {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+.wm-studio-dashboard .wm-property {
+  border: 1px solid #eef0f4;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 0 0 12px;
+}
+.wm-studio-dashboard .wm-nav-group {
+  margin-bottom: 16px;
+}
+.wm-studio-dashboard .wm-nav-group p {
+  letter-spacing: 1.4px;
+}
+.wm-studio-dashboard .wm-nav-group button {
+  padding: 9px 10px;
+  border-radius: var(--wm-radius-control);
+}
+.wm-studio-dashboard .wm-nav-group button[aria-current] {
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-sidebar-foot {
+  display: none;
+}
+.wm-studio-dashboard .wm-workspace {
+  padding: 0 24px 24px;
+}
+.wm-studio-dashboard .wm-page-heading {
+  margin: 0 -24px 20px;
+  padding: 21px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.wm-studio-dashboard .wm-page-heading h1 {
+  font-family: inherit;
+  font-size: 1.5625rem;
+  font-weight: 650;
+  color: #172033;
+}
+.wm-studio-dashboard .wm-page-heading p {
+  color: #667085;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-heading-actions {
+  gap: 8px;
+}
+.wm-studio-dashboard .wm-draft-state {
+  color: #46765c;
+  gap: 8px;
+  margin-right: 8px;
+}
+.wm-studio-dashboard .wm-draft-state::before {
+  background: #25945b;
+}
+.wm-studio-dashboard .wm-draft-state.is-dirty {
+  color: #956624;
+}
+.wm-studio-dashboard .wm-draft-state.is-dirty::before {
+  background: #c58a27;
+}
+.wm-studio-dashboard .wm-draft-state small {
+  display: block;
+  color: #8a94a4;
+  font-size: 0.875rem;
+  margin-top: 3px;
+}
+.wm-studio-dashboard .wm-editor-grid {
+  gap: 24px;
+  align-items: start;
+}
+.wm-studio-dashboard .wm-section-heading {
+  margin-bottom: 15px;
+}
+.wm-studio-dashboard .wm-section-heading h2 {
+  color: #172033;
+}
+.wm-studio-dashboard .wm-section-heading p {
+  color: #667085;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-card {
+  border: 1px solid #edf0f4;
+  margin-bottom: 16px;
+}
+.wm-studio-dashboard .wm-card-heading {
+  padding: 20px 20px 8px;
+}
+.wm-studio-dashboard .wm-card-heading h2 {
+  color: #172033;
+}
+.wm-studio-dashboard .wm-card-heading p {
+  color: #667085;
+}
+.wm-studio-dashboard .wm-card-body {
+  padding: 14px 20px 22px;
+}
+.wm-studio-dashboard .wm-button {
+  border-radius: var(--wm-radius-control);
+  transition:
+    background 180ms,
+    box-shadow 180ms,
+    transform 180ms;
+}
+.wm-studio-dashboard .wm-button:active {
+  transform: translateY(1px);
+}
+.wm-studio-dashboard .wm-discard {
+  color: #667085;
+  border-color: transparent;
+}
+.wm-studio-dashboard .wm-brand-tabs {
+  gap: 16px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+}
+.wm-studio-dashboard .wm-brand-tabs button {
+  color: #667085;
+  gap: 5px;
+  white-space: nowrap;
+}
+.wm-studio-dashboard .wm-brand-tabs button svg {
+  display: none;
+}
+.wm-studio-dashboard .wm-image-well.is-dragging {
+  border: 2px dashed #0d3263;
+  background: #eef4fb;
+}
+.wm-studio-dashboard .wm-connected-logo small {
+  color: #667085;
+}
+.wm-studio-dashboard .wm-palette-presets button:hover {
+  border-color: #9cb2ce;
+}
+.wm-studio-dashboard button:focus-visible,
+.wm-studio-dashboard summary:focus-visible {
+  outline-color: #648bb9;
+}
+.wm-studio-dashboard .wm-field input:hover,
+.wm-studio-dashboard .wm-field select:hover {
+  border-color: #a8b6c7;
+}
+.wm-studio-dashboard .wm-backup {
+  background: var(--wm-surface);
+  border-color: #e7edf4;
+}
+.wm-studio-dashboard .wm-footer {
+  color: #8a94a4;
+  border-color: #e5e7eb;
+}
+.wm-studio-dashboard .wm-save-dot {
+  background: #25945b;
+}
+.wm-color-tools {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.wm-color-tools button {
+  font-size: 0.875rem;
+  color: #667085;
+  padding: 2px 0;
+}
+.wm-color-tools button:hover {
+  color: #0d3263;
+}
+.wm-setup {
+  background: var(--wm-surface);
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  display: grid;
+  grid-template-columns: 155px minmax(0, 1fr);
+  gap: 7px 20px;
+}
+.wm-setup-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+}
+.wm-setup-title span {
+  color: #0d3263;
+  font-size: 0.875rem;
+}
+.wm-setup progress {
+  width: 100%;
+  height: 5px;
+  border: 0;
+  border-radius: 99px;
+  appearance: none;
+  align-self: center;
+}
+.wm-setup progress::-webkit-progress-bar {
+  background: #edf1f6;
+  border-radius: 99px;
+}
+.wm-setup progress::-webkit-progress-value {
+  background: #0d3263;
+  border-radius: 99px;
+}
+.wm-setup p {
+  color: #667085;
+  font-size: 0.875rem;
+  grid-column: 1/-1;
+}
+.wm-setup-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  font-size: 0.875rem;
+  color: #667085;
+  grid-column: 1/-1;
+}
+.wm-setup-checks span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.wm-setup-checks svg {
+  color: #46916b;
+}
+.wm-setup.is-compact {
+  display: block;
+  padding: 14px;
+  margin-top: auto;
+  margin-bottom: 0;
+  background: #f8fafc;
+}
+.wm-setup.is-compact progress {
+  margin: 10px 0;
+}
+.wm-setup.is-compact .wm-setup-checks {
+  display: grid;
+  gap: 8px;
+}
+.wm-setup.is-compact > small {
+  display: flex;
+  color: #8c98a8;
+  font-size: 0.875rem;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.wm-studio-dashboard .wm-preview-column {
+  position: sticky;
+  top: 112px;
+}
+.wm-studio-dashboard .wm-preview-card {
+  border: 1px solid #e3e9f1;
+  border-radius: var(--wm-radius-card);
+}
+.wm-studio-dashboard .wm-preview-heading {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px;
+}
+.wm-studio-dashboard .wm-preview-heading > span {
+  font-size: 0.875rem;
+  margin-right: auto;
+}
+.wm-studio-dashboard .wm-preview-heading i {
+  background: #25945b;
+}
+.wm-studio-dashboard .wm-device-switch {
+  display: flex;
+  align-items: center;
+  border-radius: 7px;
+  padding: 3px;
+}
+.wm-studio-dashboard .wm-device-switch button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  padding: 5px;
+  font-size: 0.875rem;
+  height: 27px;
+  border-radius: 5px;
+  color: #778599;
+}
+.wm-studio-dashboard .wm-device-switch button[aria-pressed="true"] {
+  box-shadow: 0 1px 3px #10182812;
+}
+.wm-studio-dashboard .wm-preview-page {
+  min-width: 120px;
+  font-size: 0.875rem;
+}
+.wm-open-preview {
+  color: #0d3263 !important;
+  font-size: 0.875rem !important;
+}
+.wm-studio-dashboard .wm-preview-viewport {
+  min-height: 480px;
+  height: calc(100vh - 240px);
+  padding: 0;
+  background: #edf1f6;
+}
+.wm-studio-dashboard .wm-preview-viewport.is-tablet > .wm-site {
+  max-width: 430px;
+  margin: 0 auto;
+}
+.wm-studio-dashboard .wm-preview-viewport.is-mobile > .wm-site {
+  max-width: 320px;
+  margin: 0 auto;
+}
+.wm-site .wm-site-cta {
+  border-radius: var(--website-button-radius, 12px);
+}
+.wm-site .wm-site-room {
+  border-radius: var(--website-radius, 12px);
+  overflow: hidden;
+}
+.wm-site .wm-site-room img {
+  border-radius: var(--website-image-radius, 0);
+  aspect-ratio: var(--website-image-ratio, auto);
+}
+.wm-site :is(h2, h3) {
+  letter-spacing: var(--website-heading-spacing, -0.015em);
+}
+.wm-style-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.wm-style-options button {
+  border: 1px solid #e4e9f1;
+  padding: 6px;
+  border-radius: 10px;
+  text-align: left;
+}
+.wm-style-options button[aria-pressed="true"] {
+  border-color: #0d3263;
+  background: #f2f6fb;
+  box-shadow: 0 0 0 1px #0d3263;
+}
+.wm-style-options button > span {
+  display: block;
+  padding: 7px 4px 3px;
+  font-size: 0.875rem;
+}
+.wm-style-mini {
+  padding: 9px;
+  background: #f0ede8;
+  height: 95px;
+  color: #453f37;
+  overflow: hidden;
+  position: relative;
+}
+.wm-style-mini > i {
+  display: block;
+  width: 40%;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+  margin-bottom: 10px;
+}
+.wm-style-mini strong {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.wm-style-mini > span {
+  display: block;
+  width: 32%;
+  height: 7px;
+  background: #585145;
+  margin-top: 7px;
+}
+.wm-style-mini > div {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+.wm-style-mini > div i {
+  width: 25%;
+  height: 17px;
+  background: #d4cdc2;
+}
+.wm-style-modern {
+  background: #e9eef4;
+  color: #233a56;
+}
+.wm-style-modern > span,
+.wm-style-modern > div i {
+  border-radius: 4px;
+}
+.wm-style-minimal {
+  background: var(--wm-surface);
+  color: #333;
+}
+.wm-style-classic {
+  background: #f6f0e7;
+  color: #6a4b31;
+}
+.wm-style-resort {
+  background: #e7f0ec;
+  color: #275549;
+}
+.wm-style-resort > span,
+.wm-style-resort > div i {
+  border-radius: 9px;
+}
+.wm-style-boutique {
+  background: #eee7e5;
+  color: #5d3636;
+}
+.wm-style-boutique > div i {
+  height: 24px;
+}
+.wm-radius-control {
+  font-size: 0.875rem;
+  display: block;
+}
+.wm-radius-control > span,
+.wm-radius-control small span {
+  float: right;
+  color: #667085;
+}
+.wm-radius-control input {
+  display: block;
+  width: 100%;
+  margin: 15px 0 8px;
+  accent-color: #0d3263;
+}
+.wm-radius-control small {
+  display: block;
+  color: #8a94a4;
+}
+@media (max-width: 1250px) {
+  .wm-studio-dashboard .wm-editor-grid {
+    gap: 16px;
+  }
+  .wm-studio-dashboard .wm-brand-tabs {
+    gap: 13px;
+  }
+}
+@media (max-width: 1100px) {
+  .wm-studio-dashboard {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .wm-studio-dashboard .wm-workspace {
+    padding: 0 20px 20px;
+  }
+  .wm-studio-dashboard .wm-page-heading {
+    margin: 0 -20px 20px;
+    padding: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard {
+    grid-template-columns: 1fr;
+    padding-bottom: 78px;
+  }
+  .wm-studio-dashboard .wm-sidebar {
+    width: 228px;
+  }
+  .wm-studio-dashboard .wm-topbar {
+    display: flex;
+    border-bottom: 0;
+    padding: 10px 16px;
+    height: 48px;
+  }
+  .wm-studio-dashboard .wm-topbar-right {
+    display: none;
+  }
+  .wm-studio-dashboard .wm-workspace {
+    padding: 0 16px 20px;
+  }
+  .wm-studio-dashboard .wm-page-heading {
+    margin: 0 0 20px;
+    padding: 8px 0 16px;
+  }
+  .wm-studio-dashboard .wm-page-heading h1 {
+    font-size: 1.5rem;
+  }
+  .wm-studio-dashboard .wm-heading-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    padding: 12px 16px;
+    border-top: 1px solid #e5e7eb;
+    justify-content: flex-end;
+    box-shadow: 0 -4px 15px #10182805;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-draft-state {
+    display: none;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button {
+    flex: 1;
+    justify-content: center;
+  }
+  .wm-studio-dashboard .wm-brand-tabs {
+    gap: 18px;
+  }
+  .wm-studio-dashboard .wm-brand-tabs button {
+    flex: none;
+  }
+  .wm-studio-dashboard .wm-setup {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 8px;
+  }
+  .wm-studio-dashboard .wm-setup-checks {
+    gap: 9px 12px;
+  }
+  .wm-studio-dashboard .wm-card-body {
+    padding: 12px 16px 18px;
+  }
+  .wm-style-options {
+    gap: 8px;
+  }
+  .wm-preview-dialog {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wm-studio-dashboard * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+.wm-brand-dashboard {
+  min-width: 0;
+  max-width: 100%;
+}
+.wm-studio-dashboard .wm-brand-tabs {
+  width: 100%;
+  min-width: 0;
+}
+.wm-studio-dashboard[data-editor-section="branding"] .wm-backup:not([open]) {
+  display: none;
+}
+.wm-studio-dashboard .wm-site-room small {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-site-room p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-site-cta {
+  font-size: 0.875rem;
+}
+.wm-site[data-preview-motion="calm"] .wm-site-hero > div {
+  animation: wm-preview-enter 220ms ease-out;
+}
+.wm-site[data-preview-motion="expressive"] .wm-site-hero > div {
+  animation: wm-preview-enter 400ms ease-out;
+}
+@keyframes wm-preview-enter {
+  from {
+    opacity: 0.5;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-heading-actions {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 8px;
+  }
+  .wm-studio-dashboard .wm-heading-actions:not(:has(.wm-discard)) {
+    grid-template-columns: 1fr 1fr;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button {
+    min-width: 0;
+    padding: 10px 8px;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button svg {
+    width: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wm-site * {
+    animation: none !important;
+  }
+}
+.wm-site[data-preview-style="modern"] .wm-site-hero {
+  min-height: 290px;
+}
+.wm-site[data-preview-style="minimal"] .wm-site-hero {
+  min-height: 265px;
+}
+.wm-site[data-preview-style="resort"] .wm-site-hero {
+  min-height: 350px;
+}
+.wm-site[data-preview-style="boutique"] .wm-site-hero {
+  min-height: 365px;
+}
+.wm-site[data-preview-image="editorial"] .wm-site-room img {
+  height: auto;
+  aspect-ratio: 4 / 5;
+}
+@media (max-width: 760px) {
+  .wm-site[data-preview-style] .wm-site-hero {
+    min-height: 250px;
+  }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .wm-studio-dashboard {
+    grid-template-columns: 1fr;
+  }
+  .wm-studio-dashboard .wm-sidebar {
+    position: fixed;
+    z-index: 60;
+    left: 0;
+    top: 0;
+    width: 228px;
+    height: 100dvh;
+    transform: translateX(-100%);
+    transition: transform 180ms;
+    box-shadow: 10px 0 40px #10182810;
+  }
+  .wm-studio-dashboard .wm-sidebar.is-open {
+    transform: translateX(0);
+  }
+  .wm-studio-dashboard .wm-mobile-only {
+    display: inline-flex;
+  }
+  .wm-studio-dashboard .wm-topbar {
+    display: flex;
+    height: 48px;
+    background: var(--wm-surface);
+    padding: 8px 20px;
+  }
+  .wm-studio-dashboard .wm-topbar-right {
+    display: none;
+  }
+  .wm-studio-dashboard .wm-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: #17203340;
+  }
+}
+.wm-studio-dashboard .wm-preview-dialog .wm-device-switch {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.wm-studio-dashboard .wm-preview-dialog .wm-device-switch button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  width: auto;
+  font-size: 0.875rem;
+}
+.wm-image-metadata {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #8a94a4;
+  font-size: 0.875rem;
+  margin-top: 7px;
+}
+.wm-studio-dashboard .wm-image-placeholder small {
+  font-size: 0.875rem;
+  color: #8993a2;
+}
+.wm-studio-dashboard .wm-image-placeholder {
+  flex-direction: column;
+  gap: 5px;
+}
+.wm-studio-dashboard .wm-page-heading {
+  backdrop-filter: none;
+}
+.wm-studio-dashboard {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-sidebar {
+  color: #e6edf7;
+  border-right: 1px solid #102a4b;
+}
+.wm-studio-dashboard .wm-app-brand strong {
+  color: white;
+  font-size: 1.375rem;
+}
+.wm-studio-dashboard .wm-app-brand small {
+  color: #aabbd1;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-property {
+  background: #1b3556;
+  border-color: #304965;
+}
+.wm-studio-dashboard .wm-property strong {
+  color: #f2f6fc;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-property small {
+  color: #adbed3;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-nav-group p {
+  color: #94aac4;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-nav-group button {
+  color: #c5d2e4;
+  font-size: 0.875rem;
+  min-height: 42px;
+}
+.wm-studio-dashboard .wm-nav-group button svg {
+  color: #9ab0cb;
+}
+.wm-studio-dashboard .wm-sidebar .wm-icon-button {
+  color: #e6edf7;
+}
+.wm-studio-dashboard .wm-setup.is-compact {
+  background: #1b3556;
+  border-color: #304965;
+}
+.wm-studio-dashboard .wm-setup.is-compact .wm-setup-title {
+  color: #f2f6fc;
+}
+.wm-studio-dashboard .wm-setup.is-compact .wm-setup-checks {
+  color: #bdcce0;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-setup.is-compact > small {
+  color: #9db2cc;
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-setup.is-compact progress::-webkit-progress-bar {
+  background: #314c6d;
+}
+.wm-studio-dashboard .wm-page-heading p,
+.wm-studio-dashboard .wm-section-heading p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-section-heading h2 {
+  font-size: 1.25rem;
+}
+.wm-studio-dashboard .wm-card-heading h2 {
+  font-size: 1.0625rem;
+}
+.wm-studio-dashboard .wm-card-heading p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-field label,
+.wm-studio-dashboard .wm-label,
+.wm-studio-dashboard .wm-small-label {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-field input,
+.wm-studio-dashboard .wm-field select,
+.wm-studio-dashboard .wm-field textarea {
+  font-size: 0.875rem;
+  min-height: 40px;
+}
+.wm-studio-dashboard .wm-brand-tabs button {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-button {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-button-small {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-note,
+.wm-studio-dashboard .wm-connected-logo small,
+.wm-studio-dashboard .wm-image-metadata {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.wm-studio-dashboard .wm-logo-generator strong,
+.wm-studio-dashboard .wm-logo-generator p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-draft-state {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-palette-presets button > span {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-style-options button > span {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-setup-title {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-setup-checks {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-setup p {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-font-samples span {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-font-samples small {
+  font-size: 0.875rem;
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-brand-tabs button {
+    font-size: 0.875rem;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button {
+    font-size: 0.875rem;
+  }
+  .wm-studio-dashboard .wm-setup-checks {
+    font-size: 0.875rem;
+  }
+}
+.wm-studio-dashboard {
+  --wm-primary: #1c355e;
+  --wm-ink: #1c355e;
+  --wm-muted: #596579;
+  --wm-line: #e9e2dd;
+  --wm-soft: #fff0e6;
+  background: var(--wm-brand-cream);
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-sidebar {
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  scrollbar-color: #65809f var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-app-brand > span {
+  background: var(--wm-brand-peach);
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-property,
+.wm-studio-dashboard .wm-setup.is-compact {
+  background: #294469;
+  border-color: #405778;
+}
+.wm-studio-dashboard .wm-nav-group button[aria-current] {
+  background: var(--wm-brand-peach);
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-nav-group button[aria-current] svg {
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-nav-group button:not([aria-current]):hover {
+  background: #2c486e;
+  color: white;
+}
+.wm-studio-dashboard .wm-workspace {
+  background: var(--wm-brand-cream);
+}
+.wm-studio-dashboard .wm-page-heading {
+  background: var(--wm-brand-cream);
+  border-color: #e9e2dd;
+}
+.wm-studio-dashboard .wm-page-heading h1,
+.wm-studio-dashboard .wm-section-heading h2,
+.wm-studio-dashboard .wm-card-heading h2 {
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-page-heading p,
+.wm-studio-dashboard .wm-section-heading p,
+.wm-studio-dashboard .wm-card-heading p {
+  color: #596579;
+}
+.wm-studio-dashboard .wm-card,
+.wm-studio-dashboard .wm-preview-card,
+.wm-studio-dashboard .wm-setup {
+  border-color: #eee7e1;
+}
+.wm-studio-dashboard .wm-button {
+  color: var(--wm-brand-navy);
+  border-color: #e8ded6;
+  background: var(--wm-surface);
+}
+.wm-studio-dashboard .wm-button:hover {
+  background: var(--wm-brand-soft);
+}
+.wm-studio-dashboard .wm-button-primary {
+  background: var(--wm-brand-navy);
+  color: white;
+  border-color: var(--wm-brand-navy);
+  box-shadow: none;
+}
+.wm-studio-dashboard .wm-button-primary:hover:not(:disabled) {
+  background: #152c50;
+  color: #ffffff;
+}
+.wm-studio-dashboard .wm-save-idle {
+  background: var(--wm-surface);
+  border-color: #e9e2dd;
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-save-idle:hover {
+  background: var(--wm-brand-soft);
+}
+.wm-studio-dashboard .wm-brand-tabs {
+  border-color: #e9e2dd;
+}
+.wm-studio-dashboard .wm-brand-tabs button[aria-selected="true"] {
+  color: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-logo-generator {
+  background: var(--wm-brand-soft);
+  border-color: #f7dfcf;
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-logo-generator p {
+  color: #596579;
+}
+.wm-studio-dashboard .wm-connected-logo > div,
+.wm-studio-dashboard .wm-identity-grid .wm-image-well {
+  background: #fdfaf7;
+  border-color: #e9e2dd;
+}
+.wm-studio-dashboard .wm-palette-presets button[aria-pressed="true"] {
+  background: var(--wm-brand-soft);
+  border-color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup progress::-webkit-progress-value {
+  background: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup.is-compact progress::-webkit-progress-value {
+  background: var(--wm-brand-peach);
+}
+.wm-studio-dashboard .wm-setup-title span {
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup.is-compact .wm-setup-title span {
+  color: var(--wm-brand-peach);
+}
+.wm-studio-dashboard .wm-preview-heading {
+  border-color: #eee7e1;
+}
+.wm-studio-dashboard .wm-device-switch {
+  background: #f8f3ef;
+}
+.wm-studio-dashboard .wm-device-switch button[aria-pressed="true"] {
+  color: var(--wm-brand-navy);
+  background: var(--wm-brand-soft);
+}
+.wm-studio-dashboard .wm-open-preview {
+  color: var(--wm-brand-navy) !important;
+}
+.wm-studio-dashboard .wm-type-preview,
+.wm-studio-dashboard .wm-font-samples > div {
+  background: #fdfaf7;
+  border-color: #eee7e1;
+}
+.wm-studio-dashboard .wm-section-help {
+  background: #fff4ec;
+  color: var(--wm-brand-navy);
+  border-color: #f0e2d8;
+}
+.wm-studio-dashboard .wm-backup,
+.wm-studio-dashboard .wm-footer {
+  border-color: #e9e2dd;
+}
+.wm-studio-dashboard .wm-radius-control input {
+  accent-color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-field input:focus,
+.wm-studio-dashboard .wm-field select:focus,
+.wm-studio-dashboard .wm-field textarea:focus {
+  border-color: #738baa;
+  box-shadow: 0 0 0 3px #1c355e0d;
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-topbar {
+    background: var(--wm-brand-cream);
+  }
+  .wm-studio-dashboard .wm-page-heading {
+    background: transparent;
+  }
+  .wm-studio-dashboard .wm-heading-actions {
+    background: var(--wm-brand-cream);
+    border-color: #e9e2dd;
+  }
+}
+.wm-studio-dashboard .wm-setup-stepper {
+  border-radius: var(--wm-radius-card);
+}
+.wm-setup-overview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.wm-setup-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e7f6ef;
+  color: #18a86d;
+}
+.wm-setup-intro {
+  flex: 1;
+  min-width: 0;
+}
+.wm-setup-intro > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.wm-root .wm-setup-intro h2 {
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--wm-brand-navy);
+}
+.wm-setup-badge {
+  border-radius: 20px;
+  background: #e5f6ed;
+  color: #159961;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 3px 12px;
+}
+.wm-root .wm-setup-intro p {
+  font-size: 0.875rem;
+  margin-top: 5px;
+  color: #7a899e;
+  line-height: 1.5;
+}
+.wm-setup-meter {
+  width: 46%;
+}
+.wm-setup-meter > small {
+  display: block;
+  font-size: 0.875rem;
+  color: #7a899e;
+  margin-bottom: 8px;
+}
+.wm-setup-meter > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.wm-setup-meter > div > span {
+  font-size: 0.875rem;
+  color: #647997;
+  font-weight: 600;
+}
+.wm-studio-dashboard .wm-setup-stepper progress {
+  height: 9px;
+  flex: 1;
+}
+.wm-setup-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wm-setup-steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border: 1px solid #e6ebf3;
+  border-radius: 9px;
+  padding: 12px 10px;
+  position: relative;
+}
+.wm-step-number {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #929cac;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.wm-setup-steps strong {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--wm-brand-navy);
+  line-height: 1.4;
+}
+.wm-setup-steps small {
+  display: block;
+  font-size: 0.875rem;
+  color: #8290a6;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+.wm-setup-steps .is-complete .wm-step-number {
+  background: #03935f;
+}
+.wm-setup-steps .is-current {
+  border-color: #8dabef;
+  background: #f9fbff;
+}
+.wm-setup-steps .is-current .wm-step-number {
+  background: #3376ef;
+}
+.wm-step-arrow {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #acb9cd;
+}
+@media (max-width: 1350px) {
+  .wm-setup-steps {
+    gap: 14px;
+  }
+  .wm-step-arrow {
+    right: -14px;
+    width: 12px;
+  }
+  .wm-setup-steps li {
+    padding: 10px 8px;
+    gap: 7px;
+  }
+}
+@media (max-width: 1100px) {
+  .wm-setup-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .wm-step-arrow {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .wm-setup-overview {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .wm-setup-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .wm-root .wm-setup-intro h2 {
+    font-size: 1.0625rem;
+  }
+  .wm-setup-intro > div {
+    gap: 10px;
+  }
+  .wm-setup-meter {
+    width: 100%;
+    grid-column: 1/-1;
+  }
+  .wm-setup-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .wm-setup-steps li {
+    align-items: flex-start;
+    padding: 10px 8px;
+  }
+  .wm-step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.875rem;
+  }
+}
+.wm-studio-dashboard .wm-setup-icon {
+  background: var(--wm-brand-soft);
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup-badge {
+  background: #ffdec9;
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup-stepper progress::-webkit-progress-value {
+  background: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup-stepper progress::-webkit-progress-bar {
+  background: #eee7e1;
+}
+.wm-studio-dashboard .wm-setup-stepper progress {
+  accent-color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup-steps li {
+  border-color: #eee7e1;
+}
+.wm-studio-dashboard .wm-step-number {
+  background: #ded8d3;
+  color: #596579;
+}
+.wm-studio-dashboard .wm-setup-steps .is-complete .wm-step-number {
+  background: var(--wm-brand-navy);
+  color: white;
+}
+.wm-studio-dashboard .wm-setup-steps .is-current {
+  border-color: #e6bfa5;
+  background: #fff4ec;
+}
+.wm-studio-dashboard .wm-setup-steps .is-current .wm-step-number {
+  background: var(--wm-brand-peach);
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-step-arrow {
+  color: #b4a69c;
+}
+.wm-studio-dashboard .wm-setup-meter > small,
+.wm-studio-dashboard .wm-setup-steps small {
+  color: #7a8190;
+}
+.wm-studio-dashboard .wm-setup-meter > div > span {
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup-checks svg {
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-setup.is-compact .wm-setup-checks svg {
+  color: var(--wm-brand-peach);
+}
+.wm-identity-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.wm-identity-icon {
+  display: grid;
+  place-items: center;
+  background: var(--wm-brand-soft);
+  color: var(--wm-brand-navy);
+  flex-shrink: 0;
+}
+.wm-identity-heading > div {
+  flex: 1;
+}
+.wm-root .wm-identity-heading h2 {
+  font-family: Georgia, serif;
+  color: var(--wm-brand-navy);
+}
+.wm-root .wm-identity-heading p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #667085;
+  margin-top: 5px;
+}
+.wm-studio-dashboard .wm-identity-heading .wm-button {
+  font-size: 0.875rem;
+  padding: 8px;
+  white-space: nowrap;
+}
+.wm-identity-help {
+  padding: 12px;
+  background: #fff4ec;
+  color: #596579;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin-bottom: 18px !important;
+  border-radius: var(--wm-radius-control);
+}
+.wm-identity-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.wm-identity-panel {
+  min-width: 0;
+  border: 1px solid #e9e7e4;
+  border-radius: 12px;
+}
+.wm-identity-panel > header {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.wm-root .wm-identity-panel h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--wm-brand-navy);
+}
+.wm-root .wm-identity-panel header p {
+  font-size: 0.875rem;
+  color: #778399;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+.wm-identity-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: var(--wm-brand-soft);
+  color: var(--wm-brand-navy);
+}
+.wm-logo-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ece9e5;
+  border-radius: 9px;
+  background-color: var(--wm-surface);
+  background-image:
+    linear-gradient(45deg, #f3f3f3 25%, transparent 25%),
+    linear-gradient(-45deg, #f3f3f3 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f3f3f3 75%),
+    linear-gradient(-45deg, transparent 75%, #f3f3f3 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}
+.wm-logo-stage img {
+  max-width: 100%;
+  object-fit: contain;
+}
+.wm-logo-stage > span {
+  color: #8993a2;
+  font-size: 0.875rem;
+}
+.wm-logo-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wm-logo-file > span {
+  background: #f5f6f8;
+  color: #718096;
+  padding: 8px;
+  border-radius: var(--wm-radius-control);
+}
+.wm-logo-file > div {
+  min-width: 0;
+}
+.wm-logo-file strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #465670;
+  overflow-wrap: anywhere;
+}
+.wm-logo-file small {
+  display: block;
+  color: #8993a2;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+.wm-favicon-panel .wm-image-field {
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 8px 12px;
+}
+.wm-favicon-panel .wm-image-field > .wm-label {
+  display: none;
+}
+.wm-studio-dashboard .wm-favicon-panel .wm-image-well {
+  grid-column: 1;
+  grid-row: 1/3;
+  height: 86px;
+  min-height: 86px;
+  padding: 8px;
+  background: #fdf8f4;
+  border: 1px solid #ede5df;
+}
+.wm-favicon-panel .wm-image-well img {
+  max-height: 64px;
+  max-width: 64px;
+  object-fit: contain;
+}
+.wm-favicon-panel .wm-image-metadata {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  font-size: 0.875rem;
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+.wm-favicon-panel .wm-image-actions {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  width: min(100%, 220px);
+  margin: 0;
+}
+.wm-favicon-panel .wm-image-actions .wm-button {
+  min-height: 44px;
+}
+.wm-favicon-panel .wm-image-actions .wm-icon-button {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.wm-favicon-panel .wm-advanced {
+  grid-column: 1/-1;
+  margin-top: 5px;
+  padding: 0;
+}
+.wm-favicon-panel .wm-advanced summary {
+  font-size: 0.875rem;
+  padding: 8px;
+}
+.wm-studio-dashboard .wm-favicon-panel .wm-image-placeholder span {
+  font-size: 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.wm-studio-dashboard .wm-favicon-panel .wm-image-placeholder small {
+  display: none;
+}
+.wm-browser-sample {
+  border-top: 1px solid #eeebe7;
+}
+.wm-browser-sample strong {
+  font-size: 0.875rem;
+  color: var(--wm-brand-navy);
+}
+.wm-browser-sample p {
+  font-size: 0.875rem;
+  color: #8993a2;
+  margin-top: 4px !important;
+}
+.wm-browser-example {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0f1f3;
+  border-radius: 9px;
+  min-width: 0;
+  color: #667085;
+}
+.wm-browser-dots {
+  display: flex;
+  gap: 4px;
+}
+.wm-browser-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c2c8d1;
+}
+.wm-browser-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  background: var(--wm-surface);
+  border-radius: 7px;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  color: #465670;
+}
+.wm-browser-tab > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.wm-browser-tab img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+.wm-browser-tab svg {
+  flex-shrink: 0;
+}
+.wm-palette-generator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #fff4ec;
+  border-radius: 12px;
+}
+.wm-palette-generator-copy {
+  display: flex;
+  align-items: flex-start;
+}
+.wm-palette-generator-copy > span {
+  background: #ffeadc;
+  color: var(--wm-brand-navy);
+  border-radius: 10px;
+}
+.wm-root .wm-palette-generator h3 {
+  color: var(--wm-brand-navy);
+  line-height: 1.4;
+}
+.wm-palette-generator p {
+  color: #778399;
+  line-height: 1.6;
+  margin: 6px 0 14px !important;
+}
+.wm-studio-dashboard .wm-palette-generator-copy .wm-button {
+  background: var(--wm-brand-navy);
+  color: white;
+  border-color: var(--wm-brand-navy);
+  padding: 9px 12px;
+}
+.wm-studio-dashboard .wm-palette-generator-copy .wm-button:hover:not(:disabled) {
+  background: #152c50;
+  color: #ffffff;
+  border-color: #152c50;
+}
+.wm-studio-dashboard .wm-palette-generator-copy .wm-button:disabled {
+  background: #e9edf2;
+  color: #58677b;
+  border-color: #d4dce5;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.wm-logo-color-suggestions {
+  border-left: 1px solid #f0dfd3;
+  padding-left: 20px;
+  min-width: 0;
+}
+.wm-logo-color-suggestions h4 {
+  font-size: 0.875rem;
+  color: var(--wm-brand-navy);
+  font-weight: 600;
+}
+.wm-logo-color-suggestions > div {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.wm-logo-color-suggestions > div > div {
+  text-align: center;
+  min-width: 0;
+}
+.wm-logo-color-suggestions > div span {
+  display: block;
+  border-radius: 6px;
+  border: 1px solid #10182808;
+}
+.wm-logo-color-suggestions strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #465670;
+  margin-top: 7px;
+}
+.wm-logo-color-suggestions small {
+  display: block;
+  font-size: 0.875rem;
+  color: #8993a2;
+  margin-top: 5px;
+}
+@media (max-width: 1400px) {
+  .wm-identity-panels {
+    grid-template-columns: 1fr;
+  }
+  .wm-palette-generator {
+    grid-template-columns: 1fr;
+  }
+  .wm-logo-color-suggestions {
+    border-left: 0;
+    border-top: 1px solid #f0dfd3;
+    padding: 15px 0 0;
+  }
+  .wm-logo-color-suggestions > div span {
+    height: 42px;
+  }
+  .wm-logo-color-suggestions strong,
+  .wm-logo-color-suggestions small {
+    font-size: 0.875rem;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-logo-identity {
+    padding: 16px;
+  }
+  .wm-identity-heading {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .wm-root .wm-identity-heading h2 {
+    font-size: 1.4375rem;
+  }
+  .wm-identity-heading > div {
+    min-width: 180px;
+  }
+  .wm-identity-heading .wm-button {
+    margin-left: 58px;
+  }
+  .wm-identity-panel {
+    padding: 13px;
+  }
+  .wm-palette-generator {
+    padding: 16px;
+  }
+}
+/* .wm-studio-dashboard .wm-logo-identity {
+  padding: 18px;
+} */
+.wm-identity-heading {
+  margin-bottom: 16px;
+}
+.wm-root .wm-identity-heading h2 {
+  font-size: 1.5625rem;
+}
+.wm-identity-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+}
+.wm-identity-panel {
+  padding: 13px;
+}
+.wm-identity-panel > header {
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.wm-logo-stage {
+  height: 132px;
+  padding: 14px;
+}
+.wm-logo-stage img {
+  max-height: 106px;
+}
+.wm-logo-file {
+  padding-top: 12px;
+}
+.wm-browser-sample {
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.wm-browser-example {
+  margin-top: 8px;
+  padding: 8px;
+}
+.wm-palette-generator {
+  padding: 15px;
+  gap: 16px;
+  margin-top: 15px;
+}
+.wm-palette-generator-copy {
+  gap: 10px;
+}
+.wm-palette-generator-copy > span {
+  padding: 8px;
+}
+.wm-root .wm-palette-generator h3 {
+  font-size: 0.875rem;
+}
+.wm-palette-generator p {
+  font-size: 0.875rem;
+  margin-bottom: 10px !important;
+}
+.wm-logo-color-suggestions > div span {
+  height: 26px;
+}
+.wm-identity-presets {
+  margin-top: 18px;
+}
+.wm-identity-presets > header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.wm-root .wm-identity-presets h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--wm-brand-navy);
+}
+.wm-identity-presets header p {
+  font-size: 0.875rem;
+  color: #7a899e;
+  margin-top: 4px;
+}
+.wm-preset-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.wm-studio-dashboard .wm-preset-actions .wm-button {
+  font-size: 0.875rem;
+  padding: 6px 8px;
+  min-height: 28px;
+}
+.wm-identity-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.wm-identity-palette-grid button {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border: 1px solid #e6e8ec;
+  border-radius: var(--wm-radius-control);
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+  min-width: 0;
+  transition:
+    border-color 180ms,
+    background 180ms;
+}
+.wm-identity-palette-grid button[aria-pressed="true"] {
+  border-color: var(--wm-brand-navy);
+  background: #fff4ec;
+}
+.wm-identity-palette-grid button:hover {
+  border-color: #9aabc1;
+}
+.wm-identity-palette-grid button > div {
+  padding: 10px;
+  min-width: 0;
+  flex: 1;
+}
+.wm-identity-palette-grid strong {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--wm-brand-navy);
+  line-height: 1.4;
+}
+.wm-identity-palette-grid small {
+  display: block;
+  font-size: 0.875rem;
+  color: #72839c;
+  margin-top: 3px;
+}
+.wm-identity-palette-grid button > img {
+  width: 33%;
+  min-width: 45px;
+  object-fit: cover;
+}
+.wm-identity-palette-grid button > div > span {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+}
+.wm-identity-palette-grid i {
+  width: 17px;
+  height: 17px;
+  display: block;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.wm-palette-selected {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--wm-brand-navy);
+  color: white;
+  border: 2px solid white;
+}
+.wm-custom-palette {
+  border: 1px solid #eedfd3;
+  border-radius: 9px;
+  padding: 15px;
+  margin-top: 12px;
+  background: var(--wm-brand-cream);
+}
+.wm-custom-palette > p {
+  font-size: 0.875rem;
+  color: #667085;
+  margin-top: 8px;
+}
+@media (max-width: 1400px) {
+  .wm-identity-palette-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .wm-identity-palette-grid {
+    grid-template-columns: 1fr;
+  }
+  .wm-identity-palette-grid button > img {
+    width: 85px;
+  }
+  .wm-identity-palette-grid strong {
+    font-size: 0.875rem;
+  }
+  .wm-identity-palette-grid small {
+    font-size: 0.875rem;
+  }
+  .wm-custom-palette .wm-three-columns {
+    grid-template-columns: 1fr;
+  }
+}
+.wm-studio-dashboard .wm-brand-colors-workspace {
+  padding: 18px;
+}
+.wm-brand-colors-workspace > .wm-palette-generator {
+  margin-top: 0;
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-brand-colors-workspace {
+    padding: 16px;
+  }
+}
+.wm-studio-dashboard .wm-editor-grid {
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+}
+.wm-studio-dashboard .wm-main,
+.wm-studio-dashboard .wm-workspace,
+.wm-studio-dashboard .wm-editor-column,
+.wm-studio-dashboard .wm-editor-fields,
+.wm-studio-dashboard .wm-preview-column {
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-identity-panels {
+  grid-template-columns: 1fr;
+}
+.wm-studio-dashboard .wm-palette-generator {
+  grid-template-columns: 1fr;
+}
+.wm-studio-dashboard .wm-logo-color-suggestions {
+  border-left: 0;
+  border-top: 1px solid #f0dfd3;
+  padding: 15px 0 0;
+}
+.wm-studio-dashboard .wm-identity-palette-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.wm-studio-dashboard .wm-heading-actions {
+  flex-wrap: wrap;
+}
+.wm-studio-dashboard .wm-card-heading {
+  flex-wrap: wrap;
+}
+.wm-studio-dashboard .wm-logo-generator {
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-collection-body,
+.wm-studio-dashboard .wm-image-field {
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-field textarea {
+  max-width: 100%;
+}
+@media (min-width: 1800px) {
+  .wm-studio-dashboard .wm-identity-panels {
+    grid-template-columns: 1fr 1fr;
+  }
+  .wm-studio-dashboard .wm-palette-generator {
+    grid-template-columns: 1fr 1fr;
+  }
+  .wm-studio-dashboard .wm-logo-color-suggestions {
+    border-top: 0;
+    border-left: 1px solid #f0dfd3;
+    padding: 0 0 0 18px;
+  }
+  .wm-studio-dashboard .wm-identity-palette-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1100px) {
+  .wm-studio-dashboard .wm-editor-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wm-studio-dashboard .wm-preview-column {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-page-heading {
+    display: block;
+  }
+  .wm-studio-dashboard .wm-two-columns,
+  .wm-studio-dashboard .wm-three-columns {
+    grid-template-columns: 1fr;
+  }
+  .wm-studio-dashboard .wm-identity-palette-grid {
+    grid-template-columns: 1fr;
+  }
+  .wm-studio-dashboard .wm-setup-intro > div {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .wm-studio-dashboard .wm-preset-actions {
+    width: 100%;
+  }
+  .wm-studio-dashboard .wm-preset-actions .wm-button {
+    flex: 1;
+    justify-content: center;
+  }
+  .wm-studio-dashboard .wm-preview-dialog > header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .wm-studio-dashboard .wm-preview-dialog .wm-preview-page {
+    flex: 1;
+    min-width: 100px;
+  }
+  .wm-studio-dashboard .wm-identity-heading > div {
+    min-width: 0;
+  }
+  .wm-studio-dashboard .wm-identity-heading > .wm-button {
+    margin-left: 0;
+  }
+  .wm-studio-dashboard .wm-type-preview h3 {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 380px) {
+  .wm-studio-dashboard .wm-heading-actions {
+    padding: 10px;
+    gap: 5px;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button {
+    font-size: 0.875rem;
+    padding: 9px 5px;
+  }
+  .wm-studio-dashboard .wm-heading-actions .wm-button svg {
+    display: none;
+  }
+  .wm-studio-dashboard .wm-favicon-panel .wm-image-field {
+    grid-template-columns: 70px minmax(0, 1fr);
+  }
+  .wm-studio-dashboard .wm-favicon-panel .wm-image-well {
+    height: 70px;
+    min-height: 70px;
+  }
+  .wm-studio-dashboard .wm-logo-color-suggestions strong {
+    font-size: 0.875rem;
+  }
+}
+.wm-actual-preview {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+.wm-actual-preview iframe {
+  display: block;
+  border: 0;
+  transform-origin: top left;
+  background: var(--wm-surface);
+  max-width: none;
+}
+/* Scale the complete device, keeping the website's CSS viewport at its actual size. */
+.wm-device-model {
+  position: absolute;
+  top: calc(50% - 10px);
+  left: 50%;
+  transform-origin: center;
+  max-width: none;
+}
+.wm-device-shell {
+  position: relative;
+  background: #202630;
+  border-radius: 18px;
+  box-shadow:
+    0 10px 30px #17203326,
+    inset 0 0 0 2px #47505c;
+}
+.wm-device-screen {
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+.wm-device-model.is-desktop .wm-device-screen {
+  border-radius: 0 0 5px 5px;
+}
+.wm-device-browser {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 0 16px;
+  color: #667085;
+  background: #eef0f3;
+  border-radius: 5px 5px 0 0;
+  font-size: 0.875rem;
+}
+.wm-device-browser > span:last-child {
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 70px;
+}
+.wm-device-browser-dots {
+  display: flex;
+  gap: 7px;
+}
+.wm-device-browser-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #bac1ca;
+}
+.wm-device-stand {
+  height: 62px;
+  display: grid;
+  justify-items: center;
+}
+.wm-device-stand i {
+  display: block;
+  height: 48px;
+  width: 130px;
+  background: linear-gradient(#a4acb7, #d3d8df);
+  clip-path: polygon(25% 0, 75% 0, 88% 100%, 12% 100%);
+}
+.wm-device-stand > span {
+  width: 290px;
+  height: 14px;
+  background: #bdc4ce;
+  border-radius: 12px 12px 5px 5px;
+}
+.wm-device-model.is-tablet .wm-device-shell {
+  border-radius: 30px;
+}
+.wm-device-model.is-tablet .wm-device-screen {
+  border-radius: 13px;
+}
+.wm-device-camera {
+  position: absolute;
+  top: 6px;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #080e17;
+  box-shadow: inset 0 0 0 1px #56647b;
+}
+.wm-device-model.is-mobile .wm-device-shell {
+  border-radius: 46px;
+}
+.wm-device-model.is-mobile .wm-device-screen {
+  border-radius: 0;
+}
+.wm-device-statusbar {
+  height: 28px;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  color: #172033;
+  border-radius: 32px 32px 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.wm-device-statusbar > i {
+  width: 80px;
+  height: 18px;
+  border-radius: 20px;
+  background: #161c26;
+}
+.wm-device-statusbar > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wm-device-home {
+  height: 20px;
+  display: grid;
+  place-items: center;
+  background: white;
+  border-radius: 0 0 32px 32px;
+}
+.wm-device-home > i {
+  width: 116px;
+  height: 4px;
+  background: #202630;
+  border-radius: 4px;
+}
+.wm-device-label {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  color: #475467;
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+.wm-device-label > span {
+  margin-left: 8px;
+  color: #667085;
+}
+.wm-preview-loading,
+.wm-preview-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 24px;
+  text-align: center;
+  color: #667085;
+  font-size: 0.875rem;
+  background: #fafbfc;
+}
+.wm-preview-updating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #ffffffee;
+  color: var(--wm-brand-navy);
+  font-size: 0.875rem;
+  box-shadow: 0 1px 8px #10182814;
+  pointer-events: none;
+}
+.wm-studio-dashboard .wm-preview-viewport:has(.wm-actual-preview) {
+  overflow: hidden;
+}
+.wm-full-preview:has(.wm-actual-preview) {
+  height: calc(90vh - 90px);
+  padding: 0;
+  overflow: hidden;
+}
+.wm-full-preview:has(.wm-actual-preview) > .wm-actual-preview {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.wm-actual-preview iframe:focus-visible {
+  outline: 2px solid var(--wm-brand-navy);
+  outline-offset: -2px;
+}
+@media (max-width: 760px) {
+  .wm-full-preview:has(.wm-actual-preview) {
+    height: calc(100dvh - 130px);
+  }
+}
+.wm-studio-dashboard .wm-setup-stepper {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px;
+}
+.wm-setup-stepper .wm-setup-overview {
+  margin: 0;
+  gap: 16px;
+  width: 36%;
+  flex-shrink: 0;
+}
+.wm-setup-stepper .wm-setup-icon {
+  border-radius: 12px;
+}
+.wm-setup-stepper .wm-setup-intro > div {
+  gap: 10px;
+}
+.wm-root .wm-setup-stepper .wm-setup-intro h2 {
+  font-size: 1.1875rem;
+}
+.wm-root .wm-setup-stepper .wm-setup-intro p {
+  font-size: 0.875rem;
+}
+.wm-setup-journey {
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid #e9e2dd;
+  padding-left: 20px;
+}
+.wm-setup-count {
+  display: block;
+  font-size: 0.875rem;
+  color: #667085;
+  margin-bottom: 10px;
+}
+.wm-setup-stepper .wm-setup-steps {
+  display: flex;
+  gap: 0;
+  justify-content: space-between;
+}
+.wm-setup-stepper .wm-setup-steps li {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0 3px;
+}
+.wm-setup-stepper .wm-setup-steps li::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  top: 14px;
+  left: 50%;
+  width: 100%;
+  background: #dedfe4;
+}
+.wm-setup-stepper .wm-setup-steps li:last-child::after {
+  display: none;
+}
+.wm-setup-stepper .wm-setup-steps li.is-complete::after {
+  background: var(--wm-brand-navy);
+}
+.wm-setup-stepper .wm-step-number {
+  position: relative;
+  z-index: 1;
+  width: 29px;
+  height: 29px;
+  border: 2px solid #dedfe4;
+  background: var(--wm-brand-cream);
+  color: #667085;
+}
+.wm-studio-dashboard .wm-setup-stepper .is-complete .wm-step-number {
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  color: white;
+}
+.wm-studio-dashboard .wm-setup-stepper .is-current .wm-step-number {
+  background: var(--wm-brand-peach);
+  border-color: var(--wm-brand-navy);
+  color: var(--wm-brand-navy);
+  outline-offset: 3px;
+}
+.wm-setup-stepper .wm-setup-steps strong {
+  font-size: 0.875rem;
+  white-space: normal;
+  line-height: 1.5;
+}
+.wm-setup-continue {
+  border-left: 1px solid #e9e2dd;
+  padding-left: 20px;
+  flex-shrink: 0;
+}
+.wm-studio-dashboard .wm-setup-continue .wm-button {
+  min-height: 46px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  gap: 12px;
+  white-space: nowrap;
+}
+@media (max-width: 1450px) {
+  .wm-studio-dashboard .wm-setup-stepper {
+    gap: 16px;
+    padding: 18px;
+    flex-wrap: wrap;
+  }
+  .wm-setup-stepper .wm-setup-overview {
+    width: auto;
+    flex: 1;
+  }
+  .wm-setup-journey {
+    order: 3;
+    flex-basis: 100%;
+    padding: 0;
+    border: 0;
+  }
+  .wm-setup-count {
+    margin-bottom: 12px;
+  }
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-setup-stepper {
+    padding: 16px;
+  }
+  .wm-setup-stepper .wm-setup-overview {
+    display: flex;
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .wm-root .wm-setup-stepper .wm-setup-intro h2 {
+    font-size: 1.0625rem;
+  }
+  .wm-setup-stepper .wm-setup-steps strong {
+    font-size: 0.875rem;
+  }
+  .wm-setup-stepper .wm-step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.875rem;
+  }
+  .wm-setup-stepper .wm-setup-steps li::after {
+    top: 12px;
+  }
+  .wm-setup-stepper .wm-step-number svg {
+    width: 14px;
+  }
+  .wm-setup-continue {
+    order: 4;
+    border: 0;
+    padding: 0;
+    width: 100%;
+  }
+  .wm-studio-dashboard .wm-setup-continue .wm-button {
+    width: 100%;
+    justify-content: center;
+    min-height: 40px;
+  }
+}
+.wm-studio-dashboard .wm-setup-stepper .wm-setup-steps li {
+  background: transparent;
+  border: 0;
+  isolation: isolate;
+}
+.wm-studio-dashboard .wm-setup-stepper .wm-setup-steps li::after {
+  z-index: -1;
+}
+.wm-studio-dashboard .wm-setup-stepper .wm-setup-steps li > div {
+  position: relative;
+  z-index: 1;
+}
+.wm-studio-dashboard .wm-setup-stepper .wm-step-number {
+  z-index: 2;
+  box-shadow: 0 0 0 5px #fff;
+}
+.wm-studio-dashboard .wm-setup-stepper .is-current .wm-step-number {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--wm-surface),
+    0 0 0 4px var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-brand-colors-workspace .wm-palette-generator {
+  grid-template-columns: minmax(0, 1fr);
+}
+.wm-studio-dashboard .wm-brand-colors-workspace .wm-logo-color-suggestions {
+  border-left: 0;
+  border-top: 1px solid #f0dfd3;
+  padding: 15px 0 0;
+}
+.wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 480px) {
+  .wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid button > div {
+    padding: 8px;
+  }
+  .wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid strong {
+    font-size: 0.875rem;
+  }
+  .wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid small {
+    font-size: 0.875rem;
+  }
+  .wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid button > img {
+    width: 28%;
+    min-width: 32px;
+  }
+  .wm-studio-dashboard .wm-brand-colors-workspace .wm-identity-palette-grid i {
+    width: 13px;
+    height: 13px;
+  }
+}
+.wm-studio-dashboard .wm-logo-identity .wm-identity-panels {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.wm-studio-dashboard .wm-card {
+  box-shadow: 0 3px 16px #1c355e04;
+  border-radius: var(--wm-radius-card);
+}
+.wm-studio-dashboard .wm-identity-panel {
+  background: #fdfaf7;
+  padding: 18px;
+  border-radius: 12px;
+}
+.wm-studio-dashboard .wm-identity-panels {
+  gap: 18px;
+}
+.wm-studio-dashboard .wm-setup-stepper {
+  box-shadow: none;
+  background: var(--wm-surface);
+}
+.wm-studio-dashboard .wm-preview-card {
+  box-shadow: 0 4px 20px #1c355e06;
+}
+.wm-studio-dashboard .wm-card-heading {
+  border-bottom: 0;
+}
+.wm-studio-dashboard .wm-type-preview {
+  background: #f8fafc;
+}
+.wm-studio-dashboard .wm-font-samples > div {
+  background: #f5f7fa;
+}
+.wm-studio-dashboard .wm-identity-palette-grid button {
+  border-color: transparent;
+  background: #f8f9fb;
+}
+.wm-studio-dashboard .wm-identity-palette-grid button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--wm-brand-soft);
+  box-shadow: inset 0 0 0 1px var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-identity-palette-grid button:hover {
+  background: #f1f4f8;
+}
+.wm-studio-dashboard .wm-style-options button {
+  border-color: transparent;
+  background: #f8f9fb;
+}
+.wm-studio-dashboard .wm-style-options button[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--wm-brand-soft);
+  box-shadow: inset 0 0 0 1px var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-custom-palette {
+  background: #fff4ec;
+}
+.wm-studio-dashboard .wm-logo-stage {
+  border: 0;
+}
+.wm-studio-dashboard .wm-browser-sample {
+  border-color: #ebe6e0;
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-identity-panel {
+    padding: 14px;
+  }
+}
+.wm-studio-dashboard .wm-logo-identity .wm-identity-panels {
+  gap: 22px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-identity-panel {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-favicon-panel {
+  padding-top: 22px;
+  border-top: 1px solid #eee7e1;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-identity-panel > header {
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-logo-stage {
+  border: 0;
+  border-radius: 10px;
+  height: 160px;
+  padding: 20px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-logo-stage img {
+  max-height: 125px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-logo-file {
+  padding-top: 14px;
+  gap: 12px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-logo-file strong {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-logo-file small {
+  font-size: 0.875rem;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-favicon-panel .wm-image-well {
+  border: 0;
+  background: #fff4ec;
+  border-radius: 10px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-browser-sample {
+  border: 0;
+  margin-top: 16px;
+  padding-top: 0;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-browser-example {
+  padding: 12px;
+  border-radius: 10px;
+}
+.wm-studio-dashboard .wm-logo-identity .wm-identity-heading {
+  padding-bottom: 4px;
+  margin-bottom: 22px;
+}
+@media (max-width: 760px) {
+  .wm-studio-dashboard .wm-logo-identity .wm-logo-stage {
+    height: 145px;
+    padding: 16px;
+  }
+  .wm-studio-dashboard .wm-logo-identity .wm-favicon-panel {
+    padding-top: 18px;
+  }
+  .wm-studio-dashboard .wm-logo-identity .wm-identity-panels {
+    gap: 18px;
+  }
+}
+.wm-studio-dashboard .wm-card.wm-logo-identity {
+  border-radius: var(--wm-radius-card);
+  background: var(--wm-surface);
+}
+
+/* Setup steps open the relevant editor without saving changes. */
+.wm-root .wm-setup-stepper .wm-setup-step-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+  border-radius: var(--wm-radius-control);
+}
+.wm-setup-step-link strong {
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .wm-setup-stepper .wm-setup-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+  .wm-setup-stepper .wm-setup-steps li:nth-child(3n)::after {
+    display: none;
+  }
+}
+.wm-setup-step-link:hover .wm-step-number {
+  filter: brightness(1.12);
+}
+.wm-setup-step-link:active {
+  transform: translateY(1px);
+}
+
+/* Official Patel HMS mark on the dark studio sidebar. */
+.wm-studio-dashboard .wm-brand-logo {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 9px;
+}
+.wm-studio-dashboard .wm-brand-logo img {
+  display: block;
+  width: 112px;
+  height: auto;
+  object-fit: contain;
+}
+.wm-studio-dashboard .wm-brand-logo small {
+  margin: 0;
+  color: #d5dfed;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+}
+
+/* Let the sidebar scroll instead of compressing its header on short screens. */
+.wm-studio-dashboard .wm-sidebar > * {
+  flex-shrink: 0;
+}
+
+/* Account actions belong to the editor header, never a separate full-width strip. */
+.wm-account-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  border-left: 1px solid #e9e2dd;
+  padding-left: 16px;
+}
+.wm-account-bar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--wm-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 180ms,
+    color 180ms;
+}
+.wm-account-bar button:hover {
+  background: #fff0e6;
+  color: var(--wm-brand-navy);
+}
+.wm-studio-dashboard .wm-page-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  position: relative;
+  gap: 16px;
+}
+.wm-studio-dashboard .wm-page-heading > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.wm-studio-dashboard .wm-app-brand {
+  padding-top: 2px;
+}
+@media (max-width: 1100px) {
+  .wm-studio-dashboard .wm-page-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wm-studio-dashboard .wm-page-heading > .wm-heading-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .wm-studio-dashboard .wm-page-heading > .wm-account-bar {
+    grid-column: 2;
+    grid-row: 1;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+.wm-domain-card {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.wm-domain-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.wm-domain-heading h2 {
+  font-size: 1.125rem;
+  margin: 0 0 6px;
+}
+.wm-domain-card p {
+  color: #667085;
+  font-size: 0.875rem;
+  margin: 6px 0;
+}
+.wm-domain-card label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.wm-domain-controls {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.wm-domain-input {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #d8dfe8;
+  border-radius: var(--wm-radius-control);
+  background: #fff;
+  overflow: hidden;
+}
+.wm-domain-input:focus-within {
+  outline: 2px solid var(--wm-brand-navy);
+  outline-offset: 2px;
+}
+.wm-domain-input input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  padding: 12px;
+  outline: none;
+  font: inherit;
+}
+.wm-domain-input span {
+  padding: 12px;
+  background: #f5f7fa;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+.wm-domain-card .wm-domain-status {
+  margin-top: 12px;
+}
+.wm-domain-card .wm-domain-error {
+  color: #b42318;
+}
+.wm-domain-card .wm-domain-message {
+  color: #087443;
+}
+.wm-domain-card a {
+  display: inline-block;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+  font-size: 0.875rem;
+}
+@media (max-width: 640px) {
+  .wm-domain-heading {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .wm-domain-controls {
+    flex-direction: column;
+  }
+  .wm-domain-input span {
+    font-size: 0.875rem;
+    padding: 10px 8px;
+  }
+  .wm-domain-card {
+    padding: 16px;
+  }
+}

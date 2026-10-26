@@ -1,0 +1,159 @@
+/* Header-level setup journey; the address and editor remain in the padded workspace. */
+.wm-root.wm-studio-dashboard .wm-page-heading {
+  background: var(--wm-surface);
+  margin-bottom: 0;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  align-items: center;
+  gap: 24px;
+  margin: 0 calc(-1 * var(--wm-space-page)) var(--wm-space-section);
+  padding: 12px var(--wm-space-page);
+  border: 0;
+  border-bottom: 1px solid var(--wm-line);
+  border-radius: 0;
+  background: var(--wm-surface);
+}
+.wm-setup-strip .wm-setup-journey {
+  min-width: 0;
+  order: 0;
+  border: 0;
+  padding: 0;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-steps li {
+  position: relative;
+  min-width: 0;
+  display: block;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-steps li::after {
+  top: 16px;
+  left: calc(50% + 23px);
+  width: calc(100% - 38px);
+  height: 2px;
+  background: #e2e6ed;
+  content: "";
+  position: absolute;
+}
+.wm-setup-strip .wm-setup-steps li:last-child::after {
+  display: none;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-step-number {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #dfe5ed;
+  background: white;
+  color: var(--wm-brand-navy);
+  font-size: 1rem;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .is-complete .wm-step-number {
+  background: linear-gradient(100deg, #fff0e4, #ffd6bb);
+  color: var(--wm-brand-navy);
+  border-color: #ffe8d7;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .is-current .wm-step-number {
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  color: white;
+  outline: none;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .is-warning .wm-step-number {
+  color: #c57b17;
+  background: #fff7eb;
+  border-color: #f5d3a4;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-step-link:hover .wm-step-number,
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-step-link:focus-visible .wm-step-number {
+  background: var(--wm-brand-navy);
+  border-color: var(--wm-brand-navy);
+  color: var(--wm-surface);
+  filter: none;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-step-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0;
+  min-height: 44px;
+  gap: 6px;
+}
+.wm-setup-strip .wm-setup-step-link strong {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.wm-root.wm-studio-dashboard .wm-setup-strip .is-current .wm-setup-step-link {
+  border: 0;
+}
+.wm-setup-strip .is-current .wm-setup-step-link strong {
+  color: var(--wm-brand-navy);
+  font-weight: 700;
+}
+.wm-setup-strip .wm-setup-rate-warning {
+  display: block;
+  font-size: 0.6875rem;
+  color: #a15b10;
+  margin-top: 3px;
+}
+.wm-setup-summary {
+  padding-left: 24px;
+  border-left: 1px solid var(--wm-line);
+  color: var(--wm-brand-navy);
+}
+.wm-setup-summary > strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.wm-setup-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.wm-setup-summary progress {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  height: 10px;
+}
+.wm-setup-summary span {
+  font-weight: 700;
+}
+@media (max-width: 1100px) {
+  .wm-root.wm-studio-dashboard .wm-setup-strip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .wm-setup-summary {
+    border-left: 0;
+    border-top: 1px solid var(--wm-line);
+    padding: 10px 0 0;
+  }
+  .wm-setup-summary > div {
+    max-width: 320px;
+  }
+}
+@media (max-width: 600px) {
+  .wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 8px;
+  }
+  .wm-root.wm-studio-dashboard .wm-setup-strip .wm-setup-steps li:nth-child(3n)::after {
+    display: none;
+  }
+  .wm-setup-strip .wm-setup-step-link strong {
+    font-size: 0.8125rem;
+  }
+}
