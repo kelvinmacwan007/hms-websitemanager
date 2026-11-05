@@ -112,10 +112,16 @@
   align-items: center;
 }
 .wm-root.wm-studio-dashboard .wm-draft-state {
+  line-height: 1.4;
   padding-right: 18px;
   border-right: 1px solid var(--wm-line);
   color: #168951;
   font-weight: 600;
+}
+.wm-root.wm-studio-dashboard .wm-draft-state::before {
+  align-self: flex-start;
+  flex: 0 0 6px;
+  margin-top: calc(0.7em - 3px);
 }
 .wm-root.wm-studio-dashboard .wm-draft-state.is-dirty {
   color: var(--wm-brand-navy);

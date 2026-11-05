@@ -4,6 +4,7 @@ import { BookingDatePicker } from "../booking/BookingDatePicker";
 import { GuestPicker } from "../booking/GuestPicker";
 import { useBookingSettings } from "../booking/BookingSettingsContext";
 import { parseAvailabilitySearch } from "@/lib/booking/search";
+import { offsetDate } from "@/lib/booking/settings";
 import { guestParty } from "@/lib/booking/party";
 
 import styles from "./RoomReservationPanel.module.css";
@@ -18,12 +19,6 @@ import { useState } from "react";
 import { formatMoney } from "@/lib/utils/format";
 import type { HotelAddOn, HotelExtra, HotelRoom } from "@/types/hotel";
 import { useSearchParams } from "next/navigation";
-
-function addDay(value: string) {
-  const date = new Date(`${value}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + 1);
-  return date.toISOString().slice(0, 10);
-}
 
 export function RoomReservationPanel({
   room,
@@ -44,8 +39,23 @@ export function RoomReservationPanel({
     timeZone,
   );
   const rates = room.ratePlans.filter((rate) => rate.available);
-  const [checkIn, setCheckIn] = useState(initialSearch?.checkIn ?? today);
-  const [checkOut, setCheckOut] = useState(initialSearch?.checkOut ?? addDay(today));
+  const minArrival = offsetDate(today, settings.minAdvanceDays);
+  const [checkIn, setCheckIn] = useState(initialSearch?.checkIn ?? minArrival);
+  const [checkOut, setCheckOut] = useState(
+    initialSearch?.checkOut ?? offsetDate(minArrival, settings.minStay),
+  );
+  const stayRange = {
+    checkIn,
+    checkOut,
+    minArrival,
+    maxArrival: offsetDate(today, settings.advanceWindow),
+    minStay: settings.minStay,
+    maxStay: settings.maxStay,
+    onChange: (start: string, end: string) => {
+      setCheckIn(start);
+      setCheckOut(end);
+    },
+  };
   const [rooms, setRooms] = useState(initialSearch?.rooms ?? 1);
   const [guests, setGuests] = useState(initialSearch?.guests ?? Math.min(2, room.occupancy));
   const [party, setParty] = useState(() =>
@@ -107,12 +117,17 @@ export function RoomReservationPanel({
 
   function changeCheckIn(value: string) {
     setCheckIn(value);
-    if (checkOut <= value) setCheckOut(addDay(value));
+    if (checkOut < offsetDate(value, settings.minStay))
+      setCheckOut(offsetDate(value, settings.minStay));
   }
 
   const money = (amount: number) =>
     price ? formatMoney({ amount, currency: price.currency }) : "Check rates";
   const pricedExtras = extras.filter((extra) => price && extra.price.currency === price.currency);
+  const capacityError =
+    guests > room.occupancy * rooms
+      ? `This selection accommodates up to ${room.occupancy * rooms} guests. Add more rooms or reduce your guests.`
+      : "";
 
   return (
     <aside className={styles.panel} aria-label="Room reservation">
@@ -129,9 +144,10 @@ export function RoomReservationPanel({
           <div>
             <span className={styles.dateLabel}>Check-in</span>
             <BookingDatePicker
+              stayRange={stayRange}
               label="Check-in"
               today={today}
-              min={today}
+              min={minArrival}
               value={checkIn}
               onChange={changeCheckIn}
               className={styles.dateButton}
@@ -145,9 +161,11 @@ export function RoomReservationPanel({
           <div>
             <span className={styles.dateLabel}>Check-out</span>
             <BookingDatePicker
+              stayRange={stayRange}
+              initialSelection="end"
               label="Check-out"
               today={today}
-              min={addDay(checkIn)}
+              min={offsetDate(checkIn, settings.minStay)}
               value={checkOut}
               onChange={setCheckOut}
               className={styles.dateButton}
@@ -157,15 +175,17 @@ export function RoomReservationPanel({
           </div>
         </div>
       </div>
-      <GuestPicker
-        values={{ guests, rooms, ...party }}
-        maxRooms={maxRooms}
-        onChange={(next) => {
-          setRooms(next.rooms);
-          setGuests(next.adults + next.children);
-          setParty(next);
-        }}
-      />
+      <div className={styles.guestFields}>
+        <GuestPicker
+          values={{ guests, rooms, ...party }}
+          maxRooms={maxRooms}
+          onChange={(next) => {
+            setRooms(next.rooms);
+            setGuests(next.adults + next.children);
+            setParty(next);
+          }}
+        />
+      </div>
       {rates.length > 1 && (
         <label className={styles.rateSelect}>
           Room rate
@@ -289,12 +309,24 @@ export function RoomReservationPanel({
         </div>
         {(eligibleAddOns.length > 0 || price) && (
           <p className={styles.disclaimer}>
-            Includes selected add-ons at their listed rate × quantity. Taxes are excluded. Final
-            charges are confirmed by the hotel.
+            Taxes are excluded. Final charges are confirmed by the hotel.
           </p>
         )}
       </section>
-      <Link href={href} className={`${websiteClassName("brand-button")} ${styles.reserve}`}>
+      {capacityError && (
+        <p id="room-capacity-error" role="alert" className={styles.capacityError}>
+          {capacityError}
+        </p>
+      )}
+      <Link
+        href={href}
+        aria-disabled={Boolean(capacityError)}
+        aria-describedby={capacityError ? "room-capacity-error" : undefined}
+        onClick={(event) => {
+          if (capacityError) event.preventDefault();
+        }}
+        className={`${websiteClassName("brand-button")} ${styles.reserve}`}
+      >
         <span>Reserve this room</span>
         <ArrowRight size={20} aria-hidden="true" />
       </Link>

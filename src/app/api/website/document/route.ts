@@ -4,6 +4,7 @@ import { getOperationalProvider } from "@/lib/api/provider";
 import { developmentAuthorization } from "@/lib/website/authorization";
 import { getWebsitePersistence } from "@/lib/website/persistence";
 import { validatePresentation, presentationDocument } from "@/lib/website/presentation";
+import { websiteSetupReadiness } from "../../../../../Portal/setup-readiness";
 import { contentIssues } from "../../../../../Portal/content";
 import { isMockMode } from "@/lib/api/mode";
 import { publishHotelDomain, publicHotelUrl } from "@/lib/tenant/domains";
@@ -60,12 +61,14 @@ export async function POST(request: Request) {
     if (!hotel.configured)
       return Response.json({ error: "Property unavailable." }, { status: 409 });
     const payload = validatePresentation(hotel, body.document);
-    if (
-      !isMockMode() &&
-      ["publish", "apply-publish", "apply-website"].includes(body.action) &&
-      (await hmsRateReadiness(tenant, presentationDocument(hotel, payload).hotel)) !== true
-    )
-      return Response.json({ error: HMS_RATES_REQUIRED }, { status: 409 });
+    if (["publish", "apply-publish", "apply-website"].includes(body.action)) {
+      const document = presentationDocument(hotel, payload);
+      const ratesReady = isMockMode() ? undefined : await hmsRateReadiness(tenant, document.hotel);
+      if (ratesReady !== undefined && ratesReady !== true)
+        return Response.json({ error: HMS_RATES_REQUIRED }, { status: 409 });
+      const readiness = websiteSetupReadiness(document, ratesReady);
+      if (!readiness.canPublish) return Response.json({ error: readiness.error }, { status: 409 });
+    }
     let websiteUrl: string | undefined;
     if (["apply-website", "apply-draft", "apply-publish"].includes(body.action)) {
       // Persist website-owned presentation only; every operational field remains an HMS read.
@@ -78,6 +81,7 @@ export async function POST(request: Request) {
         "heroSlides",
         "offers",
         "dining",
+        "menus",
         "testimonials",
         "policies",
         "faqs",

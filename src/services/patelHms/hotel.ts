@@ -27,8 +27,8 @@ export async function fetchHotelContext(tenant: Tenant): Promise<Hotel> {
     ...hotel,
     rooms,
     gallery,
-    heroImage: gallery[0],
-    heroSlides: gallery,
+    heroImage: hotel.heroImage,
+    heroSlides: hotel.heroSlides ?? [],
     addOns: addOns.items,
     addOnsUnavailable: addOns.unavailable,
   };

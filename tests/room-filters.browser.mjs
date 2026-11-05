@@ -39,7 +39,7 @@ try {
   );
   await page.getByRole("button", { name: "Grid view", exact: true }).click();
   await typeGroup.getByRole("checkbox").first().check();
-  await page.getByRole("button", { name: /Guests & rooms/ }).click();
+  await page.getByRole("button", { name: /^Guests\b/ }).click();
   await page.getByRole("button", { name: "Decrease adults", exact: true }).click();
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await page
@@ -60,8 +60,8 @@ try {
     true,
   );
   await page.getByRole("button", { name: "Reset all", exact: true }).click();
-  await page.getByRole("combobox", { name: "Sort by", exact: true }).selectOption("price-high");
-  await page.getByRole("combobox", { name: "Sort by", exact: true }).selectOption("price-low");
+  await page.getByRole("combobox", { name: "Sort rooms", exact: true }).selectOption("price-high");
+  await page.getByRole("combobox", { name: "Sort rooms", exact: true }).selectOption("price-low");
   mkdirSync("artifacts/rooms-filters", { recursive: true });
   await page.screenshot({ path: "artifacts/rooms-filters/desktop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });

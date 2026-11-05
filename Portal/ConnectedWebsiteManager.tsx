@@ -1,7 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
-import { useState } from "react";
+import { showToast } from "./toast";
+import { ProfileMenu } from "./ProfileMenu";
+import { useState, useTransition } from "react";
 import { WebsiteAddressCard, type WebsiteAddress } from "./WebsiteAddressCard";
 import WebsiteManager from "./WebsiteManager";
 import type { WebsiteDocument, WebsitePresentationPayload } from "./content";
@@ -11,6 +12,7 @@ export default function ConnectedWebsiteManager({
   initialContent,
   apiPreview = false,
   initialHasSavedWebsite = false,
+  initialWasPublished = false,
   hmsRatesReady,
   hostedManager = false,
   websiteUrl,
@@ -19,12 +21,18 @@ export default function ConnectedWebsiteManager({
   initialContent: WebsiteDocument;
   apiPreview?: boolean;
   initialHasSavedWebsite?: boolean;
+  initialWasPublished?: boolean;
   hmsRatesReady?: boolean | null;
   hostedManager?: boolean;
   websiteUrl?: string;
   domain?: WebsiteAddress;
 }) {
   const router = useRouter();
+  const [syncing, startSync] = useTransition();
+  const resync = () => {
+    showToast("Refreshing hotel data and setup status...", "info");
+    startSync(() => router.refresh());
+  };
   const [address, setAddress] = useState(domain);
   const rootDomain = websiteUrl
     ? new URL(websiteUrl).hostname.split(".").slice(1).join(".")
@@ -47,6 +55,8 @@ export default function ConnectedWebsiteManager({
     return (
       <>
         <WebsiteManager
+          onResync={resync}
+          syncing={syncing}
           autoGenerateLogoPalette
           onSyncLogo={async () => {
             const response = await fetch("/api/website/logo", { method: "POST" });
@@ -68,27 +78,22 @@ export default function ConnectedWebsiteManager({
           }
           accountControls={
             hostedManager ? (
-              <div className="wm-account-bar">
-                <button
-                  type="button"
-                  title={`Sign out of ${initialContent.hotel.name}`}
-                  onClick={async () => {
-                    const r = await fetch("/api/manager/logout", { method: "POST" });
-                    if (r.ok) {
-                      router.replace("/manager-login");
-                      router.refresh();
-                    }
-                  }}
-                >
-                  <LogOut size={16} aria-hidden="true" />
-                  <span>Sign out</span>
-                </button>
-              </div>
+              <ProfileMenu
+                faviconUrl={initialContent.hotel.branding.faviconUrl}
+                hotelName={initialContent.hotel.name}
+                onSignOut={async () => {
+                  const response = await fetch("/api/manager/logout", { method: "POST" });
+                  if (!response.ok) throw new Error("Sign out failed");
+                  router.replace("/manager-login");
+                  router.refresh();
+                }}
+              />
             ) : undefined
           }
           presentationOnly
           hmsRatesReady={hmsRatesReady}
           initialHasSavedWebsite={initialHasSavedWebsite}
+          initialWasPublished={initialWasPublished}
           initialContent={initialContent}
           websiteAddress={
             hostedManager && address ? (
@@ -175,6 +180,9 @@ export default function ConnectedWebsiteManager({
         reservations or charges.
       </p>
       <WebsiteManager
+        onResync={resync}
+        syncing={syncing}
+        presentationOnly
         initialContent={initialContent}
         analyzeLogo={analyzeLogo}
         connection={{ status: "READY", pmsConnected: true, gatewayConnected: false }}

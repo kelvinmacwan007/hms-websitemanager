@@ -2,11 +2,17 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { WebsiteSetup } from "./WebsiteSetup";
+import { ToastViewport } from "./ToastViewport";
+import { showToast, type ToastType } from "./toast";
+import { websiteSetupReadiness } from "./setup-readiness";
+import { WebsiteDashboard } from "./WebsiteDashboard";
+import { DashboardSetup } from "./DashboardSetup";
 import { SlidingNavigation } from "./SlidingNavigation";
 import { readPreviewResponse } from "../src/lib/api/previewResponse";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
+  AlertTriangle,
+  LayoutDashboard,
   BedDouble,
   BookOpen,
   Check,
@@ -36,7 +42,6 @@ import {
   Tablet,
   Sparkles,
   Star,
-  Undo2,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -50,7 +55,6 @@ import {
   parseWebsiteDocument,
   presentationPayload,
   preservePmsData,
-  safeImageUrl,
   updateAt,
   valueAt,
   type ContentPath,
@@ -59,24 +63,21 @@ import {
   type WebsitePresentationPayload,
 } from "./content";
 import { EditorContext, newImage } from "./editor-fields";
-import {
-  EditorSections,
-  SECTION_DESCRIPTIONS,
-  SECTION_LABELS,
-  type EditorSection,
-} from "./editor-sections";
+import { EditorSections, SECTION_LABELS, type EditorSection } from "./editor-sections";
 import { SetupBookingPreview } from "./SetupBookingPreview";
 import { ActualWebsitePreview } from "./ActualWebsitePreview";
 import { WebsitePreview } from "./WebsitePreview";
-import { SectionHelp } from "./SectionHelp";
 import "./website-manager.css";
 
 export type WebsiteManagerProps = {
+  onResync?: () => void;
+  syncing?: boolean;
   autoGenerateLogoPalette?: boolean;
   presentationOnly?: boolean;
   websiteAddress?: ReactNode;
   accountControls?: ReactNode;
   websitePublished?: boolean;
+  initialWasPublished?: boolean;
   onTakeOffline?: () => Promise<void>;
   initialContent?: WebsiteDocument;
   initialHasSavedWebsite?: boolean;
@@ -103,15 +104,15 @@ const navigation: Array<{ title: string; items: Array<[EditorSection, LucideIcon
   {
     title: "Website",
     items: [
-      ["general", Settings2],
+      ["dashboard", LayoutDashboard],
       ["branding", Palette],
-      ["homepage", Home],
       ["seo", Search],
     ],
   },
   {
     title: "Content",
     items: [
+      ["homepage", Home],
       ["rooms", BedDouble],
       ["rates", BedDouble],
       ["gallery", ImageIcon],
@@ -150,15 +151,18 @@ const previewPages: Partial<Record<EditorSection, PageKey>> = {
   policies: "policies",
   contact: "contact",
   homepage: "home",
-  general: "about",
+  dashboard: "home",
   branding: "home",
 };
 
 export default function WebsiteManager({
+  onResync,
+  syncing = false,
   autoGenerateLogoPalette = false,
   onSyncLogo,
   initialContent,
   initialHasSavedWebsite = false,
+  initialWasPublished = false,
   hmsRatesReady,
   presentationOnly = false,
   websiteAddress,
@@ -176,20 +180,12 @@ export default function WebsiteManager({
     parseWebsiteDocument(initialContent ?? createWebsiteDocument()),
   );
   const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(content));
-  const [previous, setPrevious] = useState<WebsiteDocument | null>(null);
-  const [section, setSection] = useState<EditorSection>(presentationOnly ? "branding" : "general");
-  const SectionIcon =
-    navigation.flatMap((group) => group.items).find(([key]) => key === section)?.[1] || Home;
-  const [sectionHelpOpen, setSectionHelpOpen] = useState(false);
+  const [section, setSection] = useState<EditorSection>("dashboard");
+  const connectionDialog = useRef<HTMLDialogElement>(null);
   const [page, setPage] = useState<PageKey>("home");
   const [device, setDevice] = useState<"desktop" | "laptop" | "tablet" | "mobile">("desktop");
   const [busy, setBusy] = useState<"save" | "publish" | "offline" | null>(null);
   const [setupHint, setSetupHint] = useState<string | null>(null);
-  const [notice, setNotice] = useState<{
-    message: string;
-    error: boolean;
-    action?: "colors";
-  } | null>(null);
   const [savedAt, setSavedAt] = useState("");
   const [justSaved, setJustSaved] = useState(false);
   useEffect(() => {
@@ -202,10 +198,22 @@ export default function WebsiteManager({
   const [mobileNav, setMobileNav] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [published, setPublished] = useState(false);
+  const [wasPublished, setWasPublished] = useState(initialWasPublished);
   const websiteLive = websitePublished ?? published;
   const [reviewedSnapshot, setReviewedSnapshot] = useState("");
   const [bookingPreview, setBookingPreview] = useState(false);
   const contentRef = useRef(content);
+  const lastInitialContent = useRef(initialContent);
+  useEffect(() => {
+    if (!initialContent || initialContent === lastInitialContent.current) return;
+    lastInitialContent.current = initialContent;
+    const refreshed = parseWebsiteDocument(preservePmsData(contentRef.current, initialContent));
+    contentRef.current = refreshed;
+    setContent(refreshed);
+    setSavedSnapshot((current) =>
+      JSON.stringify(parseWebsiteDocument(preservePmsData(JSON.parse(current), initialContent))),
+    );
+  }, [initialContent]);
   const logoAnalyzer = useRef(analyzeLogo);
   useEffect(() => {
     logoAnalyzer.current = analyzeLogo;
@@ -214,11 +222,12 @@ export default function WebsiteManager({
   const reviewKey = JSON.stringify({ ...content, setupStep: undefined });
   const issues = useMemo(() => contentIssues(content), [content]);
   const dirty = snapshot !== savedSnapshot;
+  const publishReadiness = websiteSetupReadiness(content, hmsRatesReady);
   const storageKey = draftStorageKey(content.hotel.tenantId);
   const tenantId = content.hotel.tenantId;
 
-  function notify(message: string, error = false) {
-    setNotice({ message, error });
+  function notify(message: string, type: boolean | ToastType = false) {
+    showToast(message, typeof type === "boolean" ? (type ? "error" : "success") : type);
   }
   async function openPreview(nextPage: PageKey = page) {
     const previewTab = window.open("about:blank", "_blank");
@@ -237,7 +246,7 @@ export default function WebsiteManager({
       });
       const result = await readPreviewResponse(response);
       const destination = new URL(
-        nextPage === "home" ? "/" : `/${nextPage}`,
+        nextPage === "home" ? "/" : nextPage === "dining" ? "/menu" : `/${nextPage}`,
         window.location.origin,
       );
       destination.searchParams.set("__website_preview", result.token);
@@ -249,7 +258,6 @@ export default function WebsiteManager({
   }
   function replace(next: WebsiteDocument) {
     next = preservePmsData(next, contentRef.current);
-    setPrevious(contentRef.current);
     contentRef.current = next;
     setContent(next);
     setPublished(false);
@@ -280,22 +288,25 @@ export default function WebsiteManager({
           ...current,
           hotel: { ...current.hotel, branding: { ...brand, ...palette } },
         };
-        setPrevious(current);
         contentRef.current = next;
         setContent(next);
-        setNotice({
-          message: "Website colors generated from your logo",
-          error: false,
-          action: "colors",
+        showToast("Website colors generated from your logo", "success", {
+          label: "Adjust colors",
+          onClick: () => {
+            setSection("branding");
+            setSetupHint(null);
+            setMobileNav(false);
+            setPage("home");
+            requestAnimationFrame(() => document.getElementById("wm-tab-colors")?.click());
+          },
         });
       },
       () => {
         if (!cancelled)
-          setNotice({
-            message:
-              "We could not read your logo colors. Use logo colors to retry, or choose colors below.",
-            error: true,
-          });
+          showToast(
+            "We could not read your logo colors. Use logo colors to retry, or choose colors below.",
+            "error",
+          );
       },
     );
     return () => {
@@ -316,6 +327,8 @@ export default function WebsiteManager({
       target = ["hotel", "rooms", index, ...path.slice(3)];
     }
     const current = (valueAt(contentRef.current, target) ?? []) as unknown[];
+    if (target[0] === "hotel" && target[1] === "heroSlides" && current.length + images.length > 7)
+      throw new Error("A banner can contain at most 7 images.");
     if (!Array.isArray(current) || current.length + images.length > 250)
       throw new Error("Keep each photo collection to 250 images or fewer.");
     update(target, [...current, ...images]);
@@ -330,11 +343,10 @@ export default function WebsiteManager({
         const stored = window.localStorage.getItem(storageKey);
         if (stored) setDraft(parseDraft(stored, tenantId));
       } catch {
-        setNotice({
-          message:
-            "We could not open the saved draft. Your current content is unchanged. Try restoring a downloaded backup.",
-          error: true,
-        });
+        showToast(
+          "We could not open the saved draft. Your current content is unchanged. Try restoring a downloaded backup.",
+          "error",
+        );
       }
     });
     return () => {
@@ -365,7 +377,6 @@ export default function WebsiteManager({
     document
       .querySelector<HTMLDetailsElement>(".wm-editor-column > .wm-section-help")
       ?.removeAttribute("open");
-    setSectionHelpOpen(false);
     setSetupHint(null);
     setSection(next);
     setMobileNav(false);
@@ -388,7 +399,7 @@ export default function WebsiteManager({
         ?.focus();
       return;
     }
-    chooseSection((["general", "branding", "rooms", "rooms", "homepage"] as EditorSection[])[step]);
+    chooseSection((["seo", "branding", "rooms", "rooms", "homepage"] as EditorSection[])[step]);
     const hints = [
       content.hotel.description?.trim()
         ? "Review your tagline, short description and hotel story below. Your hotel name is managed in Patel HMS."
@@ -418,15 +429,14 @@ export default function WebsiteManager({
   }
   async function save(publish = false, document = contentRef.current) {
     try {
-      if (publish && hmsRatesReady !== undefined && hmsRatesReady !== true) {
-        notify(
-          "Verified HMS rates are required to publish. Check rates in Patel HMS, then reload and try again.",
-          true,
-        );
-        openSetupStep(3);
+      const next = parseWebsiteDocument(document);
+      const readiness = websiteSetupReadiness(next, hmsRatesReady);
+      if (publish && !readiness.canPublish) {
+        notify(readiness.error, "warning");
+        openSetupStep(readiness.synced ? 4 : readiness.missing);
         return;
       }
-      const next = parseWebsiteDocument(document);
+
       if (publish && contentIssues(next).length) {
         setShowIssues(true);
         notify("Review the content checks before publishing.", true);
@@ -525,6 +535,7 @@ export default function WebsiteManager({
     setBusy("offline");
     try {
       await onTakeOffline();
+      setWasPublished(true);
       setPublished(false);
       notify(
         "Website is offline. Your content and address are saved; publish again when you are ready.",
@@ -584,6 +595,15 @@ export default function WebsiteManager({
     </>
   );
 
+  const readinessBanner = (
+    <div id="wm-publish-readiness" className="wm-readiness-warning" role="status">
+      <AlertTriangle className="wm-readiness-warning-icon" size={24} aria-hidden="true" />
+      <span>{publishReadiness.error}</span>
+      <button type="button" onClick={() => connectionDialog.current?.showModal()}>
+        View connection details <ChevronRight size={16} aria-hidden="true" />
+      </button>
+    </div>
+  );
   return (
     <EditorContext.Provider
       value={{
@@ -600,6 +620,8 @@ export default function WebsiteManager({
         },
         analyzeLogo,
         presentationOnly,
+        resync: onResync,
+        syncing,
       }}
     >
       <div
@@ -617,6 +639,46 @@ export default function WebsiteManager({
             onClick={() => setMobileNav(false)}
           />
         )}
+        <ToastViewport />
+        <dialog
+          ref={connectionDialog}
+          className="wm-connection-dialog"
+          aria-labelledby="wm-connection-title"
+        >
+          <header>
+            <div>
+              <h2 id="wm-connection-title">Property connection details</h2>
+              <p>Property identity is managed in Patel HMS.</p>
+            </div>
+            <button
+              type="button"
+              className="wm-icon-button"
+              aria-label="Close connection details"
+              onClick={() => connectionDialog.current?.close()}
+            >
+              <X size={20} />
+            </button>
+          </header>
+          <dl>
+            {[
+              ["Property ID", content.hotel.id],
+              ["Tenant ID", content.hotel.tenantId],
+              ["Template", content.hotel.template],
+              ["Timezone", content.hotel.timeZone],
+              ["Currency", content.hotel.currency],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value || "Not supplied"}</dd>
+              </div>
+            ))}
+          </dl>
+          <form method="dialog">
+            <button className="wm-button" type="submit">
+              Close
+            </button>
+          </form>
+        </dialog>
         <aside className={`wm-sidebar${mobileNav ? " is-open" : ""}`}>
           <div className="wm-app-brand">
             {presentationOnly ? (
@@ -655,20 +717,6 @@ export default function WebsiteManager({
               <X size={18} />
             </button>
           </div>
-          <div className="wm-property" title={content.hotel.name || "Your hotel"}>
-            <span>
-              {safeImageUrl(content.hotel.branding.logoUrl) ? (
-                <img src={safeImageUrl(content.hotel.branding.logoUrl)} alt={content.hotel.name} />
-              ) : (
-                content.hotel.name.slice(0, 1) || "H"
-              )}
-            </span>
-            <div>
-              <strong>{content.hotel.name || "Your hotel"}</strong>
-              <small>Website management</small>
-            </div>
-            <ChevronRight className="wm-property-chevron" size={18} aria-hidden="true" />
-          </div>
           <SlidingNavigation activeKey={section}>
             {navigation
               .map((group) => ({
@@ -683,7 +731,7 @@ export default function WebsiteManager({
               )
               .map((group) => (
                 <div className="wm-nav-group" key={group.title}>
-                  <p>{group.title}</p>
+                  {group.title !== "Website" && <p>{group.title}</p>}
                   {group.items.map(([key, Icon]) => (
                     <button
                       key={key}
@@ -759,7 +807,7 @@ export default function WebsiteManager({
             <div className="wm-page-heading">
               <div>
                 <p className="wm-kicker">YOUR HOTEL WEBSITE</p>
-                <h1>Website Studio</h1>
+                <h1>{content.hotel.name || "Hotel website"}</h1>
                 <p>Design and customize your hotel website.</p>
               </div>
               <div className="wm-heading-actions">
@@ -794,7 +842,7 @@ export default function WebsiteManager({
                 )}
                 <button
                   type="button"
-                  className="wm-button"
+                  className="wm-button wm-header-preview"
                   onClick={() => {
                     void openPreview();
                   }}
@@ -804,7 +852,7 @@ export default function WebsiteManager({
                 </button>
                 <button
                   type="button"
-                  className={`wm-button wm-save-button ${dirty ? "wm-button-primary" : "wm-save-idle"}`}
+                  className={`wm-button wm-save-button ${presentationOnly || dirty ? "wm-button-primary" : "wm-save-idle"}`}
                   onClick={() => void save()}
                   disabled={Boolean(busy)}
                 >
@@ -815,17 +863,6 @@ export default function WebsiteManager({
                   onPublish &&
                   (websiteLive && onTakeOffline ? (
                     <div className="wm-live-control">
-                      <button
-                        type="button"
-                        className="wm-live-switch"
-                        role="switch"
-                        aria-checked={true}
-                        aria-label="Website live"
-                        disabled={Boolean(busy)}
-                        onClick={() => void takeOffline()}
-                      >
-                        <span />
-                      </button>
                       <details className="wm-publish-menu">
                         <summary
                           className="wm-button wm-button-live"
@@ -834,15 +871,15 @@ export default function WebsiteManager({
                             if (busy) event.preventDefault();
                           }}
                         >
+                          <i className="wm-publication-dot" aria-hidden="true" />
                           <span>
                             <strong>
                               {busy === "offline"
                                 ? "Taking offline..."
                                 : busy === "publish"
                                   ? "Updating..."
-                                  : "Website live"}
+                                  : "Live"}
                             </strong>
-                            <small>Published</small>
                           </span>
                           <ChevronDown size={14} />
                         </summary>
@@ -862,7 +899,10 @@ export default function WebsiteManager({
                           </div>
                           <button
                             type="button"
-                            disabled={Boolean(busy)}
+                            disabled={Boolean(busy) || !publishReadiness.canPublish}
+                            aria-describedby={
+                              !publishReadiness.canPublish ? "wm-publish-readiness" : undefined
+                            }
                             onClick={(event) => {
                               event.currentTarget.closest("details")?.removeAttribute("open");
                               void save(true);
@@ -916,37 +956,48 @@ export default function WebsiteManager({
                       </details>
                     </div>
                   ) : (
-                    <button
-                      type="button"
-                      className="wm-button wm-button-primary"
-                      disabled={Boolean(busy)}
-                      onClick={() => void save(true)}
-                    >
-                      <Rocket size={16} />
-                      {busy === "publish" ? "Publishing..." : "Publish website"}
-                    </button>
+                    <div className="wm-publish-idle">
+                      {!wasPublished && (
+                        <span className="wm-publication-indicator is-draft" role="status">
+                          <i className="wm-publication-dot" aria-hidden="true" />
+                          Draft
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        className="wm-button wm-button-primary"
+                        disabled={Boolean(busy) || !publishReadiness.canPublish}
+                        aria-describedby={
+                          !publishReadiness.canPublish ? "wm-publish-readiness" : undefined
+                        }
+                        onClick={() => void save(true)}
+                      >
+                        <Rocket size={16} />
+                        {busy === "publish" ? "Publishing..." : "Publish website"}
+                      </button>
+                    </div>
                   ))}
               </div>
               {accountControls}
             </div>
-            {presentationOnly && (
-              <WebsiteSetup
-                content={content}
-                hmsRatesReady={hmsRatesReady}
-                saved={(initialHasSavedWebsite || Boolean(savedAt)) && !dirty}
-                published={onPublish ? websiteLive : undefined}
-                onSelect={openSetupStep}
-                onContinue={(step) => {
-                  if (step === 5) {
-                    if (onPublish) openSetupStep(step);
-                    else void save();
-                    return;
-                  }
-                  openSetupStep(step);
-                }}
-              />
+            {section === "dashboard" && (
+              <div className={`wm-dashboard-management${websiteAddress ? "" : " is-single"}`}>
+                <section
+                  className="wm-card wm-dashboard-process"
+                  aria-labelledby="website-process-title"
+                >
+                  <DashboardSetup
+                    onResync={onResync}
+                    syncing={syncing}
+                    content={content}
+                    hmsRatesReady={hmsRatesReady}
+                    saved={(initialHasSavedWebsite || Boolean(savedAt)) && !dirty}
+                    published={onPublish ? websiteLive : undefined}
+                  />
+                </section>
+                {websiteAddress}
+              </div>
             )}
-            {websiteAddress}
             <div className="wm-workspace-banner">
               <span className="wm-banner-icon">
                 <Sparkles size={18} />
@@ -965,39 +1016,6 @@ export default function WebsiteManager({
               </div>
               <span className="wm-pill">{onPublish ? "Connected" : "Draft workspace"}</span>
             </div>
-            {notice && (
-              <div
-                className={`wm-notice${notice.error ? " is-error" : ""}${notice.action === "colors" ? " wm-colors-notice" : ""}`}
-                role={notice.error ? "alert" : "status"}
-              >
-                <span>
-                  {notice.error ? <CircleHelp size={18} /> : <Check size={18} />}
-                  {notice.message}
-                </span>
-                {notice.action === "colors" && (
-                  <button
-                    type="button"
-                    className="wm-adjust-colors"
-                    onClick={() => {
-                      chooseSection("branding");
-                      requestAnimationFrame(() =>
-                        document.getElementById("wm-tab-colors")?.click(),
-                      );
-                    }}
-                  >
-                    Adjust colors
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="wm-icon-button"
-                  aria-label="Dismiss notification"
-                  onClick={() => setNotice(null)}
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            )}
             {draft && (
               <div className="wm-restore">
                 <div>
@@ -1038,176 +1056,153 @@ export default function WebsiteManager({
                 </button>
               </div>
             )}
-            <div className="wm-editor-grid">
+            {onPublish && !publishReadiness.canPublish && readinessBanner}
+            <div
+              className={`wm-editor-grid${section === "dashboard" ? " wm-dashboard-layout" : ""}`}
+            >
               <div className="wm-editor-column">
                 {setupHint && (
                   <p className="wm-info" role="status">
                     {setupHint}
                   </p>
                 )}
-                <div className="wm-section-heading wm-section-header-card">
-                  <span className="wm-section-header-icon">
-                    <SectionIcon size={26} />
-                  </span>
-                  <div>
-                    <h2>{SECTION_LABELS[section]}</h2>
-                    <p>{SECTION_DESCRIPTIONS[section]}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="wm-button wm-button-small wm-section-help-button"
-                    aria-controls={`wm-section-help-${section}`}
-                    aria-expanded={sectionHelpOpen}
-                    onClick={() => {
-                      const details = document.querySelector<HTMLDetailsElement>(
-                        ".wm-editor-column > .wm-section-help",
-                      );
-                      if (details) details.open = !sectionHelpOpen;
-                      setSectionHelpOpen(!sectionHelpOpen);
-                    }}
-                  >
-                    <CircleHelp size={15} />
-                    Help with this section
-                  </button>
-                  <button
-                    type="button"
-                    className="wm-icon-button"
-                    title="Undo last change"
-                    aria-label="Undo last change"
-                    disabled={!previous || Boolean(busy)}
-                    onClick={() => {
-                      if (previous) {
-                        const old = contentRef.current;
-                        contentRef.current = previous;
-                        setContent(previous);
-                        setPrevious(old);
-                        setPublished(false);
-                      }
-                    }}
-                  >
-                    <Undo2 size={18} />
-                  </button>
-                </div>
-                <SectionHelp section={section} />
                 <fieldset className="wm-editor-fields" disabled={Boolean(busy)}>
-                  <EditorSections section={section} />
+                  {section === "dashboard" ? (
+                    <>
+                      <WebsiteDashboard
+                        onConnectionDetails={() => connectionDialog.current?.showModal()}
+                        onNavigate={chooseSection}
+                        content={content}
+                        live={websiteLive}
+                        dirty={dirty}
+                        websiteUrl={connection?.websiteUrl}
+                      />
+                    </>
+                  ) : (
+                    <EditorSections section={section} />
+                  )}
                 </fieldset>
               </div>
-              <aside className="wm-preview-column" id="wm-guest-preview">
-                <div className="wm-preview-card wm-guest-preview-card">
-                  <div className="wm-preview-heading">
-                    <div className="wm-guest-preview-title">
-                      <h2>
-                        <i />
-                        Guest preview
-                      </h2>
-                      <p>See how your hotel website looks for your guests.</p>
-                    </div>
-                    {previewToolbar(false)}
-                  </div>
-                  <div className={`wm-preview-viewport is-${device}`}>
-                    {bookingPreview ? (
-                      <SetupBookingPreview
-                        key={reviewKey}
-                        content={content}
-                        onComplete={() => {
-                          setReviewedSnapshot(reviewKey);
-                          setBookingPreview(false);
-                          notify(
-                            "Booking preview completed for this draft. No reservation was created.",
-                          );
-                        }}
-                      />
-                    ) : presentationOnly ? (
-                      <ActualWebsitePreview
-                        content={content}
-                        page={page}
-                        device={device}
-                        onPageChange={setPage}
-                      />
-                    ) : (
-                      <WebsitePreview content={content} page={page} onPageChange={setPage} />
-                    )}
-                  </div>
-                  <div className="wm-preview-caption">
-                    <Eye size={14} />
-                    {presentationOnly
-                      ? "Actual website · unsaved draft preview"
-                      : "Content preview · final website layout may differ"}
-                  </div>
-                </div>
-                {!presentationOnly && (
-                  <div className="wm-publish-card" id="website-publish">
-                    <span className="wm-publish-icon">
-                      <Rocket size={21} />
-                    </span>
-                    <h3>Ready for your guests?</h3>
-                    <button
-                      type="button"
-                      className="wm-button wm-button-small"
-                      onClick={() => {
-                        setBookingPreview(true);
-                      }}
-                    >
-                      <Eye size={15} />
-                      Test booking flow
-                    </button>
-                    <p>
-                      {reviewedSnapshot === reviewKey
-                        ? "Current draft booking test completed."
-                        : "Test your current draft before publishing."}
-                    </p>
-                    <p>
-                      {onPublish
-                        ? "Review your content and publish when you’re ready."
-                        : "Your administrator needs to connect this portal before you can publish."}
-                    </p>
-                    <button
-                      type="button"
-                      className="wm-check-button"
-                      onClick={() => setShowIssues(!showIssues)}
-                    >
-                      {issues.length ? <CircleHelp size={15} /> : <Check size={15} />}
-                      {issues.length
-                        ? `${issues.length} content checks to review`
-                        : "Content checks passed"}
-                      <ChevronRight size={14} />
-                    </button>
-                    {showIssues && (
-                      <div className="wm-checks" role="status">
-                        {issues.length ? (
-                          <ul>
-                            {issues.map((issue) => (
-                              <li key={issue}>{issue}</li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p>No content issues found.</p>
-                        )}
+              {section !== "dashboard" && (
+                <aside className="wm-preview-column" id="wm-guest-preview">
+                  <div className="wm-preview-card wm-guest-preview-card">
+                    <div className="wm-preview-heading">
+                      <div className="wm-guest-preview-title">
+                        <h2>
+                          <i />
+                          Guest preview
+                        </h2>
+                        <p>See how your hotel website looks for your guests.</p>
                       </div>
-                    )}
-                    <button
-                      type="button"
-                      className="wm-button wm-button-primary"
-                      disabled={!onPublish || Boolean(busy)}
-                      title={
-                        !onPublish ? "Ask your administrator to enable publishing." : undefined
-                      }
-                      onClick={() => void save(true)}
-                    >
-                      <Rocket size={15} />
-                      {busy === "publish" ? "Publishing…" : "Publish website"}
-                    </button>
-                    <small>
-                      {onPublish
-                        ? connection?.websiteUrl || "Your portal controls the live release."
-                        : onSaveColors
-                          ? "Save draft applies colors to the local website."
-                          : "No changes have been made to your live website."}
-                    </small>
+                      {previewToolbar(false)}
+                    </div>
+                    <div className={`wm-preview-viewport is-${device}`}>
+                      {bookingPreview ? (
+                        <SetupBookingPreview
+                          key={reviewKey}
+                          content={content}
+                          onComplete={() => {
+                            setReviewedSnapshot(reviewKey);
+                            setBookingPreview(false);
+                            notify(
+                              "Booking preview completed for this draft. No reservation was created.",
+                            );
+                          }}
+                        />
+                      ) : presentationOnly ? (
+                        <ActualWebsitePreview
+                          content={content}
+                          page={page}
+                          device={device}
+                          onPageChange={setPage}
+                        />
+                      ) : (
+                        <WebsitePreview content={content} page={page} onPageChange={setPage} />
+                      )}
+                    </div>
+                    <div className="wm-preview-caption">
+                      <Eye size={14} />
+                      {presentationOnly
+                        ? "Actual website · unsaved draft preview"
+                        : "Content preview · final website layout may differ"}
+                    </div>
                   </div>
-                )}
-              </aside>
+                  {!presentationOnly && (
+                    <div className="wm-publish-card" id="website-publish">
+                      <span className="wm-publish-icon">
+                        <Rocket size={21} />
+                      </span>
+                      <h3>Ready for your guests?</h3>
+                      <button
+                        type="button"
+                        className="wm-button wm-button-small"
+                        onClick={() => {
+                          setBookingPreview(true);
+                        }}
+                      >
+                        <Eye size={15} />
+                        Test booking flow
+                      </button>
+                      <p>
+                        {reviewedSnapshot === reviewKey
+                          ? "Current draft booking test completed."
+                          : "Test your current draft before publishing."}
+                      </p>
+                      <p>
+                        {onPublish
+                          ? "Review your content and publish when you’re ready."
+                          : "Your administrator needs to connect this portal before you can publish."}
+                      </p>
+                      <button
+                        type="button"
+                        className="wm-check-button"
+                        onClick={() => setShowIssues(!showIssues)}
+                      >
+                        {issues.length ? <CircleHelp size={15} /> : <Check size={15} />}
+                        {issues.length
+                          ? `${issues.length} content checks to review`
+                          : "Content checks passed"}
+                        <ChevronRight size={14} />
+                      </button>
+                      {showIssues && (
+                        <div className="wm-checks" role="status">
+                          {issues.length ? (
+                            <ul>
+                              {issues.map((issue) => (
+                                <li key={issue}>{issue}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>No content issues found.</p>
+                          )}
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        className="wm-button wm-button-primary"
+                        disabled={!onPublish || Boolean(busy) || !publishReadiness.canPublish}
+                        aria-describedby={
+                          !publishReadiness.canPublish ? "wm-publish-readiness" : undefined
+                        }
+                        title={
+                          !onPublish ? "Ask your administrator to enable publishing." : undefined
+                        }
+                        onClick={() => void save(true)}
+                      >
+                        <Rocket size={15} />
+                        {busy === "publish" ? "Publishing…" : "Publish website"}
+                      </button>
+                      <small>
+                        {onPublish
+                          ? connection?.websiteUrl || "Your portal controls the live release."
+                          : onSaveColors
+                            ? "Save draft applies colors to the local website."
+                            : "No changes have been made to your live website."}
+                      </small>
+                    </div>
+                  )}
+                </aside>
+              )}
             </div>
             <footer className="wm-footer">
               <span>

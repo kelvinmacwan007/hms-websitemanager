@@ -1,6 +1,7 @@
 "use client";
 
 import { websiteClassName } from "@/lib/ui/websiteStyles";
+import styles from "./HeroSlider.module.css";
 
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
@@ -22,10 +23,12 @@ const subscribeVisibility = (callback: () => void) => {
 };
 
 export function HeroSlider({
+  overlayHeader = false,
   images,
   children,
 }: {
   images: GalleryImage[];
+  overlayHeader?: boolean;
   children: React.ReactNode;
 }) {
   const root = useRef<HTMLElement>(null);
@@ -100,7 +103,7 @@ export function HeroSlider({
   return (
     <section
       ref={root}
-      className={websiteClassName("hero-banner")}
+      className={`${websiteClassName("hero-banner")}${overlayHeader ? ` ${styles.overlayHeader}` : ""}`}
       data-motion={motion ? "enabled" : "off"}
       aria-label="Hotel highlights"
       aria-roledescription={slides.length > 1 ? "carousel" : undefined}

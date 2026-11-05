@@ -24,6 +24,9 @@ node tests/manager-responsive.browser.mjs
 node tests/header-templates.browser.mjs
 node tests/room-cards.browser.mjs
 node tests/guest-picker.browser.mjs
+node tests/booking-pickers.browser.mjs
+node tests/website-controls.browser.mjs
+node tests/booking-results.browser.mjs
 node tests/site-layout.browser.mjs
 ```
 
@@ -39,6 +42,22 @@ does not save changes or create bookings.
 keyboard dismissal, responsive bounds, and preservation of the party through
 search, room details, cart and checkout. It does not submit reservations or payments.
 
+`booking-pickers.browser.mjs` checks the themed date, guest and room selectors at
+six viewport widths. It verifies two-month desktop and single-month mobile
+calendars, disabled dates, two-click date ranges, checkout-only edits, cancellation,
+room-reservation dates, separate guest/room counts, Escape dismissal, focus restoration and overflow.
+Target a mock hotel host with `QA_URL`; it changes browser state only.
+
+`website-controls.browser.mjs` verifies standard control heights and typography on
+the homepage, Rooms, Contact and Booking at desktop/mobile widths, plus hover,
+press, disabled, reduced-motion and motion-off states.
+
+`booking-results.browser.mjs` checks the shared search-result cards at six widths,
+including omitted amenities, preserved stay links, rate switching without losing
+cart selections, quantity controls, galleries and cart handoff. It uses mock
+availability and does not submit a reservation. It also checks the matching cart
+room cards at five widths, including gallery access and removal to the empty state.
+
 `manager-responsive.browser.mjs` signs into the local HMS manager using the first
 connection in `.env.local`. It checks all 13 editor sections, expanded fields,
 appearance tabs, unsaved actions and preview controls at 11 widths from 320px to
@@ -46,3 +65,5 @@ appearance tabs, unsaved actions and preview controls at 11 widths from 320px to
 controls, overlapping header actions and sidebar scrolling, and captures screenshots
 under `artifacts/manager-responsive`. Edits stay in the browser; it does not save
 or publish website changes. It signs out when the checks finish.
+
+`booking-flow.browser.mjs` checks the five-step flow, preserves selected extras through guest checkout, verifies payment and confirmation guards, and checks responsive layouts at five widths. It uses mock hotel data on QA_URL (default port 3001) and never submits a payment. `booking-steps.test.mjs` checks step links preserve booking parameters. See docs/booking-flow-integration.md for HMS and P98Pay boundaries.

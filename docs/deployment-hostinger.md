@@ -48,6 +48,14 @@ Optional standalone manager accounts remain available for installations without 
 
 The package retains read-only HMS behavior. Real bookings/payments remain blocked. The HMS origin is the currently configured development service; replace it with the approved production API origin and credentials when supplied by HMS.
 
+For a hosted staging demonstration, retain `NODE_ENV=production`, use
+`PATEL_HMS_API_URL=https://dev-aiapi.patelhms.com` and `WEBSITE_ENV=live`, and add
+`WEBSITE_DEMO_PAYMENTS=true`. Rebuild/redeploy after setting it. This enables
+P98Pay UAT checkout using the selected stay's API rates, nights, room quantities,
+and extras. It never enables HMS booking/payment writes. The supplied UAT
+merchant supports USD only; use provider-issued test card details. Remove the
+demo payment flag before any actual guest booking deployment.
+
 ## Persistence and existing content
 
 `WEBSITE_DATA_DIR` must point to durable writable storage used by the manager and every public hotel domain. This source ZIP excludes local `.data`, login sessions, credentials and uploaded media. Retain the existing server's persistent data directory. For a new server, migrate the existing website presentations, domain registry and uploaded media privately before going live; do not copy active session records or login-attempt counters. Website settings stay separate from HMS operational data. The address registry distinguishes the reserved draft subdomain from the published subdomain. A suggestion or saved address alone does not activate a public website. Select **Publish website** to publish content and activate the selected address. Saving a draft leaves the live website untouched. Changing an address keeps the current published URL active until the next publish; after that, the old URL returns not found. Reserved/system names, invalid labels and names owned by other properties are rejected. The UI edits only the subdomain; the root domain is server-configured as `kelvinmacwan.com`.

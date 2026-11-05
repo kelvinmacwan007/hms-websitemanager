@@ -19,12 +19,21 @@ try {
   await page.goto(base + "/rooms", { waitUntil: "domcontentloaded" });
   const cards = page.locator("article[data-motion-card]");
   await cards.first().waitFor();
+  await page.getByRole("button", { name: "List view", exact: true }).click();
+  assert.equal(await cards.locator('ul[aria-label="Room amenities"]').count(), 0);
+  assert.equal(await cards.getByRole("link", { name: "View all amenities" }).count(), 0);
   const card = cards.filter({ hasText: "Deluxe Queen Room" }).first();
   const target = (await card.count()) ? card : cards.first();
   await page.evaluate(() => document.fonts.ready);
   await target
     .locator("img")
-    .evaluateAll((images) => Promise.all(images.map((image) => image.decode().catch(() => {}))));
+    .evaluateAll((images) =>
+      Promise.all(
+        images
+          .filter((image) => image.getClientRects().length)
+          .map((image) => image.decode().catch(() => {})),
+      ),
+    );
   await target.scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
   await target.screenshot({
@@ -61,6 +70,7 @@ try {
   await page.getByRole("button", { name: "Close gallery" }).click();
   const details = await target.locator("h3 a").getAttribute("href");
   await page.getByRole("button", { name: "Grid view", exact: true }).click();
+  assert.equal(await cards.locator('ul[aria-label="Room amenities"]').count(), 0);
   for (const width of [1920, 1440, 1024, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });
     assert.equal(
@@ -77,7 +87,7 @@ try {
   await page.locator("article[data-motion-card]").first().waitFor();
   assert.deepEqual(errors, []);
   console.log(
-    "PASS shared cards, 13 viewport widths, grid/list, no wishlist controls, gallery dialog and amenities link",
+    "PASS shared cards, 13 viewport widths, grid/list without amenities, gallery dialog and room detail links",
   );
 } finally {
   await browser.close();

@@ -1,6 +1,6 @@
 .panel {
   min-width: 0;
-  padding: 24px;
+  padding: 20px;
   border: 1px solid var(--color-border, #e7e5e2);
   border-radius: var(--site-card-radius, 1.5rem);
   background: var(--color-surface, #fff);
@@ -11,8 +11,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--color-text-muted);
-  font-size: 1rem;
+  margin: 0;
+  color: var(--color-brand);
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -28,7 +29,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 8px;
-  margin: 12px 0 20px;
+  margin: 12px 0 18px;
   font-family: var(--font-hotel-heading), Georgia, serif;
   line-height: 1.1;
 }
@@ -39,44 +40,74 @@
   letter-spacing: -0.045em;
 }
 .price small {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 400;
 }
 .dates {
   border-top: 1px solid var(--color-border, #e7e5e2);
+  padding: 14px 0 16px;
+  display: grid;
+  gap: 14px;
 }
 .dateRow {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 14px 6px;
-  border-bottom: 1px solid var(--color-border, #e7e5e2);
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 10px;
 }
 .dateRow > svg {
   color: var(--color-brand);
   flex-shrink: 0;
+  margin-top: 1px;
 }
 .dateRow > div {
-  flex: 1;
+  display: contents;
   min-width: 0;
 }
 .dateLabel {
   display: block;
-  margin-bottom: 3px;
-  color: var(--color-text-muted);
-  font-size: 1.125rem;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  color: var(--color-text);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 .dateRow .dateButton {
+  grid-column: 1 / -1;
   width: 100%;
-  min-height: 24px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #e7e5e2);
+  border-radius: 8px;
+  background: var(--color-surface, #fff);
   box-shadow: none;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+.dateRow .dateButton:hover {
+  border-color: var(--color-brand);
+}
+.dateRow .dateButton:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+.guestFields {
+  --guest-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  --guest-control-padding: 8px 12px;
+  --guest-control-height: 44px;
+  --guest-control-radius: 8px;
+  --guest-control-font: 0.8125rem;
+  --guest-label-color: var(--color-text);
+  --guest-field-gap: 6px;
+  padding-bottom: 18px;
 }
 .steppers {
   display: grid;
@@ -185,19 +216,19 @@
 }
 .summary {
   border-top: 1px solid var(--color-border, #e7e5e2);
-  padding-top: 18px;
+  padding-top: 14px;
 }
 .summary h3 {
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   font-family: var(--font-hotel-heading), Georgia, serif;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
 }
 .summary dl {
   display: grid;
   gap: 10px;
   margin: 0;
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
 }
 .summary dl > div {
   display: flex;
@@ -236,9 +267,9 @@
   font-weight: 600;
 }
 .disclaimer {
-  margin-top: 10px;
-  font-size: 1.125rem;
-  line-height: 1.6;
+  margin: 8px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
   color: var(--color-text-muted);
 }
 .panel .reserve {
@@ -246,21 +277,37 @@
   justify-content: center;
   gap: 14px;
   width: 100%;
-  min-height: 48px;
-  margin-top: 20px;
+  min-height: 46px;
+  margin-top: 16px;
   padding: 12px 16px;
-  font-size: 1.125rem;
+  border-radius: 8px;
+  font-family: var(--font-hotel-heading), Georgia, serif;
+  font-size: 1rem;
+}
+.capacityError {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid #f0b6b6;
+  border-radius: 10px;
+  background: #fff3f3;
+  color: #a52b2b;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.panel .reserve[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 .footer {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   margin: 14px 0 0;
   color: var(--color-text-muted);
-  font-size: 1.125rem;
+  font-size: 0.75rem;
   line-height: 1.5;
-  text-align: center;
+  text-align: left;
 }
 .footer svg {
   flex-shrink: 0;

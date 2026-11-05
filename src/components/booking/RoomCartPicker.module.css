@@ -1,14 +1,55 @@
 .roomGrid {
   display: grid;
   min-width: 0;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
 .rate {
-  margin-top: 24px;
-  padding-top: 18px;
-  border-top: 1px solid var(--color-border);
+  margin: 0;
+  padding: 0;
+}
+.rateSelect {
+  display: grid;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+.rateSelect select {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.rate:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.detailsLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--site-control-height);
+  padding: 12px 16px;
+  border: 1px solid var(--color-brand);
+  border-radius: var(--website-button-radius, 12px);
+  background: var(--color-surface);
+  color: var(--color-brand);
+  font-size: var(--site-control-font);
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.detailsLink:hover {
+  background: var(--color-brand-soft);
+}
+.detailsLink:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
 }
 .price {
   display: flex;
@@ -17,6 +58,7 @@
   margin-top: 8px;
 }
 .price strong {
+  color: var(--color-brand);
   font-family: var(--font-display);
   font-size: 2.5rem;
   line-height: 1.15;
@@ -37,7 +79,7 @@
   border-radius: 8px;
   background: #edf7f1;
   color: #345c4a;
-  font-size: 1.125rem;
+  font-size: var(--site-control-font);
   line-height: 1.5;
 }
 .availability::before {

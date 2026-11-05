@@ -2733,7 +2733,7 @@ export function websiteClassName(className: string): string {
   return [
     ...classes,
     ...Array.from(resolved.values(), ({ utility }) => utility),
-    variant ? buttonClasses[variant] : "",
+    variant ? `site-button ${buttonClasses[variant]}` : "",
   ]
     .filter(Boolean)
     .join(" ");

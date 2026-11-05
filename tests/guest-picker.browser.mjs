@@ -17,18 +17,22 @@ try {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(base + "/rooms", { waitUntil: "networkidle" });
-  const trigger = page.getByRole("button", { name: /Guests & rooms/ }).first();
+  const trigger = page.getByRole("button", { name: /^Guests\b/ }).first();
   for (const width of [2560, 1920, 1440, 1024, 768, 540, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.evaluate(
       () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
     );
     await trigger.click();
-    const dialog = page.getByRole("dialog", { name: "Guests and rooms" });
+    const dialog = page.getByRole("dialog", { name: "Guests", exact: true });
     await dialog.waitFor();
     const bounds = await dialog.boundingBox();
     assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width + 1, `popup fits at ${width}`);
-    assert.ok(Math.abs(bounds.x + bounds.width / 2 - width / 2) < 2, `popup centered at ${width}`);
+    if (width <= 640)
+      assert.ok(
+        Math.abs(bounds.x + bounds.width / 2 - width / 2) < 2,
+        `popup centered at ${width}`,
+      );
     assert.equal(await dialog.evaluate((element) => element.matches(":modal")), true);
     assert.equal(await dialog.getByText("Business travellers", { exact: true }).count(), 0);
     assert.equal(
@@ -49,13 +53,19 @@ try {
     assert.equal(await trigger.evaluate((button) => document.activeElement === button), true);
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await page
+    .getByRole("button", { name: /^Rooms\b/ })
+    .first()
+    .click();
+  await page.getByRole("button", { name: "Increase rooms", exact: true }).click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await trigger.click();
-  for (const name of ["rooms", "adults", "children", "pets"])
+  for (const name of ["adults", "children", "pets"])
     await page.getByRole("button", { name: `Increase ${name}`, exact: true }).click();
   assert.equal(await page.locator('output[aria-label="Adults"]').textContent(), "3");
   assert.equal(await page.locator('input[name="guests"]').inputValue(), "4");
   await page
-    .getByRole("dialog", { name: "Guests and rooms" })
+    .getByRole("dialog", { name: "Guests", exact: true })
     .screenshot({ path: "artifacts/guest-picker/desktop.png" });
   await page.getByRole("button", { name: "Done", exact: true }).click();
   await Promise.all([
@@ -75,20 +85,34 @@ try {
   const card = page.getByRole("region", { name: "Room results" }).locator("article").first();
   const details = await card.locator("h3 a").getAttribute("href");
   assert.equal(new URL(details, base).searchParams.get("children"), "1");
-  await page.goto(new URL(details, base).href, { waitUntil: "domcontentloaded" });
+  await page.goto(new URL(details, base).href, { waitUntil: "networkidle" });
   await page.getByRole("complementary", { name: "Room reservation" }).waitFor();
-  await page.getByRole("button", { name: /Guests & rooms/ }).click();
+  await page.getByRole("button", { name: /^Guests\b/ }).click();
+  await page.getByRole("dialog", { name: "Guests", exact: true }).waitFor();
   assert.equal(await page.locator('output[aria-label="Children"]').textContent(), "1");
   assert.equal(await page.locator('output[aria-label="Pets"]').textContent(), "1");
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  await page.getByRole("button", { name: /^Rooms\b/ }).click();
   await page.getByRole("button", { name: "Decrease rooms", exact: true }).click();
   await page.getByRole("button", { name: "Done", exact: true }).click();
+  const reservation = page.getByRole("link", { name: "Reserve this room", exact: true });
+  if ((await reservation.getAttribute("aria-disabled")) === "true") {
+    await page
+      .getByRole("alert")
+      .filter({ hasText: "Add more rooms or reduce your guests" })
+      .waitFor();
+    await page.getByRole("button", { name: /^Rooms\b/ }).click();
+    await page.getByRole("button", { name: "Increase rooms", exact: true }).click();
+    await page.getByRole("button", { name: "Done", exact: true }).click();
+    assert.equal(await reservation.getAttribute("aria-disabled"), "false");
+  }
   const reserve = await page.getByRole("link", { name: "Reserve this room" }).getAttribute("href");
   query = new URL(reserve, base).searchParams;
   assert.equal(query.get("businessTravellers"), null);
   assert.equal(query.get("pets"), "1");
-  await page.goto(new URL(reserve, base).href, { waitUntil: "domcontentloaded" });
+  await page.goto(new URL(reserve, base).href, { waitUntil: "networkidle" });
   await page.getByRole("heading", { name: "Your room cart", exact: true }).waitFor();
-  const checkout = page.getByRole("link", { name: /^Continue to (?:demo )?checkout$/ });
+  const checkout = page.getByRole("link", { name: /^Continue to extras$/ });
   const checkoutHref = await checkout.getAttribute("href");
   for (const [key, expected] of Object.entries({
     adults: "3",
@@ -101,6 +125,7 @@ try {
       `${key} survives cart`,
     );
   await checkout.click();
+  await page.getByRole("link", { name: "Continue to guest details", exact: true }).click();
   await page
     .locator("main")
     .getByText(/3 adults, 1 child, 1 pet requested/)

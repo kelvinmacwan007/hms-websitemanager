@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
-import { Card } from "./editor-fields";
+import { Card, HmsSyncButton } from "./editor-fields";
 import { AmenityIcon } from "../src/components/amenities/AmenityIcon";
-import { ScrollableHmsList } from "./ScrollableHmsList";
+import styles from "./HmsAmenities.module.css";
 
 type Amenity = { id: string; label: string; rooms: string[]; iconUrl?: string };
 
@@ -43,15 +42,11 @@ export function HmsAmenities() {
       title="Amenities from Patel HMS"
       description="Amenities assigned to your active room types. Manage these in Patel HMS."
       action={
-        <button
-          type="button"
-          className="wm-button wm-button-small"
-          disabled={loading}
-          onClick={() => setRefresh((value) => value + 1)}
-        >
-          <RefreshCw size={15} />
-          {loading ? "Fetching…" : "Refresh from HMS"}
-        </button>
+        <HmsSyncButton
+          label="Sync amenities from Patel HMS"
+          syncing={loading}
+          onSync={() => setRefresh((value) => value + 1)}
+        />
       }
     >
       {loading && (
@@ -72,23 +67,26 @@ export function HmsAmenities() {
           {!items.length && (
             <p className="wm-note">No amenities are assigned to active room types in Patel HMS.</p>
           )}
-          <ScrollableHmsList visibleCount={3} label="HMS amenities">
-            <ul className="wm-amenity-list" style={{ listStyle: "none", padding: 0 }}>
+          <div
+            className={styles.viewport}
+            role="region"
+            aria-label="HMS amenities"
+            tabIndex={0}
+            data-lenis-prevent
+          >
+            <ul className={styles.list}>
               {items.map((item) => (
-                <li key={item.id} className="wm-amenity-item">
-                  <div className="wm-amenity-row">
-                    <span className="wm-amenity-icon">
+                <li key={item.id} className={styles.item}>
+                  <div className={styles.card}>
+                    <span className={styles.icon}>
                       <AmenityIcon iconUrl={item.iconUrl} />
                     </span>
-                    <div>
-                      <strong>{item.label}</strong>
-                      <small>{item.rooms.join(", ")}</small>
-                    </div>
+                    <strong>{item.label}</strong>
                   </div>
                 </li>
               ))}
             </ul>
-          </ScrollableHmsList>
+          </div>
         </>
       )}
     </Card>

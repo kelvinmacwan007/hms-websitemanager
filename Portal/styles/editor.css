@@ -559,7 +559,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
   position: relative;
 }
 .wm-toggle-row > span:first-child {
@@ -578,12 +577,15 @@
 }
 .wm-toggle-row input {
   position: absolute;
+  z-index: 1;
+  cursor: pointer;
   width: 36px;
   height: 24px;
   right: 0;
   opacity: 0;
 }
 .wm-switch {
+  pointer-events: none;
   width: 33px;
   height: 19px;
   border-radius: 30px;

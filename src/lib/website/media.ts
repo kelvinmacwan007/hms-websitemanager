@@ -14,8 +14,8 @@ export async function validateMedia(file: File) {
     "image/gif": ["gif"],
   };
   const extension = file.name.split(".").pop()?.toLowerCase() || "";
-  if (!types[file.type]?.includes(extension) || file.size < 1 || file.size > 2 * 1024 * 1024)
-    throw new Error("Use a PNG, JPEG, WebP or GIF up to 2 MB with a matching extension.");
+  if (!types[file.type]?.includes(extension) || file.size < 1 || file.size > 5 * 1024 * 1024)
+    throw new Error("Use a PNG, JPEG, WebP or GIF up to 5 MB with a matching extension.");
   const bytes = Buffer.from(await file.arrayBuffer());
   const matches =
     file.type === "image/png"

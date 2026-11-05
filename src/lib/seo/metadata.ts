@@ -11,14 +11,17 @@ const pageTitles: Record<string, string> = {
   "/reviews": "Guest Reviews",
   "/experiences": "Experiences",
   "/policies": "Hotel Policies",
-  "/dining": "Dining",
+  "/dining": "Menu",
+  "/menu": "Menu",
   "/booking": "Find a Stay",
 };
 
 export function createHotelMetadata(hotel: Hotel, path = "", pageTitle?: string): Metadata {
   const page =
     hotel.website?.pages[
-      (path.split("/")[1] || "home") as keyof NonNullable<Hotel["website"]>["pages"]
+      (path === "/menu" ? "dining" : path.split("/")[1] || "home") as keyof NonNullable<
+        Hotel["website"]
+      >["pages"]
     ];
   const label = pageTitle ?? pageTitles[path];
   const title =

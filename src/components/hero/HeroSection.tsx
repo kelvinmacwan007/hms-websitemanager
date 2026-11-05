@@ -4,25 +4,21 @@ import { PublicPageLink as Link } from "@/components/common/PublicPageLink";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { HeroMotion } from "./HeroMotion";
 import { HeroSlider } from "./HeroSlider";
-import type { GalleryImage, Hotel } from "@/types/hotel";
+import type { Hotel } from "@/types/hotel";
+import { bannerImages } from "@/lib/website/bannerImages";
 
 export function HeroSection({ hotel }: { hotel: Hotel }) {
-  const candidates = hotel.heroSlides?.length
-    ? hotel.heroSlides
-    : [hotel.heroImage, ...hotel.gallery];
-  const seen = new Set<string>();
-  const images = candidates.filter((image): image is GalleryImage => {
-    if (!image?.url || seen.has(image.url)) return false;
-    seen.add(image.url);
-    return true;
-  });
+  const images = bannerImages(hotel);
   const location = [hotel.location.city, hotel.location.country]
     .map((value) => value?.trim())
     .filter(Boolean)
     .join(", ");
 
   return (
-    <HeroSlider images={images}>
+    <HeroSlider
+      images={images}
+      overlayHeader={hotel.branding.header?.template === "transparent" && hotel.configured}
+    >
       <HeroMotion>
         {location && (
           <p className={websiteClassName("hero-location")}>

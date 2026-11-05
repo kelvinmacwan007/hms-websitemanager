@@ -75,7 +75,9 @@ export function ManagerLogin({ hmsMode = false }: { hmsMode?: boolean }) {
                     tenantId: data.get("tenantId") || undefined,
                   }),
                 });
-                const result = await r.json();
+                const result = await r.json().catch(() => {
+                  throw new Error("Sign-in is unavailable. Please refresh the page and try again.");
+                });
                 if (!r.ok) throw new Error(result.error || "Sign-in failed. Please try again.");
                 if (result.chooseProperty) {
                   setProperties(result.properties);

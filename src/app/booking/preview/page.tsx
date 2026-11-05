@@ -1,14 +1,12 @@
+import { getBookingContext } from "@/lib/booking/context";
 import { pageEnabled } from "@/lib/website/pages";
 import { Heading } from "@/components/common/Heading";
 import { websiteClassName } from "@/lib/ui/websiteStyles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DemoStayPreview } from "@/components/booking/DemoStayPreview";
-import { SiteShell } from "@/components/layout/SiteShell";
-import { getWebsiteProvider } from "@/lib/api/provider";
 import { isDemoPaymentMode } from "@/lib/payment/demoMode";
 import { parseAvailabilitySearch } from "@/lib/booking/search";
-import { resolveTenant } from "@/lib/tenant/resolveTenant";
 
 type Params = Record<string, string | string[] | undefined>;
 type Props = { searchParams: Promise<Params> };
@@ -19,9 +17,7 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
   if (!isDemoPaymentMode()) notFound();
 
   const params = await searchParams;
-  const tenant = await resolveTenant();
-  const provider = getWebsiteProvider();
-  const hotel = await provider.getHotel(tenant);
+  const { tenant, provider, hotel } = await getBookingContext();
   if (!pageEnabled(hotel, "booking")) notFound();
   const { search } = parseAvailabilitySearch(params, hotel.bookingSettings, hotel.timeZone);
   const roomSlug = typeof params.room === "string" ? params.room : "";
@@ -33,7 +29,7 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
 
   if (!search || !room || !rate) {
     return (
-      <SiteShell hotel={hotel}>
+      <>
         <main className={websiteClassName("container py-20")}>
           <Heading as="h1" className={websiteClassName("section-title")}>
             This sample stay is no longer available.
@@ -44,7 +40,7 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
             </span>
           </Link>
         </main>
-      </SiteShell>
+      </>
     );
   }
 
@@ -65,7 +61,7 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
   const pricedExtras = extras.filter((extra) => extra.price.currency === rate.price.currency);
 
   return (
-    <SiteShell hotel={hotel}>
+    <>
       <DemoStayPreview
         room={room}
         rate={rate}
@@ -74,6 +70,6 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
         extras={pricedExtras}
         initialExtraIds={[...selectedIds]}
       />
-    </SiteShell>
+    </>
   );
 }

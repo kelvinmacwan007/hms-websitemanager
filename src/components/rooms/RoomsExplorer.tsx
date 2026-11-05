@@ -5,14 +5,7 @@ import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { useMotionPreset } from "@/components/layout/MotionWrapper";
 import { useSearchParams } from "next/navigation";
-import {
-  SlidersHorizontal,
-  Star,
-  RotateCcw,
-  Grid2X2,
-  PanelsTopLeft,
-  ChevronDown,
-} from "lucide-react";
+import { SlidersHorizontal, Star, RotateCcw, Grid2X2, List, ChevronDown } from "lucide-react";
 import { formatMoney } from "@/lib/utils/format";
 import { BookingWidget } from "../booking/BookingWidget";
 import { Checkbox } from "../common/Checkbox";
@@ -370,32 +363,39 @@ export function RoomsExplorer({
                 {filterCount} active {filterCount === 1 ? "filter" : "filters"}
               </span>
             )}
-            <label className={styles.sort}>
-              Sort by
-              <select value={sort} onChange={(event) => setSort(event.target.value)}>
-                <option value="recommended">Recommended</option>
-                <option value="price-low">Price (low to high)</option>
-                <option value="price-high">Price (high to low)</option>
-                <option value="name">Room name</option>
-              </select>
-            </label>
-            <div className={styles.viewToggle} aria-label="Room view">
-              <button
-                type="button"
-                aria-label="Grid view"
-                aria-pressed={view === "grid"}
-                onClick={() => changeView("grid")}
-              >
-                <Grid2X2 size={18} />
-              </button>
-              <button
-                type="button"
-                aria-label="List view"
-                aria-pressed={view === "list"}
-                onClick={() => changeView("list")}
-              >
-                <PanelsTopLeft size={18} />
-              </button>
+            <div className={styles.resultControls}>
+              <label className={styles.sort}>
+                <span className={styles.controlLabel}>Sort rooms</span>
+                <select
+                  aria-label="Sort rooms"
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value)}
+                >
+                  <option value="recommended">Recommended</option>
+                  <option value="price-low">Price (low to high)</option>
+                  <option value="price-high">Price (high to low)</option>
+                  <option value="name">Room name</option>
+                </select>
+                <ChevronDown size={18} aria-hidden="true" />
+              </label>
+              <div className={styles.viewToggle} role="group" aria-label="Room view">
+                <button
+                  type="button"
+                  aria-label="Grid view"
+                  aria-pressed={view === "grid"}
+                  onClick={() => changeView("grid")}
+                >
+                  <Grid2X2 size={22} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="List view"
+                  aria-pressed={view === "list"}
+                  onClick={() => changeView("list")}
+                >
+                  <List size={24} aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
           {error && (

@@ -3,8 +3,118 @@
 @tailwind utilities;
 
 .website-body {
+  --site-control-height: 52px;
+  --site-control-compact: 44px;
+  --site-control-icon: 44px;
+  --site-calendar-day: 40px;
+  --site-control-padding: 16px;
+  --site-control-radius: 12px;
+  --site-control-font: 1rem;
+  --site-control-duration: 180ms;
   --site-card-radius: var(--website-radius, 1.5rem);
   --site-card-shadow: 0 0.75rem 2.25rem rgb(25 30 28 / 6%);
+}
+
+/* Shared public-site controls, including pickers portalled into the body. */
+.website-body:not(:has(.wm-root))
+  :is(
+    input:not(
+      [type="hidden"],
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="color"],
+      [type="file"],
+      [type="submit"],
+      [type="button"],
+      [type="reset"]
+    ),
+    select
+  ):not([data-compact-control]):not(#checkoutWidget *) {
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  min-height: var(--site-control-height);
+  border-radius: var(--site-control-radius);
+  padding-block: 12px;
+  font-size: var(--site-control-font);
+  line-height: 1.5;
+}
+.website-body:not(:has(.wm-root)) textarea:not(#checkoutWidget *) {
+  min-height: calc(var(--site-control-height) * 2);
+  font-size: var(--site-control-font);
+  line-height: 1.5;
+}
+.website-body:not(:has(.wm-root))
+  :is(
+    button,
+    [role="button"],
+    .brand-button,
+    .site-button,
+    .ghost-button,
+    .accent-button,
+    .light-button,
+    .icon-button,
+    .image-button,
+    .indicator-button,
+    [data-shimmer],
+    [data-site-button]
+  ):not(#checkoutWidget *) {
+  touch-action: manipulation;
+  transition-property: background-color, border-color, color, box-shadow, opacity, scale;
+  transition-duration: var(--site-control-duration);
+  transition-timing-function: ease-out;
+}
+.website-body:not(:has(.wm-root)) :is(button, [role="button"], [data-site-button]):focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  html:not([data-site-motion="off"])
+    .website-body:not(:has(.wm-root))
+    :is(
+      button,
+      [role="button"],
+      .brand-button,
+      .site-button,
+      .ghost-button,
+      .accent-button,
+      .light-button,
+      .icon-button,
+      .image-button,
+      .indicator-button,
+      [data-shimmer],
+      [data-site-button]
+    ):not(:disabled):not([aria-disabled="true"]):not(#checkoutWidget *):hover {
+    scale: 1.02;
+  }
+}
+html:not([data-site-motion="off"])
+  .website-body:not(:has(.wm-root))
+  :is(
+    button,
+    [role="button"],
+    .brand-button,
+    .site-button,
+    .ghost-button,
+    .accent-button,
+    .light-button,
+    .icon-button,
+    .image-button,
+    .indicator-button,
+    [data-shimmer],
+    [data-site-button]
+  ):not(:disabled):not([aria-disabled="true"]):not(#checkoutWidget *):active {
+  scale: 0.98;
+}
+@media (prefers-reduced-motion: reduce) {
+  .website-body:not(:has(.wm-root)) :is(button, [role="button"], a) {
+    transition: none !important;
+    scale: none !important;
+  }
+}
+html[data-site-motion="off"] .website-body:not(:has(.wm-root)) :is(button, [role="button"], a) {
+  transition: none !important;
+  scale: none !important;
 }
 
 @layer base {

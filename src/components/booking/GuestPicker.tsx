@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, Minus, Plus, Users, X } from "lucide-react";
+import { BedDouble, ChevronDown, Minus, Plus, Users, X } from "lucide-react";
 import type { AvailabilitySearch } from "@/types/hotel";
-import { guestParty, partySummary } from "@/lib/booking/party";
+import { guestParty } from "@/lib/booking/party";
 import styles from "./GuestPicker.module.css";
+import { useBookingPopover } from "./useBookingPopover";
 
 type GuestSelection = ReturnType<typeof guestParty> & { rooms: number };
 
@@ -22,16 +23,15 @@ export function GuestPicker({
     ...guestParty({ guests: values?.guests ?? 2, ...values }),
     rooms: values?.rooms ?? 1,
   }));
-  const [open, setOpen] = useState(false);
-  const trigger = useRef<HTMLButtonElement>(null);
-  const dialog = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState<"guests" | "rooms" | null>(null);
+  const {
+    dialog,
+    trigger,
+    alternateTrigger: roomTrigger,
+  } = useBookingPopover(Boolean(open), open === "rooms");
   const id = useId();
   const guests = party.adults + party.children;
-  const summary = `${partySummary({ guests, ...party })}, ${party.rooms} ${party.rooms === 1 ? "room" : "rooms"}`;
-
-  useEffect(() => {
-    if (open) dialog.current?.showModal();
-  }, [open]);
+  const summary = `${party.adults} ${party.adults === 1 ? "adult" : "adults"}, ${party.children} ${party.children === 1 ? "child" : "children"}, ${party.pets} ${party.pets === 1 ? "pet" : "pets"}`;
 
   const rows = [
     {
@@ -75,23 +75,52 @@ export function GuestPicker({
 
   return (
     <div className={styles.root}>
-      <button
-        ref={trigger}
-        type="button"
-        className={styles.trigger}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls={id}
-        onClick={() => setOpen(!open)}
-      >
+      <div className={styles.field}>
         <span className={styles.label}>
-          <Users size={17} /> Guests &amp; rooms
+          <Users size={16} aria-hidden="true" /> Guests
         </span>
-        <span className={styles.summary}>
-          <span title={summary}>{summary}</span>
-          <ChevronDown size={18} aria-hidden="true" />
+        <button
+          ref={trigger}
+          type="button"
+          className={styles.trigger}
+          aria-label={`Guests: ${summary}`}
+          aria-haspopup="dialog"
+          aria-expanded={open === "guests"}
+          aria-controls={id}
+          onClick={() => {
+            setOpen("guests");
+          }}
+        >
+          <span className={styles.summary}>
+            <span title={summary}>{summary}</span>
+            <ChevronDown size={18} aria-hidden="true" />
+          </span>
+        </button>
+      </div>
+      <div className={styles.field}>
+        <span className={styles.label}>
+          <BedDouble size={16} aria-hidden="true" /> Rooms
         </span>
-      </button>
+        <button
+          ref={roomTrigger}
+          type="button"
+          className={styles.trigger}
+          aria-label={`Rooms: ${party.rooms} ${party.rooms === 1 ? "room" : "rooms"}`}
+          aria-haspopup="dialog"
+          aria-expanded={open === "rooms"}
+          aria-controls={id}
+          onClick={() => {
+            setOpen("rooms");
+          }}
+        >
+          <span className={styles.summary}>
+            <span>
+              {party.rooms} {party.rooms === 1 ? "room" : "rooms"}
+            </span>
+            <ChevronDown size={18} aria-hidden="true" />
+          </span>
+        </button>
+      </div>
       <input type="hidden" name="guests" value={guests} />
       {Object.entries(party).map(([key, count]) => (
         <input key={key} type="hidden" name={key} value={count} />
@@ -101,11 +130,11 @@ export function GuestPicker({
           <dialog
             ref={dialog}
             id={id}
-            aria-label="Guests and rooms"
+            aria-label={open === "rooms" ? "Rooms" : "Guests"}
             className={styles.dialog}
             onClose={() => {
-              setOpen(false);
-              trigger.current?.focus();
+              setOpen(null);
+              (open === "rooms" ? roomTrigger : trigger).current?.focus();
             }}
             onClick={(event) => {
               if (event.target !== event.currentTarget) return;
@@ -120,45 +149,56 @@ export function GuestPicker({
             }}
           >
             <div className={styles.heading}>
-              <h2>Guests &amp; rooms</h2>
+              <h2>{open === "rooms" ? "Rooms" : "Guests"}</h2>
               <button
                 type="button"
                 className={styles.close}
-                aria-label="Close guest selector"
+                aria-label={open === "rooms" ? "Close room selector" : "Close guest selector"}
                 onClick={() => dialog.current?.close()}
               >
                 <X size={20} />
               </button>
             </div>
-            {rows.map(({ key, label, hint, min, max }) => (
-              <div key={key} className={styles.row}>
-                <div className={styles.copy}>
-                  <strong>{label}</strong>
-                  <span>{hint}</span>
+            {rows
+              .filter((row) => (open === "rooms" ? row.key === "rooms" : row.key !== "rooms"))
+              .map(({ key, label, hint, min, max }) => (
+                <div key={key} className={styles.row}>
+                  <div className={styles.copy}>
+                    <strong>{label}</strong>
+                    <span className={styles.hint} id={`${id}-${key}-hint`}>
+                      {hint}
+                    </span>
+                  </div>
+                  <div className={styles.counter}>
+                    <button
+                      type="button"
+                      aria-label={`Decrease ${label.toLowerCase()}`}
+                      aria-describedby={`${id}-${key}-hint`}
+                      disabled={party[key] <= min}
+                      onClick={() => change(key, -1)}
+                    >
+                      <Minus size={18} />
+                    </button>
+                    <output aria-label={label} aria-live="polite">
+                      {party[key]}
+                    </output>
+                    <button
+                      type="button"
+                      aria-label={`Increase ${label.toLowerCase()}`}
+                      aria-describedby={`${id}-${key}-hint`}
+                      disabled={party[key] >= max}
+                      onClick={() => change(key, 1)}
+                    >
+                      <Plus size={18} />
+                    </button>
+                  </div>
                 </div>
-                <div className={styles.counter}>
-                  <button
-                    type="button"
-                    aria-label={`Decrease ${label.toLowerCase()}`}
-                    disabled={party[key] <= min}
-                    onClick={() => change(key, -1)}
-                  >
-                    <Minus size={18} />
-                  </button>
-                  <output aria-label={label} aria-live="polite">
-                    {party[key]}
-                  </output>
-                  <button
-                    type="button"
-                    aria-label={`Increase ${label.toLowerCase()}`}
-                    disabled={party[key] >= max}
-                    onClick={() => change(key, 1)}
-                  >
-                    <Plus size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            <p className={styles.note}>
+              {open === "rooms"
+                ? "At least one adult per room."
+                : "Pet requests require hotel confirmation."}
+            </p>
             <button
               type="button"
               className={styles.done}

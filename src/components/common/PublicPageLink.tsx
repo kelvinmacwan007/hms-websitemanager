@@ -9,6 +9,7 @@ export function PublicPageLink({
 }: ComponentProps<typeof Link> & { hotel: Hotel }) {
   const href = typeof props.href === "string" ? props.href : props.href.pathname || "";
   const page = (href.split("/")[1]?.split("?")[0] || "home") as PageKey;
+  if (href === "/menu" && !pageEnabled(hotel, "dining")) return null;
   if (PAGE_KEYS.includes(page) && !pageEnabled(hotel, page)) return null;
   return <Link {...props} />;
 }

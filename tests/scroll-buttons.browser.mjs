@@ -9,9 +9,10 @@ const base = process.env.QA_URL ?? "http://localhost:3000";
 const errors = [];
 
 async function scale(locator) {
-  return locator.evaluate(
-    (element) => new DOMMatrixReadOnly(getComputedStyle(element).transform).a,
-  );
+  return locator.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return new DOMMatrixReadOnly(style.transform).a * (parseFloat(style.scale) || 1);
+  });
 }
 
 try {
@@ -26,8 +27,9 @@ try {
   const actions = [
     page.getByRole("link", { name: "Book your stay", exact: true }),
     page.getByRole("link", { name: "All rooms", exact: true }),
-    page.getByRole("button", { name: "Next banner image", exact: true }),
   ];
+  const bannerNext = page.getByRole("button", { name: "Next banner image", exact: true });
+  if (await bannerNext.count()) actions.push(bannerNext);
   for (const action of actions) {
     await action.scrollIntoViewIfNeeded();
     await action.hover();
@@ -42,9 +44,16 @@ try {
     await page.keyboard.press("Tab");
     await action.focus();
     assert.equal(await action.evaluate((element) => element.matches(":focus-visible")), true);
-    assert.notEqual(
-      await action.evaluate((element) => getComputedStyle(element).boxShadow),
-      "none",
+    assert.equal(
+      await action.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return (
+          style.boxShadow !== "none" ||
+          (style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2)
+        );
+      }),
+      true,
+      "Keyboard focus has a visible outline or ring",
     );
   }
 

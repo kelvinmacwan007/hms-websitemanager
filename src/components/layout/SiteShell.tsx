@@ -14,10 +14,12 @@ export function SiteShell({
   hotel,
   children,
   showMobileBookingCta = true,
+  animatePageEntry = true,
 }: {
   hotel: Hotel;
   children: React.ReactNode;
   showMobileBookingCta?: boolean;
+  animatePageEntry?: boolean;
 }) {
   return (
     <BookingSettingsProvider
@@ -40,7 +42,7 @@ export function SiteShell({
         </a>
         <Header hotel={hotel} />
         <div id="main-content">
-          <PageEntryMotion>{children}</PageEntryMotion>
+          <PageEntryMotion enabled={animatePageEntry}>{children}</PageEntryMotion>
         </div>
         <Footer hotel={hotel} />
         <WebsiteCursor />

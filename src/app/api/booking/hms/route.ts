@@ -248,7 +248,7 @@ export async function POST(request: Request) {
           session.reservationId = await getHmsWebsiteIntegration(tenant).createReservation({
             ...getHmsStayTimes(tenant, search),
             rooms,
-            reservationNotes: `Website booking: ${partySummary(search)}.`,
+            reservationNotes: `Website booking: ${partySummary(search)}.${selection.addOnRequests.length ? ` Requested services (subject to hotel confirmation): ${selection.addOnRequests.map(({ item, quantity }) => `${quantity} x ${item.name.slice(0, 100)}`).join("; ")}.` : ""}`,
           });
           await writeHmsSession(tenant.id, token, session);
           const verified = await details(tenant, session);

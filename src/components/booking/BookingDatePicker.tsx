@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { offsetDate } from "@/lib/booking/settings";
 import styles from "./BookingDatePicker.module.css";
+import { useBookingPopover } from "./useBookingPopover";
+import { canSelectStayDate, type StayDateLimits } from "@/lib/booking/dateRange";
+
+type StayRange = StayDateLimits & {
+  checkIn: string;
+  checkOut: string;
+  onChange: (checkIn: string, checkOut: string) => void;
+};
 
 const months = Array.from({ length: 12 }, (_, index) =>
   new Intl.DateTimeFormat("en", { month: "long", timeZone: "UTC" }).format(
@@ -20,7 +28,6 @@ const shiftMonth = (value: string, offset: number) => {
 };
 const displayDate = (value: string) =>
   new Intl.DateTimeFormat("en", {
-    weekday: "short",
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -38,6 +45,8 @@ export function BookingDatePicker({
   className = "",
   rangeStart,
   rangeEnd,
+  stayRange,
+  initialSelection = "start",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -49,36 +58,74 @@ export function BookingDatePicker({
   className?: string;
   rangeStart?: string;
   rangeEnd?: string;
+  stayRange?: StayRange;
+  initialSelection?: "start" | "end";
 }) {
   const id = useId();
-  const dialog = useRef<HTMLDialogElement>(null);
   const [month, setMonth] = useState(monthOf(value || min));
   const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (open) dialog.current?.showModal();
-  }, [open]);
-  const upper = max || offsetDate(min, 730);
-  const minimumMonth = monthOf(min);
+  const [selecting, setSelecting] = useState(initialSelection);
+  const [draftStart, setDraftStart] = useState(stayRange?.checkIn || "");
+  const [draftEnd, setDraftEnd] = useState(stayRange?.checkOut || "");
+  const [hovered, setHovered] = useState("");
+  const { dialog, trigger } = useBookingPopover(open);
+  const lower = stayRange?.minArrival || min;
+  const upper = stayRange
+    ? selecting === "start"
+      ? stayRange.maxArrival
+      : offsetDate(draftStart || stayRange.checkIn, stayRange.maxStay)
+    : max || offsetDate(min, 730);
+  const minimumMonth = monthOf(lower);
   const maximumMonth = monthOf(upper);
-  const clamp = (date: string) => (date < min ? min : date > upper ? upper : date);
+  const clamp = (date: string) => (date < lower ? lower : date > upper ? upper : date);
+  const selectedStart = stayRange ? draftStart : rangeStart;
+  const selectedEnd = stayRange
+    ? selecting === "end" && hovered > draftStart
+      ? hovered
+      : draftEnd
+    : rangeEnd;
   const years = Array.from(
-    { length: Math.max(1, Number(upper.slice(0, 4)) - Number(min.slice(0, 4)) + 1) },
-    (_, i) => Number(min.slice(0, 4)) + i,
+    { length: Math.max(1, Number(upper.slice(0, 4)) - Number(lower.slice(0, 4)) + 1) },
+    (_, i) => Number(lower.slice(0, 4)) + i,
   );
 
   function close() {
     dialog.current?.close();
   }
   function show() {
+    if (stayRange) {
+      setDraftStart(stayRange.checkIn);
+      setDraftEnd(stayRange.checkOut);
+      setSelecting(initialSelection);
+      setHovered("");
+    }
     setMonth(monthOf(clamp(value || today)));
     setOpen(true);
+  }
+
+  function selectDate(day: string) {
+    if (!stayRange) {
+      onChange(day);
+      close();
+      return;
+    }
+    setHovered("");
+    if (selecting === "start" || !draftStart || day <= draftStart) {
+      setDraftStart(day);
+      setDraftEnd("");
+      setSelecting("end");
+    } else {
+      setDraftEnd(day);
+      stayRange.onChange(draftStart, day);
+      close();
+    }
   }
 
   function calendar(start: string, second: boolean) {
     const date = dateOf(start);
     const monthIndex = date.getUTCMonth();
     const year = date.getUTCFullYear();
-    const blanks = (date.getUTCDay() + 6) % 7;
+    const blanks = date.getUTCDay();
     const days = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
     return (
       <section
@@ -93,6 +140,7 @@ export function BookingDatePicker({
           ) : (
             <>
               <select
+                data-compact-control
                 aria-label="Calendar month"
                 value={monthIndex}
                 onChange={(e) =>
@@ -113,6 +161,7 @@ export function BookingDatePicker({
                 })}
               </select>
               <select
+                data-compact-control
                 aria-label="Calendar year"
                 value={year}
                 onChange={(e) => {
@@ -130,13 +179,15 @@ export function BookingDatePicker({
           )}
         </div>
         <div className={styles.days}>
-          {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+          {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
             <span key={day} className={styles.weekday} aria-hidden="true">
               {day}
             </span>
           ))}
           {Array.from({ length: blanks }, (_, i) => (
-            <span key={`blank-${i}`} />
+            <span key={`blank-${i}`} className={styles.outsideDay} aria-hidden="true">
+              {new Date(Date.UTC(year, monthIndex, i - blanks + 1)).getUTCDate()}
+            </span>
           ))}
           {Array.from({ length: days }, (_, i) => {
             const day = `${start.slice(0, 7)}-${String(i + 1).padStart(2, "0")}`;
@@ -145,21 +196,37 @@ export function BookingDatePicker({
                 key={day}
                 type="button"
                 data-date={day}
-                disabled={day < min || day > upper}
+                disabled={
+                  stayRange
+                    ? !canSelectStayDate(day, draftStart, selecting, stayRange)
+                    : day < min || day > upper
+                }
                 aria-label={displayDate(day)}
-                aria-pressed={day === value}
+                aria-pressed={stayRange ? day === selectedStart || day === draftEnd : day === value}
                 aria-current={day === today ? "date" : undefined}
-                data-range={Boolean(rangeStart && rangeEnd && day > rangeStart && day < rangeEnd)}
-                data-endpoint={day === rangeStart || day === rangeEnd}
-                onClick={() => {
-                  onChange(day);
-                  close();
+                data-range={Boolean(
+                  selectedStart && selectedEnd && day > selectedStart && day < selectedEnd,
+                )}
+                data-endpoint={day === selectedStart || day === selectedEnd}
+                onMouseEnter={() => {
+                  if (
+                    stayRange &&
+                    selecting === "end" &&
+                    canSelectStayDate(day, draftStart, selecting, stayRange)
+                  )
+                    setHovered(day);
                 }}
+                onClick={() => selectDate(day)}
               >
                 {i + 1}
               </button>
             );
           })}
+          {Array.from({ length: (7 - ((blanks + days) % 7)) % 7 }, (_, i) => (
+            <span key={`next-${i}`} className={styles.outsideDay} aria-hidden="true">
+              {i + 1}
+            </span>
+          ))}
         </div>
       </section>
     );
@@ -169,11 +236,13 @@ export function BookingDatePicker({
     <>
       {name && <input type="hidden" name={name} value={value} />}
       <button
+        ref={trigger}
         type="button"
         className={`${styles.trigger} ${className}`}
         aria-label={`${label}: ${value ? displayDate(value) : "Choose date"}`}
         aria-haspopup="dialog"
         aria-expanded={open}
+        aria-controls={id}
         onClick={show}
       >
         <span>{value ? displayDate(value) : "Choose date"}</span>
@@ -183,9 +252,13 @@ export function BookingDatePicker({
         createPortal(
           <dialog
             ref={dialog}
+            id={id}
             className={styles.dialog}
-            aria-labelledby={id}
-            onClose={() => setOpen(false)}
+            aria-labelledby={`${id}-title`}
+            onClose={() => {
+              setOpen(false);
+              trigger.current?.focus();
+            }}
             onClick={(e) => {
               if (e.target === e.currentTarget) {
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -202,7 +275,9 @@ export function BookingDatePicker({
             <div className={styles.title}>
               <div>
                 <span>Plan your stay</span>
-                <h2 id={id}>Choose your {label.toLowerCase()} date</h2>
+                <h2 id={`${id}-title`}>
+                  {stayRange ? "Choose your stay dates" : `Choose your ${label.toLowerCase()} date`}
+                </h2>
               </div>
               <button type="button" aria-label="Close calendar" onClick={close}>
                 <X size={20} />
@@ -229,13 +304,23 @@ export function BookingDatePicker({
                 Next <ChevronRight size={18} />
               </button>
             </div>
-            <div className={styles.calendars}>
+            <div className={styles.calendars} onMouseLeave={() => setHovered("")}>
               {calendar(month, false)}
               {calendar(shiftMonth(month, 1), true)}
             </div>
             <div className={styles.footer}>
-              <span>{value ? displayDate(value) : "Select an available date"}</span>
-              <button type="button" onClick={close}>
+              <span role="status" aria-live="polite">
+                {stayRange
+                  ? selecting === "end" && !draftEnd
+                    ? "Now select your check-out date"
+                    : selecting === "start"
+                      ? "Select your check-in date"
+                      : `${Math.round((Date.parse(draftEnd) - Date.parse(draftStart)) / 86400000)} nights selected`
+                  : value
+                    ? displayDate(value)
+                    : "Select an available date"}
+              </span>
+              <button type="button" disabled={Boolean(stayRange && !draftEnd)} onClick={close}>
                 Done
               </button>
             </div>

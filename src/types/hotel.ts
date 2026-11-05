@@ -118,6 +118,29 @@ export type Offer = {
   ctaLabel?: string;
 };
 
+export type RestaurantMenu = {
+  id: string;
+  name: string;
+  pdfUrl?: string;
+  sections: {
+    id: string;
+    title: string;
+    column: string;
+    boxed?: boolean;
+    items: {
+      id: string;
+      name: string;
+      description: string;
+      price: string;
+      image?: GalleryImage;
+      itemType?: "veg" | "non-veg";
+      vintage?: string;
+      status?: string;
+      available?: boolean;
+    }[];
+  }[];
+};
+
 export type DiningVenue = {
   id: string;
   name: string;
@@ -191,6 +214,7 @@ export type Hotel = {
   rooms: HotelRoom[];
   offers?: Offer[];
   dining?: DiningVenue[];
+  menus?: RestaurantMenu[];
   testimonials?: Testimonial[];
   policies?: HotelPolicy[];
   faqs?: HotelFaq[];

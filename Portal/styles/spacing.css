@@ -1,57 +1,319 @@
 /* Shared spacing rhythm, applied after the individual section layouts. */
+.wm-root.wm-studio-dashboard .wm-dashboard-management {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
+  align-items: stretch;
+  gap: var(--wm-space-section);
+  margin-bottom: var(--wm-space-section);
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management>.wm-card {
+  min-width: 0;
+  margin: 0;
+  padding: var(--wm-space-card);
+}
+
+.wm-root.wm-studio-dashboard .wm-process-heading {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 0;
+}
+
+.wm-root.wm-studio-dashboard .wm-process-heading h2 {
+  margin: 0;
+  color: var(--wm-brand-navy);
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.wm-root.wm-studio-dashboard .wm-process-title p {
+  margin: 4px 0 0;
+  color: var(--wm-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .wm-root.wm-studio-dashboard .wm-process-heading {
+    gap: 12px;
+  }
+
+  .wm-root.wm-studio-dashboard .wm-process-heading h2 {
+    font-size: 1.25rem;
+  }
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-heading {
+  flex-wrap: wrap;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-controls {
+  flex-wrap: wrap;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-input {
+  min-width: 0;
+  flex: 1 1 240px;
+}
+
+@media (max-width: 1100px) {
+  .wm-root.wm-studio-dashboard .wm-dashboard-management {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .wm-root.wm-studio-dashboard .wm-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wm-space-section);
+  padding-top: 0;
   padding-inline: var(--wm-space-page);
   padding-bottom: var(--wm-space-page);
 }
+
+/* The parent gap owns page spacing; children must not add a second gap. */
+.wm-root.wm-studio-dashboard .wm-workspace>* {
+  margin-block: 0;
+  min-width: 0;
+}
+
 .wm-root.wm-studio-dashboard .wm-page-heading {
   padding-inline: var(--wm-space-page);
+  margin-bottom: 0;
 }
-.wm-root.wm-studio-dashboard
-  .wm-workspace
-  > :is(.wm-address-panel, .wm-domain-card, .wm-setup-stepper, .wm-notice, .wm-workspace-banner) {
-  margin-bottom: var(--wm-space-section);
+
+.wm-root.wm-studio-dashboard .wm-workspace> :is(.wm-address-panel, .wm-domain-card, .wm-setup-stepper, .wm-notice, .wm-workspace-banner) {
+  margin-bottom: 0;
 }
+
 .wm-root.wm-studio-dashboard .wm-editor-grid {
   gap: var(--wm-space-section);
 }
+
+@media (min-width: 1101px) {
+  .wm-root.wm-studio-dashboard .wm-editor-grid:not(.wm-dashboard-layout) {
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+  }
+}
+
 .wm-root.wm-studio-dashboard .wm-editor-column {
+  display: grid;
+  align-content: start;
+  gap: var(--wm-space-section);
+}
+
+.wm-root.wm-studio-dashboard .wm-editor-fields {
+  margin: 0;
+  padding: 0;
+}
+
+.wm-root.wm-studio-dashboard .wm-preview-column {
+  top: var(--wm-space-page);
+  margin-top: 0;
+  padding-top: 0;
+  align-self: start;
+}
+
+.wm-root.wm-studio-dashboard .wm-editor-column> :is(.wm-section-header-card, .wm-section-help, .wm-info) {
+  margin: 0;
+}
+
+.wm-root.wm-studio-dashboard :is(.wm-editor-fields,
+  .wm-home-design,
+  .wm-contact-design,
+  .wm-identity-design,
+  .wm-colors-design) {
+  gap: var(--wm-space-section);
+}
+
+.wm-root.wm-studio-dashboard .wm-card {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.wm-root.wm-studio-dashboard .wm-editor-fields> :is(.wm-setup, .wm-address-panel, .wm-domain-card, .wm-advanced),
+.wm-root.wm-studio-dashboard .wm-preview-column> :is(.wm-preview-card, .wm-publish-card) {
+  margin-block: 0;
+}
+
+.wm-root.wm-studio-dashboard .wm-preview-column {
   display: grid;
   gap: var(--wm-space-section);
 }
-.wm-root.wm-studio-dashboard
-  .wm-editor-column
-  > :is(.wm-section-header-card, .wm-section-help, .wm-info) {
-  margin: 0;
-}
-.wm-root.wm-studio-dashboard
-  :is(
-    .wm-editor-fields,
-    .wm-home-design,
-    .wm-contact-design,
-    .wm-identity-design,
-    .wm-colors-design
-  ) {
-  gap: var(--wm-space-section);
-}
-.wm-root.wm-studio-dashboard .wm-card {
-  margin-bottom: 0;
-}
-.wm-root.wm-studio-dashboard
-  :is(
-    .wm-section-header-card,
-    .wm-address-panel,
-    .wm-setup-reference.wm-setup-stepper,
-    .wm-id-card,
-    .wm-color-generate-card,
-    .wm-colors-main-card,
-    .wm-typography-design,
-    .wm-experience-design
-  ) {
+
+.wm-root.wm-studio-dashboard :is(.wm-section-header-card,
+  .wm-address-panel,
+  .wm-setup-reference.wm-setup-stepper,
+  .wm-id-card,
+  .wm-color-generate-card,
+  .wm-colors-main-card,
+  .wm-typography-design,
+  .wm-experience-design) {
   padding: var(--wm-space-card);
 }
+
 .wm-root.wm-studio-dashboard .wm-card-heading {
   padding: var(--wm-space-card) var(--wm-space-card) var(--wm-space-content);
 }
+
 .wm-root.wm-studio-dashboard .wm-card-body {
   padding: 0 var(--wm-space-card) var(--wm-space-card);
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-process {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-title h2 {
+  font-size: 1.5rem;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-heading p {
+  font-size: 14px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-input input {
+  width: 0;
+  min-width: 60px;
+  flex: 1;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-input span {
+  font-size: 14px;
+  padding: 12px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-status a {
+  color: #1f8f5f;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.wm-address-pending {
+  display: block;
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-heading {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-title h2 {
+    font-size: 1.25rem;
+  }
+
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-status {
+    grid-column: 2;
+    justify-self: start;
+    margin: 0;
+  }
+
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-input {
+    flex: 0 1 auto;
+    width: 100%;
+  }
+
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-input input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-title h2 {
+  font-size: 21px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-heading {
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-label {
+  display: block;
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wm-root.wm-studio-dashboard .wm-dashboard-management .wm-address-hint {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--wm-muted);
+}
+
+.wm-address-hint svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.wm-root.wm-studio-dashboard .wm-address-live-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin-top: 14px;
+  border-radius: 12px;
+  background: #e9edf4;
+  font-size: 13px;
+  color: var(--wm-muted);
+}
+
+.wm-root.wm-studio-dashboard .wm-address-live-panel.is-live {
+  background: #e6f6ee;
+}
+
+.wm-address-live-panel>a {
+  overflow-wrap: anywhere;
+  color: #13894f;
+  font-weight: 600;
+}
+
+.wm-address-live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.wm-root.wm-studio-dashboard .wm-address-live-actions a {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .wm-root.wm-studio-dashboard .wm-dashboard-management .wm-domain-heading {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
 }

@@ -38,7 +38,10 @@ export function resolveDemoSelection(params: Params, hotel: Hotel, rooms: HotelR
       !(extra.id === "breakfast" && allIncludeBreakfast),
   );
   const addOnRequests = selectedAddOnRequests(hotel.addOns ?? [], params.addon).filter(
-    ({ item }) => item.price.currency === currency,
+    ({ item }) =>
+      item.price.currency === currency &&
+      (!item.startDate || item.startDate <= search.checkIn) &&
+      (!item.endDate || item.endDate >= search.checkIn),
   );
   const estimate =
     cartSubtotal(lines, nights) +
@@ -58,5 +61,7 @@ export function resolveDemoSelection(params: Params, hotel: Hotel, rooms: HotelR
   addOnRequests.forEach(({ item, quantity }) =>
     query.append("addon", JSON.stringify([item.id, quantity])),
   );
-  return { search, lines, nights, extras, estimate, currency, query, isCart };
+  if (typeof params.__website_preview === "string")
+    query.set("__website_preview", params.__website_preview);
+  return { search, lines, nights, extras, addOnRequests, estimate, currency, query, isCart };
 }

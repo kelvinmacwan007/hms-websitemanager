@@ -131,6 +131,7 @@ export function Header({ hotel }: { hotel: Hotel }) {
           hotel={hotel}
           href="/rooms#rooms-availability"
           className={styles.search}
+          data-site-button
           aria-label="Search rooms"
         >
           <Search size={22} />
@@ -140,6 +141,7 @@ export function Header({ hotel }: { hotel: Hotel }) {
         hotel={hotel}
         href={cartHref}
         className={styles.cart}
+        data-site-button
         aria-label={`Cart, ${count ? `${count} rooms selected` : "no rooms selected"}`}
         aria-current={pathname === "/booking/cart" ? "page" : undefined}
       >
@@ -166,9 +168,10 @@ export function Header({ hotel }: { hotel: Hotel }) {
   return (
     <HeaderMotion
       template={template}
+      shellClassName={`${styles.shell} ${overlay ? styles.overlayShell : ""}`}
       className={`${styles.header} ${overlay ? styles.overlay : ""} ${overlay && !lightLogo ? styles.noLightLogo : ""}`}
     >
-      <div className={styles.templateLayout}>
+      <div className={styles.templateLayout} data-header-layout data-sticky-header>
         {template === "contact" && (
           <div className={styles.contactBar}>
             <div className={styles.contactInner}>
@@ -251,11 +254,6 @@ export function Header({ hotel }: { hotel: Hotel }) {
             {actions()}
           </div>
         )}
-      </div>
-      <div className={`${styles.row} ${styles.stickyRow}`} data-sticky-header>
-        {identity}
-        {links(items, "Main navigation")}
-        {actions()}
       </div>
       {open && (
         <SlidingMenu

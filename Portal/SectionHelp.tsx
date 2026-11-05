@@ -3,7 +3,8 @@ import { useEditor } from "./editor-fields";
 
 const help: Record<EditorSection, string> = {
   seo: "Manage search settings for every page here. Save your draft, then publish when you are ready.",
-  general: "Write a short introduction to your hotel. Guests see this information on your website.",
+  dashboard:
+    "Review website status and setup progress here. Manage your subdomain and follow setup steps to complete your website.",
   branding:
     "Upload your logo, then choose colours and fonts. Use the colour picker; you do not need to enter colour codes.",
   homepage:
@@ -20,7 +21,7 @@ const help: Record<EditorSection, string> = {
     "Add a photo and description for each package. To give guests a booking discount code, use Promotions.",
   promotions:
     "Add a code, choose the discount and dates, then turn it on. Leave room selections empty to include every room type.",
-  dining: "Add each restaurant or dining service with a photo, description, and opening hours.",
+  dining: "Create menus with sections, dish descriptions, prices, and a PDF link.",
   reviews:
     "Add the guest's name and review. Use Move up to put the reviews you want guests to see first at the top.",
   faq: "Add a question and a helpful answer. Keep each answer short and easy to understand.",

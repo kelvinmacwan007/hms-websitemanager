@@ -12,10 +12,10 @@ export async function POST(request: Request) {
   }
   if (!allowRequest(`upload:${tenant.id}`, 40))
     return Response.json({ error: "Upload limit reached." }, { status: 429 });
-  if (Number(request.headers.get("content-length")) > 2_200_000)
+  if (Number(request.headers.get("content-length")) > 5_500_000)
     return Response.json({ error: "Image too large." }, { status: 413 });
   try {
-    const bytes = await readLimitedBytes(request, 2_200_000);
+    const bytes = await readLimitedBytes(request, 5_500_000);
     const form = await new Response(bytes as BodyInit, {
       headers: { "Content-Type": request.headers.get("content-type") || "" },
     }).formData();
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     });
   } catch {
     return Response.json(
-      { error: "Image upload failed. Check type, extension and 2 MB size limit." },
+      { error: "Image upload failed. Check type, extension and 5 MB size limit." },
       { status: 422 },
     );
   }

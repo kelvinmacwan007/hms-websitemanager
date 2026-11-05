@@ -32,6 +32,7 @@ export const config = {
     "/about",
     "/rooms/:path*",
     "/dining",
+    "/menu",
     "/gallery",
     "/offers",
     "/contact",

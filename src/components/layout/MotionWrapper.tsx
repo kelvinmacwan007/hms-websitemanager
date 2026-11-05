@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const MotionContext = createContext<MotionPreset>("calm");
 export const useMotionPreset = () => useContext(MotionContext);
-const SmoothScrollContext = createContext<(top: number) => void>(() => {});
+const SmoothScrollContext = createContext<(top: number, immediate?: boolean) => void>(() => {});
 export const useSmoothScroll = () => useContext(SmoothScrollContext);
 
 type Props = { children: React.ReactNode; motionConfig?: HotelMotionConfig };
@@ -22,12 +22,15 @@ export function MotionWrapper({ children, motionConfig }: Props) {
   const smoothScroll = motionConfig?.smoothScroll ?? true;
   const lenisRef = useRef<Lenis | null>(null);
   const scrollTo = useCallback(
-    (top: number) => {
+    (top: number, immediate = false) => {
       if (lenisRef.current) {
-        lenisRef.current.scrollTo(top);
+        lenisRef.current.scrollTo(top, { immediate });
       } else {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        window.scrollTo({ top, behavior: reduceMotion || preset === "off" ? "instant" : "smooth" });
+        window.scrollTo({
+          top,
+          behavior: immediate || reduceMotion || preset === "off" ? "instant" : "smooth",
+        });
       }
     },
     [preset],

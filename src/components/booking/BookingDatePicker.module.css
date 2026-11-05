@@ -19,21 +19,22 @@
   outline-offset: 5px;
 }
 .dialog {
+  position: fixed;
+  inset: auto;
   width: min(660px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   padding: 0;
   margin: auto;
   overflow: auto;
   border: 1px solid var(--color-border);
-  border-radius: var(--site-card-radius, 1.5rem);
+  border-radius: 14px;
   background: var(--color-surface, white);
   color: var(--color-text);
   font-family: var(--font-sans);
-  box-shadow: var(--site-card-shadow, 0 0.75rem 2.25rem rgb(25 30 28 / 6%));
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--color-brand) 12%, transparent);
 }
 .dialog::backdrop {
-  background: #16202c66;
-  backdrop-filter: blur(3px);
+  background: transparent;
 }
 .dialog[open] {
   animation: enter 180ms ease-out;
@@ -42,16 +43,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 24px 18px;
+  padding: 16px 20px 12px;
   gap: 16px;
 }
 .title span {
   color: var(--color-text-muted);
-  font-size: 1.125rem;
+  font-size: 0.75rem;
 }
 .title h2 {
   margin: 4px 0 0;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -72,8 +73,8 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: var(--site-control-icon);
+  height: var(--site-control-icon);
   border: 0;
   border-radius: 50%;
   color: inherit;
@@ -83,9 +84,12 @@
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
-  background: var(--color-brand-soft);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 .toolbar button {
+  min-height: var(--site-control-compact);
   display: inline-flex;
   gap: 6px;
   align-items: center;
@@ -94,7 +98,7 @@
   border-radius: 8px;
   padding: 8px;
   color: var(--color-brand);
-  font-size: 1.125rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 .toolbar button:hover:not(:disabled) {
@@ -103,7 +107,7 @@
 .calendars {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 22px 14px;
+  padding: 16px 12px;
 }
 .month {
   padding: 0 12px;
@@ -119,10 +123,11 @@
   gap: 4px;
   min-height: 40px;
   margin-bottom: 14px;
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 .monthHeading select {
+  min-height: var(--site-control-compact);
   border: 0;
   border-radius: 6px;
   padding: 6px 2px;
@@ -138,20 +143,29 @@
 }
 .weekday {
   text-align: center;
-  font-size: 1.125rem;
+  font-size: 0.75rem;
   padding-bottom: 10px;
+  color: var(--color-brand);
+}
+.outsideDay {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
   color: var(--color-text-muted);
+  opacity: 0.45;
+  font-size: 0.875rem;
 }
 .days button {
+  min-height: var(--site-calendar-day);
   display: grid;
   place-items: center;
   aspect-ratio: 1;
   min-width: 0;
   border: 0;
-  border-radius: 9px;
+  border-radius: 50%;
   color: var(--color-text);
   background: transparent;
-  font-size: 1.125rem;
+  font-size: 0.875rem;
 }
 .days button[data-range="true"] {
   background: var(--color-brand-soft);
@@ -180,16 +194,17 @@
   padding: 16px 24px;
 }
 .footer span {
-  font-size: 1.125rem;
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 .footer button {
+  min-height: var(--site-control-height);
+  font-size: var(--site-control-font);
   background: var(--color-brand);
   color: white;
   border: 0;
   border-radius: 9px;
   padding: 10px 22px;
-  font-size: 1.125rem;
   font-weight: 600;
 }
 @keyframes enter {
@@ -202,7 +217,13 @@
     transform: translateY(0);
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 640px) {
+  .dialog {
+    inset: 0;
+  }
+  .dialog::backdrop {
+    background: #16202c55;
+  }
   .calendars {
     grid-template-columns: 1fr;
     padding: 18px 16px;
@@ -217,7 +238,7 @@
     font-size: 1.125rem;
   }
   .days button {
-    min-height: 40px;
+    min-height: var(--site-control-compact);
   }
 }
 @media (prefers-reduced-motion: reduce) {

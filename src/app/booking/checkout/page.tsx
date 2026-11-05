@@ -1,17 +1,17 @@
+import { getBookingContext } from "@/lib/booking/context";
 import { pageEnabled } from "@/lib/website/pages";
 import { AddOnRequests } from "@/components/extras/AddOnRequests";
+import { BookingProgress } from "@/components/booking/BookingProgress";
 import { Heading } from "@/components/common/Heading";
 import { websiteClassName } from "@/lib/ui/websiteStyles";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DemoCheckout } from "@/components/booking/DemoCheckout";
 import { HmsCheckout } from "@/components/booking/HmsCheckout";
-import { SiteShell } from "@/components/layout/SiteShell";
-import { getWebsiteProvider } from "@/lib/api/provider";
 import { isDemoPaymentMode } from "@/lib/payment/demoMode";
 import { resolveDemoSelection } from "@/lib/booking/demoSelection";
 import { parseAvailabilitySearch } from "@/lib/booking/search";
-import { resolveTenant } from "@/lib/tenant/resolveTenant";
+import { getCheckoutWidgetConfig } from "@/lib/payment/p98payConfig";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -19,9 +19,7 @@ export const metadata = { title: "Guest checkout", robots: "noindex, nofollow" }
 
 export default async function CheckoutPage({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
-  const tenant = await resolveTenant();
-  const provider = getWebsiteProvider();
-  const hotel = await provider.getHotel(tenant);
+  const { tenant, provider, hotel } = await getBookingContext();
   if (!pageEnabled(hotel, "booking")) notFound();
   const { search } = parseAvailabilitySearch(params, hotel.bookingSettings, hotel.timeZone);
   const rooms = search ? await provider.searchAvailability(tenant, search) : [];
@@ -29,7 +27,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
 
   if (!selection) {
     return (
-      <SiteShell hotel={hotel}>
+      <>
         <main className={websiteClassName("container py-20")}>
           <Heading as="h1" className={websiteClassName("section-title")}>
             This sample stay is no longer available.
@@ -40,12 +38,20 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
             </span>
           </Link>
         </main>
-      </SiteShell>
+      </>
     );
   }
 
   return (
-    <SiteShell hotel={hotel} showMobileBookingCta={false}>
+    <>
+      {!isDemoPaymentMode() && (
+        <BookingProgress
+          step={3}
+          hotelName={hotel.name}
+          query={selection.query.toString()}
+          demo={isDemoPaymentMode()}
+        />
+      )}
       <AddOnRequests items={hotel.addOns ?? []} selected={params.addon} />
       {!isDemoPaymentMode() ? (
         <HmsCheckout
@@ -55,9 +61,11 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           query={selection.query.toString()}
           estimate={selection.estimate}
           currency={selection.currency}
+          extras={selection.extras}
         />
       ) : (
         <DemoCheckout
+          widgetConfig={getCheckoutWidgetConfig()}
           settings={hotel.bookingSettings}
           hotelName={hotel.name}
           lines={selection.lines}
@@ -66,10 +74,10 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
           extras={selection.extras}
           estimate={selection.estimate}
           policies={hotel.policies ?? []}
-          backHref={`/booking/${selection.isCart ? "cart" : "preview"}?${selection.query}`}
+          backHref={`/booking/extras?${selection.query}`}
           paymentHref={`/booking/payment?${selection.query}`}
         />
       )}
-    </SiteShell>
+    </>
   );
 }

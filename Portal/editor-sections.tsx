@@ -1,5 +1,6 @@
 "use client";
 
+import { MenuEditor } from "./MenuEditor";
 import { BrandDashboard } from "./BrandDashboard";
 import { HeaderSettings } from "./HeaderSettings";
 import { AmenitiesEditor } from "./AmenitiesEditor";
@@ -11,7 +12,6 @@ import { PAGE_LABELS, type PageKey } from "./content";
 import { SeoEditor } from "./SeoEditor";
 import { HomepageEditor as Homepage } from "./HomepageEditor";
 import { ContactEditor as Contact } from "./ContactEditor";
-import { Settings2 } from "lucide-react";
 import {
   Card,
   Collection,
@@ -20,14 +20,13 @@ import {
   ImageCollection,
   ImageField,
   newId,
-  newImage,
   Toggle,
   useEditor,
 } from "./editor-fields";
 
 export type EditorSection =
   | "seo"
-  | "general"
+  | "dashboard"
   | "branding"
   | "homepage"
   | "rooms"
@@ -50,14 +49,14 @@ export const SECTION_LABELS: Record<EditorSection, string> = {
   rates: "Rates & inventory",
   "booking-settings": "Booking settings",
   payments: "Payments",
-  general: "Hotel story",
-  branding: "Brand & appearance",
+  dashboard: "Dashboard",
+  branding: "Appearance",
   homepage: "Homepage",
   rooms: "Rooms",
   gallery: "Gallery",
   amenities: "Amenities",
   offers: "Offers",
-  dining: "Dining",
+  dining: "Menu",
   reviews: "Guest reviews",
   faq: "FAQs",
   policies: "Policies",
@@ -70,14 +69,14 @@ export const SECTION_DESCRIPTIONS: Record<EditorSection, string> = {
   rates: "Choose which room prices guests can see and book.",
   "booking-settings": "Set stay limits, advance notice, and guest details.",
   payments: "Choose how guests will pay for their stay.",
-  general: "Write the introduction and story guests will remember.",
+  dashboard: "View website status, setup progress, statistics and domain management.",
   branding: "Set a coordinated palette, typography, and motion.",
   homepage: "Choose homepage sections and edit their headings, images and content.",
   rooms: "Room types come from Patel HMS. Manage their website presentation here.",
   gallery: "Add and organise hotel photos.",
   amenities: "View the facilities assigned to your rooms in Patel HMS.",
   offers: "Present packages and special stays on your website.",
-  dining: "Introduce your restaurants and dining experiences.",
+  dining: "Manage menu tabs, sections, dishes, prices, and downloadable PDFs.",
   reviews: "Manage guest reviews shown on your website.",
   faq: "Answer the questions guests ask most.",
   policies: "Keep the details clear before guests arrive.",
@@ -85,58 +84,29 @@ export const SECTION_DESCRIPTIONS: Record<EditorSection, string> = {
   contact: "Set your website enquiry inbox and social profiles.",
 };
 
-function General() {
-  const { content, presentationOnly } = useEditor();
+function HotelProfile() {
+  const { presentationOnly } = useEditor();
   return (
     <>
       <Card
-        title="Tell your story"
-        description="A warm introduction helps guests imagine their stay."
+        title="Hotel information"
+        description="Your hotel introduction supplies default website content. Search titles and descriptions can be customised above."
       >
         {!presentationOnly && <Field label="Hotel name" path={["hotel", "name"]} />}
         <Field
           label="Tagline"
           path={["hotel", "tagline"]}
-          hint="A short, memorable introduction to your hotel."
+          hint="A short introduction to your hotel."
         />
         <Field label="Short description" path={["hotel", "description"]} multiline />
         <Field
-          label="Your story"
+          label="About page story"
           path={["hotel", "longDescription"]}
           multiline
-          hint="The longer description used on your about page."
+          hint="Visible on your public About page."
         />
       </Card>
-      {!presentationOnly && (
-        <details className="wm-advanced">
-          <summary>Connection details (for your administrator)</summary>
-          <Card
-            title="Property connection"
-            description="Read-only details supplied by Patel HMS. Contact your portal administrator to update the connection."
-          >
-            <div className="wm-property-details">
-              <div>
-                <small>Property ID</small>
-                <code>{content.hotel.id}</code>
-              </div>
-              <div>
-                <small>Tenant ID</small>
-                <code>{content.hotel.tenantId}</code>
-              </div>
-              <div>
-                <small>Template</small>
-                <code>{content.hotel.template}</code>
-              </div>
-            </div>
-            <p className="wm-note">
-              PMS timezone: {content.hotel.timeZone ?? "Not supplied (UTC fallback)"} | Currency:{" "}
-              {content.hotel.currency ??
-                content.hotel.rooms[0]?.ratePlans[0]?.price.currency ??
-                "Not supplied"}
-            </p>
-          </Card>
-        </details>
-      )}
+      <PageSettings page="about" />
     </>
   );
 }
@@ -248,15 +218,11 @@ function Branding() {
 function PageSettings({ page }: { page: PageKey }) {
   return (
     <Card
-      title={`${PAGE_LABELS[page]} page settings`}
-      icon={page === "home" ? <Settings2 size={23} /> : undefined}
-      description="Manage this page's visibility and introduction."
+      title={`${page === "experiences" ? "Amenities" : PAGE_LABELS[page]} page settings`}
+      description="Show this page in your website and navigation."
+      className="wm-page-settings"
+      action={<Toggle compact label="Show this page" path={["pages", page, "enabled"]} />}
     >
-      <Toggle
-        label="Show this page"
-        path={["pages", page, "enabled"]}
-        hint="Include the page in your published website and navigation."
-      />
       <Field label="Small heading above the title" path={["pages", page, "eyebrow"]} />
       {page !== "home" && (
         <>
@@ -277,6 +243,7 @@ function Rooms() {
       </p>
       <Collection
         title="Rooms"
+        syncFromHms
         singular="Room"
         path={["hotel", "rooms"]}
         summary={(item) => String(item.name)}
@@ -326,10 +293,12 @@ function Offers() {
   return (
     <Collection
       title="Offers"
+      syncFromHms
+      description="Offers are supplied by Patel HMS."
+      emptyMessage="Offers will appear here when supplied by Patel HMS."
       singular="Offer"
       path={["hotel", "offers"]}
       summary={(item) => String(item.title)}
-      create={() => ({ id: newId(), title: "New offer", description: "", image: newImage() })}
     >
       {(path) => (
         <>
@@ -351,47 +320,18 @@ function Offers() {
   );
 }
 function Dining() {
-  return (
-    <Collection
-      title="Dining venues"
-      singular="Venue"
-      path={["hotel", "dining"]}
-      summary={(item) => String(item.name)}
-      create={() => ({
-        id: newId(),
-        name: "New dining venue",
-        description: "",
-        hours: "",
-        image: newImage(),
-      })}
-    >
-      {(path) => (
-        <>
-          <Field label="Venue name" path={[...path, "name"]} />
-          <Field label="Description" path={[...path, "description"]} multiline />
-          <Field
-            label="Opening hours"
-            path={[...path, "hours"]}
-            hint="For example: Daily, 7:00 AM to 10:00 PM."
-          />
-          <ImageField
-            label="Venue photo"
-            path={[...path, "image", "url"]}
-            altPath={[...path, "image", "alt"]}
-          />
-        </>
-      )}
-    </Collection>
-  );
+  return <MenuEditor />;
 }
 function Reviews() {
   return (
     <Collection
       title="Guest reviews"
+      syncFromHms
+      description="Guest reviews are supplied by Patel HMS."
+      emptyMessage="Guest reviews will appear here when supplied by Patel HMS."
       singular="Review"
       path={["hotel", "testimonials"]}
       summary={(item) => String(item.guestName)}
-      create={() => ({ id: newId(), guestName: "", quote: "", location: "" })}
     >
       {(path) => (
         <>
@@ -427,10 +367,12 @@ function Policies() {
   return (
     <Collection
       title="Policies"
+      syncFromHms
+      description="Policies are supplied by Patel HMS."
+      emptyMessage="Policies will appear here when supplied by Patel HMS."
       singular="Policy"
       path={["hotel", "policies"]}
       summary={(item) => String(item.title)}
-      create={() => ({ title: "", description: "" })}
     >
       {(path) => (
         <>
@@ -470,8 +412,6 @@ function Extras() {
 }
 
 const sectionPages: Partial<Record<EditorSection, PageKey>> = {
-  general: "about",
-  homepage: "home",
   rooms: "rooms",
   gallery: "gallery",
   amenities: "experiences",
@@ -502,9 +442,14 @@ export function EditorSections({ section }: { section: EditorSection }) {
 function SectionContent({ section }: { section: EditorSection }) {
   switch (section) {
     case "seo":
-      return <SeoEditor />;
-    case "general":
-      return <General />;
+      return (
+        <>
+          <SeoEditor />
+          <HotelProfile />
+        </>
+      );
+    case "dashboard":
+      return null;
     case "branding":
       return <Branding />;
     case "homepage":

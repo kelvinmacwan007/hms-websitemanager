@@ -1,4 +1,5 @@
 import type { WebsiteProvider } from "./types";
+import { cache } from "react";
 import { visibleRooms } from "../booking/visibility.ts";
 import { parseAvailabilitySearch } from "../booking/search.ts";
 import type { HotelRoom } from "../../types/hotel";
@@ -14,12 +15,12 @@ export function publicProvider(
   source: WebsiteProvider,
   loadPublished?: (tenantId: string) => Promise<WebsitePresentationPayload | null>,
 ): WebsiteProvider {
-  async function context(tenant: Parameters<WebsiteProvider["getHotel"]>[0]) {
+  const context = cache(async (tenant: Parameters<WebsiteProvider["getHotel"]>[0]) => {
     return normalizeHotel(
       await source.getHotel(tenant),
       (await loadPublished?.(tenant.id)) ?? null,
     );
-  }
+  });
   return {
     async getHotel(tenant) {
       const hotel = await context(tenant);

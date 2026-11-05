@@ -17,13 +17,15 @@ import {
   BedDouble,
   Pencil,
   Trash2,
-  X,
+  Minus,
+  Plus,
   Info,
   Gift,
   PawPrint,
   Clock,
 } from "lucide-react";
-import Image from "next/image";
+import { BookingProgress } from "./BookingProgress";
+import { RoomCard } from "@/components/rooms/RoomCard";
 import styles from "./CartReview.module.css";
 import { selectedAddOnRequests } from "@/lib/booking/addOnRequests";
 import { useEffect, useState } from "react";
@@ -41,6 +43,7 @@ export function CartReview({
   addOns = [],
   initialExtraIds,
   isDemo,
+  step = 1,
 }: {
   hotelName: string;
   search: AvailabilitySearch;
@@ -49,20 +52,28 @@ export function CartReview({
   addOns?: HotelAddOn[];
   initialExtraIds: string[];
   isDemo: boolean;
+  step?: 1 | 2;
 }) {
   const [lines, setLines] = useState(initialLines);
   const params = useSearchParams();
+  const currency = initialLines[0].rate.price.currency;
+  const eligibleAddOns = addOns.filter(
+    (item) =>
+      item.price.currency === currency &&
+      (!item.startDate || item.startDate <= search.checkIn) &&
+      (!item.endDate || item.endDate >= search.checkIn),
+  );
   const [requests, setRequests] = useState(() =>
-    selectedAddOnRequests(addOns, params.getAll("addon")),
+    selectedAddOnRequests(eligibleAddOns, params.getAll("addon")),
   );
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set(initialExtraIds));
   const nights =
     (Date.parse(`${search.checkOut}T00:00:00Z`) - Date.parse(`${search.checkIn}T00:00:00Z`)) /
     86400000;
-  const currency = initialLines[0].rate.price.currency;
   const money = (amount: number) => formatMoney({ amount, currency });
   const eligibleExtras = extras.filter(
     (extra) =>
+      isDemo &&
       extra.price.currency === currency &&
       !(
         extra.id === "breakfast" &&
@@ -82,9 +93,9 @@ export function CartReview({
       0,
     );
   const query = cartQuery(search, lines);
-  selectedExtras.forEach((extra) => query.append("extra", extra.id));
   const editQuery = cartQuery(search, lines);
   for (const destination of [query, editQuery]) {
+    selectedExtras.forEach((extra) => destination.append("extra", extra.id));
     requests.forEach(({ item, quantity }) =>
       destination.append("addon", JSON.stringify([item.id, quantity])),
     );
@@ -117,251 +128,304 @@ export function CartReview({
     lines.reduce((sum, line) => sum + line.quantity, 0) === search.rooms &&
     lines.reduce((sum, line) => sum + line.quantity * line.room.occupancy, 0) >= search.guests &&
     (!search.pets || lines.some((line) => line.room.petsAllowed !== false));
-  const checkoutLabel = isDemo ? "Continue to demo checkout" : "Continue to checkout";
+  function changeService(item: HotelAddOn, quantity: number) {
+    const count = Math.max(0, Math.min(99, quantity));
+    setRequests((current) => [
+      ...current.filter((request) => request.item.id !== item.id),
+      ...(count ? [{ item, quantity: count }] : []),
+    ]);
+  }
+  const checkoutLabel = step === 1 ? "Continue to extras" : "Continue to guest details";
+  const nextHref = `/booking/${step === 1 ? "extras" : "checkout"}?${query}`;
   return (
-    <main className={`${websiteClassName("container")} ${styles.page}`}>
-      <Link href={`/booking?${editQuery}`} className={styles.back}>
-        <ArrowLeft size={17} /> Change rooms
-      </Link>
-      <div className={styles.layout}>
-        <div className={styles.main}>
-          <header className={styles.heading}>
-            <p className={websiteClassName("eyebrow")}>
-              {isDemo ? "Demo booking" : "Your reservation"}
-            </p>
-            <Heading as="h1">Your room cart</Heading>
-            <p>Review your stay before continuing.</p>
-          </header>
-          <div className={styles.stayBar}>
-            <div>
-              <CalendarDays size={23} />
-              <span>
-                <strong>{formatStayDate(search.checkIn)}</strong>
-                <small>Check-in</small>
-              </span>
-            </div>
-            <div>
-              <CalendarDays size={23} />
-              <span>
-                <strong>{formatStayDate(search.checkOut)}</strong>
-                <small>Check-out</small>
-              </span>
-            </div>
-            <div>
-              <Moon size={23} />
-              <span>
-                {nights} {nights === 1 ? "night" : "nights"}
-              </span>
-            </div>
-            <div>
-              <Users size={23} />
-              <span>{partySummary(search)}</span>
-            </div>
-          </div>
-          <section className={styles.card} aria-label="Selected rooms">
-            <h2>
-              <BedDouble size={24} /> {lines.length === 1 ? "Selected room" : "Selected rooms"}
-            </h2>
-            {lines.length ? (
-              lines.map((line) => (
-                <article key={`${line.room.id}:${line.rate.id}`} className={styles.room}>
-                  <div className={styles.photo}>
-                    {line.room.images[0] ? (
-                      <Image
-                        src={line.room.images[0].url}
-                        alt={line.room.name}
-                        fill
-                        sizes="(max-width:650px) 90vw, 280px"
-                      />
-                    ) : (
-                      <BedDouble size={40} />
-                    )}
-                  </div>
-                  <div className={styles.roomInfo}>
-                    <h3>{line.room.name}</h3>
-                    <p>
-                      {line.rate.name} · {line.quantity} {line.quantity === 1 ? "room" : "rooms"} ·
-                      up to {line.room.occupancy * line.quantity} guests
-                    </p>
-                    {line.rate.mealPlan && <p>{line.rate.mealPlan}</p>}
-                    <div className={styles.roomActions}>
-                      <Link href={`/booking?${editQuery}`}>
-                        <Pencil size={16} /> Edit
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setLines((current) =>
-                            current.filter(
-                              (item) =>
-                                item.room.id !== line.room.id || item.rate.id !== line.rate.id,
-                            ),
-                          )
-                        }
-                        aria-label={`Remove ${line.room.name}`}
-                      >
-                        <Trash2 size={16} /> Remove
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles.roomPrice}>
-                    <strong>{money(line.rate.price.amount)}</strong>
-                    <small>per night</small>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <div className={styles.empty}>
-                <ShoppingBag size={30} />
-                <h3>Your cart is empty.</h3>
-                <Link href={`/rooms?${stayQuery(search)}`}>
-                  Explore rooms <ArrowRight size={16} />
-                </Link>
-              </div>
-            )}
-          </section>
-          {requests.length > 0 && (
-            <section className={styles.card} aria-label="Requested add-ons">
-              <h2>
-                <ShoppingBag size={24} /> Requested add-ons
-              </h2>
-              <div className={styles.requests}>
-                {requests.map(({ item, quantity }) => {
-                  const Icon = /pet/i.test(item.name)
-                    ? PawPrint
-                    : /bed/i.test(item.name)
-                      ? BedDouble
-                      : /check/i.test(item.name)
-                        ? Clock
-                        : Gift;
-                  return (
-                    <div key={item.id}>
-                      <Icon size={24} />
-                      <strong>{item.name}</strong>
-                      <span>{quantity}</span>
-                      <span className={styles.confirmation}>
-                        <Info size={15} /> Hotel confirmation required
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setRequests((current) =>
-                            current.filter((request) => request.item.id !== item.id),
-                          )
-                        }
-                        aria-label={`Remove ${item.name}`}
-                      >
-                        <X size={17} />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-              <p className={styles.note}>
-                <Info size={16} /> Listed add-on prices are included in the estimate. Availability
-                and final charges are confirmed by the hotel.
+    <>
+      <BookingProgress step={step} hotelName={hotelName} query={query.toString()} demo={isDemo} />
+      <main className={`${websiteClassName("container")} ${styles.page}`}>
+        <Link
+          href={step === 1 ? `/booking?${editQuery}` : `/booking/cart?${query}`}
+          className={styles.back}
+        >
+          <ArrowLeft size={17} /> {step === 1 ? "Change rooms" : "Back to rooms"}
+        </Link>
+        <div className={styles.layout}>
+          <div className={styles.main}>
+            <header className={styles.heading}>
+              <p className={websiteClassName("eyebrow")}>
+                {isDemo ? "Demo booking" : "Your reservation"}
               </p>
-            </section>
-          )}
-          {eligibleExtras.length > 0 && (
-            <section className={styles.card}>
-              <h2>
-                <Gift size={24} /> Optional extras
-              </h2>
-              <div className={styles.extraList}>
-                {eligibleExtras.map((extra) => (
-                  <label key={extra.id}>
-                    <Checkbox
-                      checked={selectedIds.has(extra.id)}
-                      onChange={(event) => toggleExtra(extra.id, event.target.checked)}
-                    />
+              <Heading as="h1">{step === 1 ? "Your room cart" : "Add extras to your stay"}</Heading>
+              <p>
+                {step === 1
+                  ? "Review your stay before continuing."
+                  : "Choose optional services for a more comfortable stay."}
+              </p>
+            </header>
+            {step === 1 && (
+              <>
+                <div className={styles.stayBar}>
+                  <div>
+                    <CalendarDays size={23} />
                     <span>
-                      <strong>{extra.name}</strong>
-                      <small>{extra.description}</small>
+                      <strong>{formatStayDate(search.checkIn)}</strong>
+                      <small>Check-in</small>
                     </span>
-                    <strong>
-                      {formatMoney(extra.price)}
-                      <small>{extra.charge === "per-night" ? "per night" : "per stay"}</small>
-                    </strong>
-                  </label>
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-        <aside className={`${styles.card} ${styles.summary}`} aria-label="Cart total">
-          <Heading as="h2">Your stay summary</Heading>
-          <p className={styles.hotel}>{hotelName}</p>
-          <p className={styles.dates}>
-            {formatStayDate(search.checkIn)} to {formatStayDate(search.checkOut)} · {nights}{" "}
-            {nights === 1 ? "night" : "nights"} · {search.guests}{" "}
-            {search.guests === 1 ? "guest" : "guests"}
-          </p>
-          <dl className={styles.breakdown}>
-            <div>
-              <dt>Room subtotal</dt>
-              <dd>{money(roomSubtotal)}</dd>
-            </div>
-            {selectedExtras.map((extra) => (
-              <div key={extra.id}>
-                <dt>{extra.name}</dt>
-                <dd>{money(extra.price.amount * (extra.charge === "per-night" ? nights : 1))}</dd>
-              </div>
-            ))}
-            {addOnSubtotal > 0 && (
-              <div>
-                <dt>Listed add-ons</dt>
-                <dd>{money(addOnSubtotal)}</dd>
-              </div>
+                  </div>
+                  <div>
+                    <CalendarDays size={23} />
+                    <span>
+                      <strong>{formatStayDate(search.checkOut)}</strong>
+                      <small>Check-out</small>
+                    </span>
+                  </div>
+                  <div>
+                    <Moon size={23} />
+                    <span>
+                      {nights} {nights === 1 ? "night" : "nights"}
+                    </span>
+                  </div>
+                  <div>
+                    <Users size={23} />
+                    <span>{partySummary(search)}</span>
+                  </div>
+                </div>
+                <section className={styles.selectedRooms} aria-label="Selected rooms">
+                  <h2>
+                    <BedDouble size={24} />{" "}
+                    {lines.length === 1 ? "Selected room" : "Selected rooms"}
+                  </h2>
+                  {lines.length ? (
+                    lines.map((line) => (
+                      <RoomCard
+                        key={`${line.room.id}:${line.rate.id}`}
+                        room={line.room}
+                        search={search}
+                        layout="responsive"
+                      >
+                        <div className={styles.cartRoomPrice}>
+                          <span className={styles.rateName}>{line.rate.name}</span>
+                          <div>
+                            <strong>{money(line.rate.price.amount)}</strong>
+                            <span>/ night</span>
+                          </div>
+                          <p>
+                            {line.quantity} {line.quantity === 1 ? "room" : "rooms"} &middot;{" "}
+                            {nights} {nights === 1 ? "night" : "nights"}
+                          </p>
+                          {line.rate.mealPlan && <p>{line.rate.mealPlan}</p>}
+                        </div>
+                        <div className={styles.cartRoomActions}>
+                          <Link href={`/booking?${editQuery}`} data-site-button>
+                            <Pencil size={16} aria-hidden="true" /> Change room
+                          </Link>
+                          <Link href={`/rooms/${line.room.slug}?${editQuery}`} data-site-button>
+                            View details <ArrowRight size={18} aria-hidden="true" />
+                          </Link>
+                          <button
+                            type="button"
+                            aria-label={`Remove ${line.room.name}`}
+                            onClick={() =>
+                              setLines((current) =>
+                                current.filter(
+                                  (item) =>
+                                    item.room.id !== line.room.id || item.rate.id !== line.rate.id,
+                                ),
+                              )
+                            }
+                          >
+                            <Trash2 size={16} aria-hidden="true" /> Remove
+                          </button>
+                        </div>
+                      </RoomCard>
+                    ))
+                  ) : (
+                    <div className={styles.empty}>
+                      <ShoppingBag size={30} />
+                      <h3>Your cart is empty.</h3>
+                      <Link href={`/rooms?${stayQuery(search)}`}>
+                        Explore rooms <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  )}
+                </section>
+              </>
             )}
-            <div>
-              <dt>
-                Taxes &amp; local charges <Info size={15} />
-              </dt>
-              <dd>Not included</dd>
-            </div>
-          </dl>
-          <div className={styles.total}>
-            <h3>
-              Estimated <em>total</em>
-            </h3>
-            <div>
-              <output aria-label="Estimated total amount" aria-live="polite">
-                {money(subtotal)}
-              </output>
-              <small>{currency}</small>
-            </div>
+            {step === 2 && (eligibleAddOns.length > 0 || eligibleExtras.length === 0) && (
+              <section className={styles.card} aria-label="Extras and services">
+                <h2>
+                  <Gift size={24} /> Extras &amp; services
+                </h2>
+                {eligibleAddOns.length > 0 ? (
+                  <div className={styles.serviceList}>
+                    {eligibleAddOns.map((item) => {
+                      const quantity =
+                        requests.find((request) => request.item.id === item.id)?.quantity || 0;
+                      const Icon = /pet/i.test(item.name)
+                        ? PawPrint
+                        : /bed/i.test(item.name)
+                          ? BedDouble
+                          : /check/i.test(item.name)
+                            ? Clock
+                            : Gift;
+                      return (
+                        <div className={styles.service} key={item.id} data-selected={quantity > 0}>
+                          <Checkbox
+                            aria-label={`Add ${item.name}`}
+                            checked={quantity > 0}
+                            onChange={(event) => changeService(item, event.target.checked ? 1 : 0)}
+                          />
+                          <span className={styles.serviceIcon}>
+                            <Icon size={24} aria-hidden="true" />
+                          </span>
+                          <div className={styles.serviceCopy}>
+                            <strong>{item.name}</strong>
+                            <p>{item.description}</p>
+                            <small>Hotel confirmation required</small>
+                          </div>
+                          <div className={styles.serviceControls}>
+                            <strong>{formatMoney(item.price)}</strong>
+                            <small>Listed price</small>
+                            <div>
+                              <button
+                                type="button"
+                                aria-label={`Decrease ${item.name}`}
+                                disabled={!quantity}
+                                onClick={() => changeService(item, quantity - 1)}
+                              >
+                                <Minus size={16} />
+                              </button>
+                              <output aria-label={`${item.name} quantity`} aria-live="polite">
+                                {quantity}
+                              </output>
+                              <button
+                                type="button"
+                                aria-label={`Increase ${item.name}`}
+                                disabled={quantity >= 99}
+                                onClick={() => changeService(item, quantity + 1)}
+                              >
+                                <Plus size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className={styles.note}>
+                    No optional services are available for these dates. You can continue without
+                    extras.
+                  </p>
+                )}
+                {eligibleAddOns.length > 0 && (
+                  <p className={styles.note}>
+                    Services are requests. Availability and final charges are confirmed by the
+                    hotel.
+                  </p>
+                )}
+              </section>
+            )}
+            {step === 2 && eligibleExtras.length > 0 && (
+              <section className={styles.card}>
+                <h2>
+                  <Gift size={24} /> Optional extras
+                </h2>
+                <div className={styles.extraList}>
+                  {eligibleExtras.map((extra) => (
+                    <label key={extra.id}>
+                      <Checkbox
+                        checked={selectedIds.has(extra.id)}
+                        onChange={(event) => toggleExtra(extra.id, event.target.checked)}
+                      />
+                      <span>
+                        <strong>{extra.name}</strong>
+                        <small>{extra.description}</small>
+                      </span>
+                      <strong>
+                        {formatMoney(extra.price)}
+                        <small>{extra.charge === "per-night" ? "per night" : "per stay"}</small>
+                      </strong>
+                    </label>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
-          <p className={styles.note}>Final rates and add-on charges require hotel confirmation.</p>
-          {canContinue ? (
-            <Link
-              href={`/booking/checkout?${query}`}
-              className={`${websiteClassName("brand-button")} ${styles.continue}`}
-            >
-              {checkoutLabel} <ArrowRight size={19} />
-            </Link>
-          ) : (
-            <>
-              <button
-                type="button"
+          <aside className={`${styles.card} ${styles.summary}`} aria-label="Cart total">
+            <Heading as="h2">Your stay summary</Heading>
+            <p className={styles.hotel}>{hotelName}</p>
+            <p className={styles.dates}>
+              {formatStayDate(search.checkIn)} to {formatStayDate(search.checkOut)} · {nights}{" "}
+              {nights === 1 ? "night" : "nights"} · {search.guests}{" "}
+              {search.guests === 1 ? "guest" : "guests"}
+            </p>
+            <dl className={styles.breakdown}>
+              <div>
+                <dt>Room subtotal</dt>
+                <dd>{money(roomSubtotal)}</dd>
+              </div>
+              {selectedExtras.map((extra) => (
+                <div key={extra.id}>
+                  <dt>{extra.name}</dt>
+                  <dd>{money(extra.price.amount * (extra.charge === "per-night" ? nights : 1))}</dd>
+                </div>
+              ))}
+              {addOnSubtotal > 0 && (
+                <div>
+                  <dt>Listed add-ons</dt>
+                  <dd>{money(addOnSubtotal)}</dd>
+                </div>
+              )}
+              <div>
+                <dt>
+                  Taxes &amp; local charges <Info size={15} />
+                </dt>
+                <dd>Not included</dd>
+              </div>
+            </dl>
+            <div className={styles.total}>
+              <h3>
+                Estimated <em>total</em>
+              </h3>
+              <div>
+                <output aria-label="Estimated total amount" aria-live="polite">
+                  {money(subtotal)}
+                </output>
+                <small>{currency}</small>
+              </div>
+            </div>
+            <p className={styles.note}>
+              Final rates and add-on charges require hotel confirmation.
+            </p>
+            {canContinue ? (
+              <Link
+                href={nextHref}
                 className={`${websiteClassName("brand-button")} ${styles.continue}`}
-                disabled
               >
-                {checkoutLabel}
-              </button>
-              <p role="status" className={styles.note}>
-                Choose enough rooms for your stay to continue.
-              </p>
-            </>
-          )}
-          <p className={styles.notice}>
-            <Info size={17} />{" "}
-            {isDemo
-              ? "Demo only. No rooms are held and no payment is collected."
-              : "Availability and final prices are rechecked before confirmation."}
-          </p>
-        </aside>
-      </div>
-    </main>
+                {checkoutLabel} <ArrowRight size={19} />
+              </Link>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className={`${websiteClassName("brand-button")} ${styles.continue}`}
+                  disabled
+                >
+                  {checkoutLabel}
+                </button>
+                <p role="status" className={styles.note}>
+                  Choose enough rooms for your stay to continue.
+                </p>
+              </>
+            )}
+            <p className={styles.notice}>
+              <Info size={17} />{" "}
+              {isDemo
+                ? "Demo only. No rooms are held and no payment is collected."
+                : "Availability and final prices are rechecked before confirmation."}
+            </p>
+          </aside>
+        </div>
+      </main>
+    </>
   );
 }

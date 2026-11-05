@@ -1,0 +1,118 @@
+.viewport {
+  position: fixed;
+  z-index: 200;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  width: min(420px, calc(100vw - 32px));
+  display: grid;
+  gap: 12px;
+  pointer-events: none;
+  font-family: var(--wm-font-ui, Inter, "Segoe UI", Arial, sans-serif);
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--toast-border);
+  border-radius: var(--wm-radius-card, 14px);
+  background: var(--toast-surface);
+  color: var(--wm-brand-navy, #1c355e);
+  box-shadow: 0 6px 24px #1c355e14;
+  pointer-events: auto;
+  animation: arrive 160ms ease-out;
+}
+.success {
+  --toast-surface: #f0faf4;
+  --toast-border: #bfe5cf;
+  --toast-color: #16834a;
+}
+.warning {
+  --toast-surface: #fff8ed;
+  --toast-border: #efd5a8;
+  --toast-color: #9b651b;
+}
+.info {
+  --toast-surface: #f0f5fc;
+  --toast-border: #ccd9ed;
+  --toast-color: #1c355e;
+}
+.error {
+  --toast-surface: #fff2f1;
+  --toast-border: #efc7c3;
+  --toast-color: #b42318;
+}
+.icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 50%;
+  background: var(--toast-color);
+  color: white;
+}
+.content {
+  flex: 1;
+  min-width: 0;
+}
+.content p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.content button {
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wm-brand-navy, #1c355e);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.close {
+  display: grid;
+  place-items: center;
+  width: var(--wm-button-height, 46px);
+  height: var(--wm-button-height, 46px);
+  flex: 0 0 var(--wm-button-height, 46px);
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--wm-brand-navy, #1c355e);
+  cursor: pointer;
+}
+.close:hover {
+  background: #1c355e0d;
+}
+.close:focus-visible,
+.content button:focus-visible {
+  outline: 2px solid var(--wm-brand-navy, #1c355e);
+  outline-offset: 2px;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .viewport {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

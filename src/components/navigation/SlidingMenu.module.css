@@ -9,9 +9,28 @@
   left: 0;
   z-index: -1;
   pointer-events: none;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--color-brand) 14%, transparent);
   opacity: 0;
+}
+
+.background::before {
+  content: "";
+  position: absolute;
+  inset: 6px 2px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-brand) 6%, transparent);
+}
+
+.background::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  color: var(--color-brand);
+  transform: translateX(-50%);
 }
 
 .menu[data-menu-ready] > .background {

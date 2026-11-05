@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cartQuery, type CartLine } from "@/lib/booking/cart";
+import { stayQuery } from "@/lib/booking/party";
 import { formatMoney } from "@/lib/utils/format";
 import type { AvailabilitySearch, HotelRoom } from "@/types/hotel";
 
@@ -30,6 +31,7 @@ export function RoomCartPicker({
       initialItems.map((item) => [`${item.roomSlug}:${item.rateId}`, item.quantity]),
     ),
   );
+  const [rateChoices, setRateChoices] = useState<Record<string, string>>({});
   const lines: CartLine[] = rooms.flatMap((room) =>
     room.ratePlans
       .filter((rate) => rate.available)
@@ -87,9 +89,40 @@ export function RoomCartPicker({
     <div className={websiteClassName("mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]")}>
       <div className={styles.roomGrid}>
         {rooms.map((room) => (
-          <RoomCard key={room.id} room={room} search={search} availabilityChecked>
+          <RoomCard
+            key={room.id}
+            room={room}
+            search={search}
+            availabilityChecked
+            layout="responsive"
+          >
+            {room.ratePlans.filter((rate) => rate.available).length > 1 && (
+              <label className={styles.rateSelect}>
+                Rate plan
+                <select
+                  aria-label={`Rate plan for ${room.name}`}
+                  value={rateChoices[room.id] || room.ratePlans.find((rate) => rate.available)?.id}
+                  onChange={(event) =>
+                    setRateChoices((current) => ({ ...current, [room.id]: event.target.value }))
+                  }
+                >
+                  {room.ratePlans
+                    .filter((rate) => rate.available)
+                    .map((rate) => (
+                      <option key={rate.id} value={rate.id}>
+                        {rate.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+            )}
             {room.ratePlans
-              .filter((rate) => rate.available)
+              .filter(
+                (rate) =>
+                  rate.available &&
+                  rate.id ===
+                    (rateChoices[room.id] || room.ratePlans.find((item) => item.available)?.id),
+              )
               .map((rate) => {
                 const quantity = quantities[`${room.slug}:${rate.id}`] ?? 0;
                 const selectedRooms = lines
@@ -100,7 +133,9 @@ export function RoomCartPicker({
                 return (
                   <div key={rate.id} className={styles.rate}>
                     <div>
-                      <p className={websiteClassName("font-semibold")}>{rate.name}</p>
+                      {room.ratePlans.filter((item) => item.available).length === 1 && (
+                        <p className={websiteClassName("font-semibold")}>{rate.name}</p>
+                      )}
                       <p className={websiteClassName("mt-1 text-sm leading-5 text-muted")}>
                         {[rate.mealPlan, rate.cancellationPolicy].filter(Boolean).join(" · ")}
                       </p>
@@ -119,10 +154,10 @@ export function RoomCartPicker({
                         aria-live="polite"
                       >
                         {inventory === undefined
-                          ? "Contact the hotel to confirm the number of rooms available."
+                          ? "Availability on request"
                           : inventory === 0
-                            ? "No rooms available for these dates."
-                            : `${inventory} ${inventory === 1 ? "room available" : "rooms available"} for these dates.${inventoryReached ? " All available rooms of this type are selected." : ""}`}
+                            ? "No rooms available"
+                            : `${inventory} ${inventory === 1 ? "room available" : "rooms available"}${inventoryReached ? " · All selected" : ""}`}
                       </p>
                     </div>
                     <div
@@ -162,12 +197,11 @@ export function RoomCartPicker({
                 );
               })}
             <Link
-              href={`/rooms/${room.slug}`}
-              className={websiteClassName(
-                "mt-7 inline-block text-sm font-semibold text-brand underline underline-offset-4",
-              )}
+              href={`/rooms/${room.slug}?${new URLSearchParams({ ...Object.fromEntries(stayQuery(search)), ...(preview ? { __website_preview: preview } : {}) })}`}
+              className={styles.detailsLink}
+              data-site-button
             >
-              View room details <ArrowRight size={18} className="inline-block ml-1" />
+              View details <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </RoomCard>
         ))}

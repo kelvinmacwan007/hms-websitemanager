@@ -23,6 +23,7 @@ function cloneHotel(tenant: Tenant) {
     gallery: [],
     offers: [],
     dining: [],
+    menus: [],
     testimonials: [],
     policies: [],
     faqs: [],

@@ -4,8 +4,6 @@ import { formatMoney } from "@/lib/utils/format";
 import { stayQuery } from "@/lib/booking/party";
 import type { AvailabilitySearch, HotelRoom } from "@/types/hotel";
 import { RoomCardGallery } from "./RoomCardGallery";
-import { RoomAmenitiesSlider } from "./RoomAmenitiesSlider";
-import { AmenityIcon } from "../amenities/AmenityIcon";
 import styles from "./RoomCard.module.css";
 import type { ReactNode } from "react";
 
@@ -28,7 +26,6 @@ export function RoomCard({
     : rateDates
       ? `/booking?${new URLSearchParams({ ...rateDates, guests: "1", rooms: "1", room: room.slug })}`
       : `/booking?${new URLSearchParams({ room: room.slug })}`;
-  const amenities = room.amenities.filter((item) => item.enabled !== false);
   const detailsHref = `/rooms/${room.slug}${search ? `?${stayQuery(search)}` : ""}`;
   return (
     <div className={styles.shell}>
@@ -52,6 +49,9 @@ export function RoomCard({
                 </span>
               )}
           </div>
+          {layout === "responsive" && room.shortDescription && (
+            <p className={styles.description}>{room.shortDescription}</p>
+          )}
           <div className={styles.facts}>
             <div className={styles.fact}>
               <i>
@@ -85,24 +85,6 @@ export function RoomCard({
               </div>
             )}
           </div>
-          {amenities.length > 0 && (
-            <div className={styles.amenities}>
-              <div className={styles.amenitiesHeading}>
-                <h4>Top amenities</h4>
-                <Link href={`/rooms/${room.slug}#room-amenities`}>
-                  View all amenities <ArrowRight size={16} />
-                </Link>
-              </div>
-              <RoomAmenitiesSlider>
-                {amenities.map((item) => (
-                  <li key={item.id}>
-                    <AmenityIcon iconUrl={item.iconUrl} iconKey={item.iconKey} label={item.label} />
-                    <span>{item.label}</span>
-                  </li>
-                ))}
-              </RoomAmenitiesSlider>
-            </div>
-          )}
         </div>
         <div className={styles.footer} data-custom={Boolean(children)}>
           {children ?? (
@@ -124,7 +106,7 @@ export function RoomCard({
                 </div>
               </div>
               <div className={styles.actions}>
-                <Link href={detailsHref} className={styles.details}>
+                <Link href={detailsHref} className={styles.details} data-site-button>
                   View details
                 </Link>
                 <Link href={bookingHref} className={styles.book} data-shimmer>

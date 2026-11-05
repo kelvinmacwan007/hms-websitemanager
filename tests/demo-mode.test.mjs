@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import ts from "typescript";
 
-test("live payment simulation requires an explicit development flag and stays off in production", () => {
+test("API-backed UAT requires explicit opt-in, including on hosted staging", () => {
   const { outputText } = ts.transpileModule(readFileSync("src/lib/payment/demoMode.ts", "utf8"), {
     compilerOptions: { module: ts.ModuleKind.CommonJS },
   });
@@ -17,6 +17,8 @@ test("live payment simulation requires an explicit development flag and stays of
     process.env.WEBSITE_DEMO_PAYMENTS = "true";
     assert.equal(exports.isDemoPaymentMode(), true);
     process.env.NODE_ENV = "production";
+    assert.equal(exports.isDemoPaymentMode(), true);
+    delete process.env.WEBSITE_DEMO_PAYMENTS;
     assert.equal(exports.isDemoPaymentMode(), false);
   } finally {
     if (original.node === undefined) delete process.env.NODE_ENV;

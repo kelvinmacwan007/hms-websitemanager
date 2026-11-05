@@ -97,6 +97,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         `website-root motion-reduce:!scroll-auto ${headingFont.variable} ${bodyFont.variable}`,
       )}
       style={theme}
+      data-site-motion={hotel?.branding.motion?.preset ?? "calm"}
     >
       <body
         // Browser extensions may add attributes before React hydrates this element.

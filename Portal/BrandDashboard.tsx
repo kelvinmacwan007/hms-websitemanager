@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Palette, Type, Sparkles, PanelsTopLeft } from "lucide-react";
+import { Image, Palette, Type, Sparkles, PanelsTopLeft } from "lucide-react";
 import { HeaderSettings } from "./HeaderSettings";
 import { BrandColors } from "./BrandColors";
 import { LogoIdentity } from "./LogoIdentity";
@@ -9,7 +9,7 @@ import { AppearanceControls } from "./AppearanceControls";
 import { TypographyControls } from "./TypographyControls";
 
 const tabs = [
-  { key: "identity", label: "Brand identity", icon: Palette },
+  { key: "identity", label: "Brand identity", icon: Image },
   { key: "colors", label: "Colors", icon: Palette },
   { key: "typography", label: "Typography", icon: Type },
   { key: "experience", label: "Experience", icon: Sparkles },
@@ -52,8 +52,8 @@ export function BrandDashboard() {
               setTab(key);
             }}
           >
-            <Icon size={16} />
-            {label}
+            <Icon size={20} aria-hidden="true" />
+            <span>{label}</span>
           </button>
         ))}
       </nav>

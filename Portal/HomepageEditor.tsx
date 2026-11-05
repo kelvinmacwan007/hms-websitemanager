@@ -1,12 +1,10 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import {
   ImagePlus,
   Images,
   Layers,
   GripVertical,
-  Check,
   ChevronDown,
   RotateCcw,
   ArrowUp,
@@ -21,8 +19,8 @@ import {
   MapPin,
   type LucideIcon,
 } from "lucide-react";
-import { Card, Field, ImageField, ImageCollection, Toggle, useEditor } from "./editor-fields";
-import { createWebsiteDocument, safeImageUrl } from "./content";
+import { Card, Field, ImageCollection, Toggle, useEditor } from "./editor-fields";
+import { createWebsiteDocument } from "./content";
 
 const sectionIcons: Record<string, LucideIcon> = {
   rooms: BedDouble,
@@ -43,13 +41,6 @@ export function HomepageEditor() {
   const { content, update, notify } = useEditor();
   const [opened, setOpened] = useState<string>();
   const [dragged, setDragged] = useState<string>();
-  const photos = [
-    ...new Map(
-      [...content.hotel.gallery, ...content.hotel.rooms.flatMap((room) => room.images)]
-        .filter((image) => safeImageUrl(image.url))
-        .map((image) => [image.url, image]),
-    ).values(),
-  ];
   function move(from: number, to: number) {
     if (
       from < 0 ||
@@ -69,7 +60,7 @@ export function HomepageEditor() {
       <Card
         icon={<ImagePlus size={23} />}
         title="The first impression"
-        description="Write your welcome message. The main photo is used when no slider images are selected."
+        description="Write your welcome message. Manage your banner photos in Banner Images."
       >
         <div className="wm-home-first-grid">
           <div className="wm-home-welcome-fields">
@@ -88,15 +79,6 @@ export function HomepageEditor() {
               </small>
             </div>
           </div>
-          <div className="wm-home-banner-photo">
-            <ImageField
-              altInDetails
-              editOverlay
-              label="Main banner photo"
-              path={["hotel", "heroImage", "url"]}
-              altPath={["hotel", "heroImage", "alt"]}
-            />
-          </div>
         </div>
       </Card>
       <div className="wm-home-slides">
@@ -104,45 +86,9 @@ export function HomepageEditor() {
           icon={<Images size={23} />}
           banner
           path={["hotel", "heroSlides"]}
-          title="Banner slider images"
+          title="Banner Images"
         />
       </div>
-      {photos.length > 0 && (
-        <Card
-          icon={<Images size={23} />}
-          title="Choose from hotel photos"
-          description="Select photos for the banner slider. Uploads and slide order are managed above."
-        >
-          <div className="wm-home-photo-library">
-            {photos.map((image) => {
-              const selected = content.hotel.heroSlides?.some((slide) => slide.url === image.url);
-              return (
-                <button
-                  type="button"
-                  key={image.url}
-                  aria-pressed={Boolean(selected)}
-                  aria-label={`${selected ? "Remove" : "Select"} banner photo: ${image.alt || "Hotel photo"}`}
-                  onClick={() =>
-                    update(
-                      ["hotel", "heroSlides"],
-                      selected
-                        ? content.hotel.heroSlides?.filter((slide) => slide.url !== image.url)
-                        : [...(content.hotel.heroSlides || []), image],
-                    )
-                  }
-                >
-                  <img src={safeImageUrl(image.url)} alt={image.alt || "Hotel photo"} />
-                  {selected && (
-                    <span>
-                      <Check size={17} />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </Card>
-      )}
       <Card
         icon={<Layers size={23} />}
         title="Homepage sections"

@@ -93,6 +93,7 @@ export function presentationDocument(hotel: Hotel, payload: WebsitePresentationP
     hotel: {
       ...base.hotel,
       ...content,
+      heroImage: hotel.heroImage,
       branding: { ...hotel.branding, ...content.branding },
       contact: { ...hotel.contact, website, enquiryEmail, socialLinks },
       rooms,

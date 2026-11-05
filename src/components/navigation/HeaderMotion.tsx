@@ -8,18 +8,38 @@ import { useMotionPreset } from "@/components/layout/MotionWrapper";
 interface HeaderMotionProps {
   children: React.ReactNode;
   className?: string;
+  shellClassName?: string;
   template?: string;
 }
 
-export function HeaderMotion({ children, className, template }: HeaderMotionProps) {
+export function HeaderMotion({ children, className, shellClassName, template }: HeaderMotionProps) {
   const headerRef = useRef<HTMLElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
   const preset = useMotionPreset();
 
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
+    // Reserve a stable document footprint, including after font or viewport changes.
+    const layout = header.querySelector<HTMLElement>("[data-header-layout]");
+    const reserveSpace = () => {
+      if (!layout || !shellRef.current) return;
+      const compact = header.dataset.compact;
+      header.dataset.compact = "false";
+      const height = layout.getBoundingClientRect().height;
+      if (compact === undefined) delete header.dataset.compact;
+      else header.dataset.compact = compact;
+      shellRef.current.style.setProperty("--header-expanded-height", `${height}px`);
+      shellRef.current
+        .closest<HTMLElement>(".website-root")
+        ?.style.setProperty("--website-header-height", `${height}px`);
+    };
+    reserveSpace();
+    const observer = new ResizeObserver(reserveSpace);
+    if (layout) observer.observe(layout);
+    window.addEventListener("resize", reserveSpace);
     const update = () => {
-      // Hysteresis prevents a shrinking sticky header from toggling at its boundary.
+      // Separate entry and exit thresholds prevent flicker near the boundary.
       const compact = String(window.scrollY > (header.dataset.compact === "true" ? 100 : 180));
       if (header.dataset.compact === compact) return;
       const initialized = header.dataset.compact !== undefined;
@@ -33,66 +53,26 @@ export function HeaderMotion({ children, className, template }: HeaderMotionProp
           ".header-identity, .header-navigation, .header-actions",
         ),
       );
-      const groups = ["header-identity", "header-navigation", "header-actions"];
-      const before = new Map(
-        groups.map((group) => [
-          group,
-          targets
-            .filter((target) => target.classList.contains(group))
-            .map((target) => target.getBoundingClientRect())
-            .filter((rect) => rect.width && rect.height),
-        ]),
-      );
-      const height = header.getBoundingClientRect().height;
-      // Capture the currently painted positions before interrupting a transition.
-      // Resetting first makes a quick scroll reversal jump to the previous endpoint.
       gsap.killTweensOf([header, ...targets]);
       gsap.set(targets, { clearProps: "transform,transformOrigin,opacity" });
-      gsap.set(header, { clearProps: "height" });
+      gsap.set(header, { clearProps: "height,transform" });
       header.dataset.compact = compact;
       if (preset === "off" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const nextHeight = header.getBoundingClientRect().height;
-      targets.forEach((target) => {
-        const after = target.getBoundingClientRect();
-        if (!after.width || !after.height) return;
-        const group = groups.find((name) => target.classList.contains(name));
-        const previous = group ? before.get(group) : undefined;
-        const origin = previous?.reduce((nearest, rect) =>
-          Math.abs(rect.left - after.left) < Math.abs(nearest.left - after.left) ? rect : nearest,
-        );
-        if (!origin) return;
+      if (compact === "true") {
+        // Bring in the entire sticky bar together, with its final layout intact.
         gsap.fromTo(
-          target,
-          {
-            x: origin.left - after.left,
-            y: origin.top - after.top,
-            // Only the logo changes size. Scaling navigation or action groups
-            // distorts their text, icons, and pill buttons during the transition.
-            scaleX: group === "header-identity" ? origin.width / after.width : 1,
-            scaleY: group === "header-identity" ? origin.height / after.height : 1,
-            transformOrigin: "top left",
-          },
-          {
-            x: 0,
-            y: 0,
-            scaleX: 1,
-            scaleY: 1,
-            duration: 0.55,
-            ease: "power3.inOut",
-            clearProps: "transform,transformOrigin,opacity",
-          },
+          header,
+          { yPercent: -100 },
+          { yPercent: 0, duration: 0.6, ease: "power3.out", clearProps: "transform" },
         );
-      });
-      gsap.fromTo(
-        header,
-        { height },
-        { height: nextHeight, duration: 0.55, ease: "power3.inOut", clearProps: "height" },
-      );
+      }
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => {
       window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", reserveSpace);
+      observer.disconnect();
       gsap.killTweensOf([
         header,
         ...header.querySelectorAll(".header-identity, .header-navigation, .header-actions"),
@@ -128,8 +108,10 @@ export function HeaderMotion({ children, className, template }: HeaderMotionProp
   );
 
   return (
-    <header ref={headerRef} className={className} data-template={template}>
-      {children}
-    </header>
+    <div ref={shellRef} className={shellClassName}>
+      <header ref={headerRef} className={className} data-template={template}>
+        {children}
+      </header>
+    </div>
   );
 }

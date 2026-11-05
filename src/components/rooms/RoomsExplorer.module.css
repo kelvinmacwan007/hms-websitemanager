@@ -182,38 +182,97 @@
   color: #626c7b;
 }
 .sort {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: 220px;
+  color: var(--color-text);
+}
+.resultControls {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  font-size: 1.125rem;
-  color: #626c7b;
+  gap: 12px;
+  min-width: 0;
+}
+.controlLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .sort select {
-  max-width: 10.625rem;
-  padding: 0.625rem 0.75rem;
-  border: 1px solid #ecebed;
-  border-radius: 0.4375rem;
-  background: #fff;
-  color: #384456;
-  font-size: 1.125rem;
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: var(--site-control-height);
+  padding: 0 42px 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--site-control-font);
+  cursor: pointer;
+}
+.sort > svg {
+  position: absolute;
+  right: 16px;
+  top: 15px;
+  color: var(--color-text-muted);
+  pointer-events: none;
 }
 .viewToggle {
   display: flex;
-  border: 1px solid #ecebed;
-  border-radius: 0.4375rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
   overflow: hidden;
+  background: var(--color-surface, #fff);
 }
 .viewToggle button {
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.25rem;
-  background: #fff;
-  color: #586174;
+  width: 52px;
+  height: calc(var(--site-control-height) - 2px);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.viewToggle button + button {
+  border-left: 1px solid var(--color-border);
+}
+.viewToggle button:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
 }
 .viewToggle button[aria-pressed="true"] {
-  background: var(--color-brand);
-  color: #fff;
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
+.sort select:focus-visible,
+.viewToggle button:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -3px;
+}
+@media (max-width: 480px) {
+  .resultControls {
+    width: 100%;
+    gap: 10px;
+  }
+  .sort {
+    width: auto;
+  }
+  .sort select {
+    padding-left: 12px;
+    font-size: 0.875rem;
+  }
+  .viewToggle button {
+    width: 44px;
+  }
 }
 .grid {
   display: grid;

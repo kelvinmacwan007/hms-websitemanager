@@ -46,8 +46,8 @@ export default async function WebsiteManagerPage() {
     : undefined;
   const colors = await loadWebsiteColors(tenant.id, hotel.id);
   const persistence = getWebsitePersistence();
-  const payload =
-    (await persistence?.loadDraft(tenant.id)) ?? (await persistence?.loadPublished(tenant.id));
+  const publishedPayload = await persistence?.loadPublished(tenant.id);
+  const payload = (await persistence?.loadDraft(tenant.id)) ?? publishedPayload;
   const initialContent = payload
     ? presentationDocument(hotel, payload)
     : createWebsiteDocument(hotel);
@@ -61,6 +61,7 @@ export default async function WebsiteManagerPage() {
       apiPreview={!isMockMode()}
       initialContent={initialContent}
       initialHasSavedWebsite={Boolean(payload)}
+      initialWasPublished={Boolean(publishedPayload)}
       hmsRatesReady={hmsRatesReady}
       hostedManager={hostedManager}
       websiteUrl={websiteUrl}

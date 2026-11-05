@@ -1,0 +1,14 @@
+/* Leave the standard banner unchanged; reserve extra space for an overlaid header. */
+.overlayHeader.overlayHeader > :global(.hero-banner-content) {
+  box-sizing: border-box;
+  min-height: max(780px, 100svh);
+  padding-top: calc(var(--website-header-height, 112px) + 64px);
+  padding-bottom: 150px;
+}
+@media (max-width: 767px) {
+  .overlayHeader.overlayHeader > :global(.hero-banner-content) {
+    min-height: max(740px, 100svh);
+    padding-top: calc(var(--website-header-height, 96px) + 40px);
+    padding-bottom: 140px;
+  }
+}

@@ -37,6 +37,18 @@ export function BookingWidget({
   const [checkOut, setCheckOut] = useState(
     values?.checkOut ?? offsetDate(checkIn, settings.minStay),
   );
+  const stayRange = {
+    checkIn,
+    checkOut,
+    minArrival,
+    maxArrival: offsetDate(today, settings.advanceWindow),
+    minStay: settings.minStay,
+    maxStay: settings.maxStay,
+    onChange: (start: string, end: string) => {
+      setCheckIn(start);
+      setCheckOut(end);
+    },
+  };
 
   function changeCheckIn(next: string) {
     setCheckIn(next);
@@ -94,6 +106,7 @@ export function BookingWidget({
             <CalendarDays size={15} /> Check-in
           </span>
           <BookingDatePicker
+            stayRange={stayRange}
             label="Check-in"
             name="checkIn"
             today={today}
@@ -110,6 +123,8 @@ export function BookingWidget({
             <CalendarDays size={15} /> Check-out
           </span>
           <BookingDatePicker
+            stayRange={stayRange}
+            initialSelection="end"
             label="Check-out"
             name="checkOut"
             today={today}

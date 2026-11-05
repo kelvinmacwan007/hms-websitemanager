@@ -11,6 +11,24 @@
   --wm-space-card: 24px;
   --wm-space-section: 24px;
   --wm-space-content: 16px;
+  --wm-font-ui: Inter, "Segoe UI", Arial, sans-serif;
+  --wm-text-page: 26px;
+  --wm-text-heading: 20px;
+  --wm-text-subheading: 16px;
+  --wm-text-body: 14px;
+  --wm-text-label: 13px;
+  --wm-text-caption: 12px;
+  --wm-button-height: 46px;
+  --wm-button-padding: 16px;
+  --wm-button-icon-size: 18px;
+  --wm-icon-tile-size: var(--wm-button-height);
+  --wm-icon-size: 24px;
+  --wm-icon-tile-radius: 12px;
+  --wm-heading-gap: 16px;
+  --wm-focus-ring: #8cadd4;
+  --wm-control-disabled-bg: #edf1f7;
+  --wm-control-disabled-text: #63728a;
+  --wm-control-duration: 180ms;
 }
 
 @media (max-width: 760px) {

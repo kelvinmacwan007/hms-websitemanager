@@ -14,7 +14,9 @@ export async function authenticateHmsManager(
     body: JSON.stringify({ userIdentity: username, password, customerCode }),
     cache: "no-store",
   });
-  if (!response.ok) return null;
+  if (response.status === 401 || response.status === 403) return null;
+  if (!response.ok)
+    throw new Error(`PatelHMS authentication service returned HTTP ${response.status}.`);
   const data = await response.json();
   const expires = Date.parse(data.expiration);
   if (

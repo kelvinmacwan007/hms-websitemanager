@@ -1,0 +1,204 @@
+.page {
+  background: #f0ede9;
+  color: #252521;
+  padding: 60px 24px 80px;
+  min-height: 70vh;
+}
+.heading {
+  text-align: center;
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(42px, 5vw, 64px);
+  margin: 0 0 18px;
+  line-height: 1.15;
+}
+.description {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 30px;
+  color: #77716b;
+}
+.menu {
+  max-width: 1100px;
+  margin: auto;
+}
+.tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #ccc6bf;
+  margin: 70px 0 64px;
+  padding: 16px 0;
+}
+.tabs::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 70px;
+  right: 70px;
+  border-top: 1px solid #ccc6bf;
+}
+.utensil {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+.star {
+  position: absolute;
+  left: 50%;
+  top: -17px;
+  transform: translateX(-50%);
+  color: #cf4e2e;
+  background: #f0ede9;
+  padding: 0 8px;
+  font-size: 26px;
+}
+.tabList {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px 54px;
+}
+.tabList button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 8px 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+.tabList button[aria-selected="true"] {
+  color: #cc4c2e;
+}
+.tabList button:focus-visible,
+.download a:focus-visible {
+  outline: 2px solid #cc4c2e;
+  outline-offset: 5px;
+}
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1.28fr 1fr;
+  align-items: start;
+  gap: 38px;
+}
+.column {
+  min-width: 0;
+}
+.section {
+  margin-bottom: 40px;
+}
+.menu .section h2 {
+  font:
+    400 29px/1.25 Georgia,
+    serif;
+  margin: 0 0 25px;
+}
+.boxed {
+  border: 1px solid #ccc6bf;
+  padding: 36px;
+}
+.item {
+  padding: 0 0 21px;
+  margin-bottom: 21px;
+  border-bottom: 1px solid #ccc6bf;
+  break-inside: avoid;
+}
+.itemHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.menu .itemHeading h3 {
+  font:
+    400 14px/1.5 Arial,
+    sans-serif;
+  margin: 0;
+}
+.itemHeading span {
+  white-space: nowrap;
+  font:
+    400 14px/1.5 Arial,
+    sans-serif;
+  color: #807b76;
+}
+.item p {
+  color: #8a847e;
+  font:
+    400 12px/1.7 Arial,
+    sans-serif;
+  margin: 4px 0 0;
+}
+.download {
+  text-align: center;
+  margin: 40px 0 0;
+}
+.download a {
+  display: inline-block;
+  background: #cf4e2e;
+  border-radius: 30px;
+  padding: 14px 30px;
+  color: white;
+  text-decoration: none;
+  font:
+    600 13px Arial,
+    sans-serif;
+}
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+@media (max-width: 900px) {
+  .columns {
+    gap: 22px;
+  }
+  .boxed {
+    padding: 24px 18px;
+  }
+  .menu .section h2 {
+    font-size: 25px;
+  }
+}
+@media (max-width: 640px) {
+  .page {
+    padding: 40px 22px;
+  }
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .tabs {
+    margin: 45px 0 38px;
+    gap: 12px;
+  }
+  .tabList {
+    gap: 10px 20px;
+  }
+  .utensil {
+    width: 28px;
+    height: 36px;
+  }
+  .tabs::before {
+    left: 42px;
+    right: 42px;
+  }
+  .boxed {
+    padding: 28px;
+  }
+}
+
+.dishImage {
+  float: left;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin: 0 12px 8px 0;
+}
+.item::after {
+  content: "";
+  display: block;
+  clear: both;
+}

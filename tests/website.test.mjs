@@ -4,11 +4,21 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import ts from "typescript";
+import { cache } from "react";
 import { demoHotel } from "../src/providers/mock/demoHotel.ts";
 import { DEFAULT_BOOKING_SETTINGS, propertyDate, offsetDate } from "../src/lib/booking/settings.ts";
 import { parseAvailabilitySearch } from "../src/lib/booking/search.ts";
 import { resolveCart } from "../src/lib/booking/cart.ts";
 import { visibleRooms } from "../src/lib/booking/visibility.ts";
+import { bannerImages } from "../src/lib/website/bannerImages.ts";
+import { pageEnabled } from "../src/lib/website/pages.ts";
+
+test("the homepage remains available even when an older draft disables it", () => {
+  const hotel = structuredClone(demoHotel);
+  hotel.website = { pages: { home: { enabled: false }, rooms: { enabled: false } } };
+  assert.equal(pageEnabled(hotel, "home"), true);
+  assert.equal(pageEnabled(hotel, "rooms"), false);
+});
 
 // Load the actual pure modules without Next's server/runtime or alias resolver.
 const project = fileURLToPath(new URL("../", import.meta.url));
@@ -20,6 +30,7 @@ function load(relative) {
   });
   const exports = {};
   new Function("require", "exports", outputText)((specifier) => {
+    if (specifier === "react") return { cache };
     const target = path.resolve(path.dirname(filename), specifier);
     return load(target.endsWith(".ts") ? target : `${target}.ts`);
   }, exports);
@@ -32,6 +43,44 @@ const {
   presentationPayload,
   contentIssues,
 } = load("Portal/content.ts");
+
+test("empty banner selections retain the HMS cover through storage and ignore room photos", () => {
+  const source = structuredClone(demoHotel);
+  const cover = source.heroImage;
+  const document = createWebsiteDocument(source);
+  document.hotel.heroSlides = [];
+  document.hotel.heroImage = source.gallery[1];
+  const restored = load("src/lib/website/presentation.ts").presentationDocument(
+    source,
+    presentationPayload(document),
+  );
+  assert.deepEqual(restored.hotel.heroSlides, []);
+  assert.deepEqual(restored.hotel.heroImage, cover);
+  assert.deepEqual(bannerImages(restored.hotel), [cover]);
+  assert.deepEqual(
+    bannerImages({ heroSlides: [], heroImage: undefined, gallery: source.gallery }),
+    [],
+  );
+  assert.deepEqual(preservePmsData(document, createWebsiteDocument(source)).hotel.heroImage, cover);
+  const selected = source.gallery.slice(0, 2);
+  assert.deepEqual(bannerImages({ heroSlides: selected, heroImage: cover }), selected);
+});
+
+test("banner image collections accept seven images and reject an eighth", () => {
+  const document = createWebsiteDocument(structuredClone(demoHotel));
+  document.hotel.heroSlides = Array.from({ length: 7 }, (_, index) => ({
+    id: `banner-${index}`,
+    url: `https://example.com/banner-${index}.jpg`,
+    alt: `Banner ${index}`,
+  }));
+  assert.equal(parseWebsiteDocument(document).hotel.heroSlides.length, 7);
+  document.hotel.heroSlides.push({
+    id: "eighth",
+    url: "https://example.com/eighth.jpg",
+    alt: "Extra",
+  });
+  assert.throws(() => parseWebsiteDocument(document), /at most 7 images/);
+});
 const { publicProvider } = load("src/lib/api/publicProvider.ts");
 const { roomDisplayRates } = load("src/lib/booking/displayRates.ts");
 
@@ -213,9 +262,10 @@ test("backend draft/publish payload excludes operational room and rate values", 
     "occupancy",
     "availabilityStatus",
     "ratePlans",
-    '"price"',
   ])
     assert.equal(serialized.includes(field), false, field);
+  assert.equal(JSON.stringify(payload.rooms).includes('"price"'), false);
+  assert.deepEqual(payload.content.menus, demoHotel.menus);
   assert.equal(payload.paymentSettings.mode, "pay-at-property");
 });
 
@@ -359,4 +409,17 @@ test("disabled hotel and room amenities persist in drafts but disappear from pub
     ),
     false,
   );
+});
+
+test("menu edits survive presentation storage and rehydration", () => {
+  const draft = createWebsiteDocument(demoHotel);
+  draft.hotel.menus[0].sections[0].items[0].price = "$29";
+  draft.hotel.menus[0].sections[0].items[0].vintage = "2024";
+  draft.hotel.menus[0].sections[0].items[0].itemType = "non-veg";
+  draft.hotel.menus[0].sections[0].items[0].status = "draft";
+  draft.hotel.menus[0].sections[0].items[0].available = false;
+  draft.hotel.menus[0].pdfUrl = "https://hotel.example.com/dinner.pdf";
+  const payload = JSON.parse(JSON.stringify(presentationPayload(parseWebsiteDocument(draft))));
+  const restored = load("src/lib/website/presentation.ts").presentationDocument(demoHotel, payload);
+  assert.deepEqual(restored.hotel.menus, draft.hotel.menus);
 });

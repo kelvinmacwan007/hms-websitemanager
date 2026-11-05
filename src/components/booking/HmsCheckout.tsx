@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { BookingStaySummary } from "./BookingStaySummary";
+import flow from "./BookingFlow.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { websiteClassName } from "@/lib/ui/websiteStyles";
 import { formatMoney, formatStayDate } from "@/lib/utils/format";
 import type { CartLine } from "@/lib/booking/cart";
-import type { AvailabilitySearch } from "@/types/hotel";
+import type { AvailabilitySearch, HotelExtra } from "@/types/hotel";
 import type { HmsOption, HmsForecastDay } from "@/services/patelHms/integrationTypes";
 import { HMS_READ_ONLY } from "@/lib/api/hmsPolicy";
 import { allocateParty, partySummary } from "@/lib/booking/party";
@@ -270,6 +273,7 @@ export function HmsCheckout({
   estimate,
   currency,
   hotelName,
+  extras = [],
 }: {
   lines: CartLine[];
   search: AvailabilitySearch;
@@ -277,6 +281,7 @@ export function HmsCheckout({
   estimate: number;
   currency: string;
   hotelName: string;
+  extras?: HotelExtra[];
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -338,7 +343,7 @@ export function HmsCheckout({
           setAttempted(false);
         throw new Error(result.error ?? "Booking needs checking by the hotel.");
       }
-      router.push("/booking/payment");
+      router.push(`/booking/payment?${query}`);
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -364,7 +369,7 @@ export function HmsCheckout({
           result.error ??
             "The hotel must check this booking attempt. Do not create another reservation.",
         );
-      router.push("/booking/payment");
+      router.push(`/booking/payment?${query}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Contact the hotel to check this attempt.");
     } finally {
@@ -382,103 +387,119 @@ export function HmsCheckout({
   }
   return (
     <main className={websiteClassName("container py-12")}>
-      <h1 className={websiteClassName("section-title")}>
-        {HMS_READ_ONLY ? "Room rates" : "Guest details"}
-      </h1>
-      <p className={websiteClassName("mt-4 text-muted")}>
-        {hotelName} · {formatStayDate(search.checkIn)} to {formatStayDate(search.checkOut)} ·{" "}
-        {partySummary(search)}
-      </p>
-      <p className={websiteClassName("mt-4")}>
-        Estimated room subtotal: {formatMoney({ amount: estimate, currency })}. The hotel provides
-        the final taxes and payable balance after reservation creation.
-      </p>
-      <div className={websiteClassName("mt-5 flex flex-wrap gap-3")}>
-        {lines.map((line) => (
-          <button
-            type="button"
-            className={websiteClassName("ghost-button")}
-            key={line.room.id}
-            onClick={() => loadForecast(line.room.id)}
+      <div className={flow.split}>
+        <div className={flow.content}>
+          <Link
+            className={websiteClassName("text-brand font-semibold")}
+            href={`/booking/extras?${query}`}
           >
-            View daily rates: {line.room.name}
-          </button>
-        ))}
-      </div>
-      {Object.entries(forecast).map(([id, days]) => (
-        <div className={websiteClassName("mt-4 overflow-x-auto")} key={id}>
-          <table className={websiteClassName("w-full text-left text-sm")}>
-            <caption>
-              {lines.find((line) => line.room.id === id)?.room.name} — rate forecast
-            </caption>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nightly rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {days.map((day) => (
-                <tr key={day.rateDate}>
-                  <td>{formatStayDate(day.rateDate.slice(0, 10))}</td>
-                  <td>{formatMoney({ amount: day.rate, currency })}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
-      {HMS_READ_ONLY ? (
-        <p role="status" className={websiteClassName("surface-panel mt-8 p-6")}>
-          Read-only testing. You can view room availability and daily rates. Reservations and
-          payments are disabled.
-        </p>
-      ) : (
-        <form onSubmit={submit} className={websiteClassName("mt-8 grid gap-8")}>
-          {rooms.map((room, index) => (
-            <GuestFields
-              key={`${room.id}-${index}`}
-              index={index}
-              name={room.name}
-              occupancy={room.occupancy}
-              initialAdults={allocation[index].adults}
-              initialChildren={allocation[index].children}
-              initialPets={allocation[index].pets}
-              maxPets={search.pets ?? 0}
-            />
+            Back to extras
+          </Link>
+          <h1 className={websiteClassName("section-title")}>Guest details</h1>
+          <p className={websiteClassName("mt-4 text-muted")}>
+            {hotelName} · {formatStayDate(search.checkIn)} to {formatStayDate(search.checkOut)} ·{" "}
+            {partySummary(search)}
+          </p>
+          <p className={websiteClassName("mt-4")}>
+            Estimated room subtotal: {formatMoney({ amount: estimate, currency })}. The hotel
+            provides the final taxes and payable balance after reservation creation.
+          </p>
+          <div className={websiteClassName("mt-5 flex flex-wrap gap-3")}>
+            {lines.map((line) => (
+              <button
+                type="button"
+                className={websiteClassName("ghost-button")}
+                key={line.room.id}
+                onClick={() => loadForecast(line.room.id)}
+              >
+                View daily rates: {line.room.name}
+              </button>
+            ))}
+          </div>
+          {Object.entries(forecast).map(([id, days]) => (
+            <div className={websiteClassName("mt-4 overflow-x-auto")} key={id}>
+              <table className={websiteClassName("w-full text-left text-sm")}>
+                <caption>
+                  {lines.find((line) => line.room.id === id)?.room.name} — rate forecast
+                </caption>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Nightly rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {days.map((day) => (
+                    <tr key={day.rateDate}>
+                      <td>{formatStayDate(day.rateDate.slice(0, 10))}</td>
+                      <td>{formatMoney({ amount: day.rate, currency })}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ))}
-          <label className={websiteClassName("flex items-start gap-3")}>
-            <input type="checkbox" required className={websiteClassName("mt-1")} />I authorize the
-            hotel to create this reservation and understand payment may be required. I have reviewed
-            the hotel’s policies.
-          </label>
-          {error && (
-            <p role="alert" className={websiteClassName("text-error")}>
-              {error}
+          {HMS_READ_ONLY ? (
+            <p role="status" className={websiteClassName("surface-panel mt-8 p-6")}>
+              Read-only testing. You can view room availability and daily rates. Reservations and
+              payments are disabled.
             </p>
+          ) : (
+            <form onSubmit={submit} className={websiteClassName("mt-8 grid gap-8")}>
+              {rooms.map((room, index) => (
+                <GuestFields
+                  key={`${room.id}-${index}`}
+                  index={index}
+                  name={room.name}
+                  occupancy={room.occupancy}
+                  initialAdults={allocation[index].adults}
+                  initialChildren={allocation[index].children}
+                  initialPets={allocation[index].pets}
+                  maxPets={search.pets ?? 0}
+                />
+              ))}
+              <label className={websiteClassName("flex items-start gap-3")}>
+                <input type="checkbox" required className={websiteClassName("mt-1")} />I authorize
+                the hotel to create this reservation and understand payment may be required. I have
+                reviewed the hotel’s policies.
+              </label>
+              {error && (
+                <p role="alert" className={websiteClassName("text-error")}>
+                  {error}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={busy || attempted}
+                className={websiteClassName("brand-button justify-self-start")}
+              >
+                {busy
+                  ? "Creating reservation…"
+                  : attempted
+                    ? "Booking submitted — check status"
+                    : "Create reservation"}
+              </button>
+              {attempted && !busy && (
+                <button
+                  type="button"
+                  onClick={recover}
+                  className={websiteClassName("ghost-button justify-self-start")}
+                >
+                  Check reservation status
+                </button>
+              )}
+            </form>
           )}
-          <button
-            type="submit"
-            disabled={busy || attempted}
-            className={websiteClassName("brand-button justify-self-start")}
-          >
-            {busy
-              ? "Creating reservation…"
-              : attempted
-                ? "Booking submitted — check status"
-                : "Create reservation"}
-          </button>
-          {attempted && !busy && (
-            <button
-              type="button"
-              onClick={recover}
-              className={websiteClassName("ghost-button justify-self-start")}
-            >
-              Check reservation status
-            </button>
-          )}
-        </form>
-      )}
+        </div>
+        <BookingStaySummary
+          hotelName={hotelName}
+          search={search}
+          lines={lines}
+          total={estimate}
+          currency={currency}
+          extras={extras}
+        />
+      </div>
     </main>
   );
 }

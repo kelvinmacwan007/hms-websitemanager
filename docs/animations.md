@@ -27,24 +27,42 @@ Implementation: `MotionWrapper` owns Lenis and tenant settings. `HeroMotion` and
 skips the homepage hero to avoid overlapping timelines. Both use GSAP context cleanup,
 respect the motion preset and OS preference, and reveal content immediately on keyboard focus.
 
+The persistent booking layout passes `animatePageEntry={false}` to `SiteShell`.
+Its children stream through independent hydration boundaries, so the layout must
+not query and animate their headings before those boundaries hydrate. The booking
+header, stepper and loading container stay stable; no hydration warnings are
+suppressed to hide animation mutations. Check this with
+`node tests/booking-hydration.browser.mjs`, which enables motion and delays page
+chunks while checking for hydration errors and heading style mutations.
+
 Public website styling uses Tailwind utilities from `src/lib/ui/websiteStyles.ts`.
 Semantic classes are hooks for animation, shared utility composition, and browser
-checks. `globals.css` contains only Tailwind directives; no public CSS modules or
-custom rule stylesheets remain. Tailwind's animation configuration contains the
-small decorative keyframes. Hotel branding variables continue to come from the
+checks. `globals.css` owns the public control tokens and shared interaction rules;
+component CSS modules define layouts and specialized controls. Tailwind's animation
+configuration contains the small decorative keyframes. Hotel branding variables continue to come from the
 server-side theme. Glass navigation, panels, and slideshow controls use translucent
 surfaces, Tailwind backdrop blur, borders, and shadows with readable fallback surfaces.
-The website uses 18px body text and a 14px minimum for smaller text.
+The website uses 18px body text and 16px control text; compact utility labels use
+their component-specific caption sizes.
 
 `src/lib/ui/buttons.ts` defines shared Tailwind button geometry, typography,
 hover/press effects, keyboard focus rings and disabled states. Primary and outlined
-actions use the same 48px minimum height and pill shape; icon controls use 44px
-circles. Image targets keep their image layout and share the interaction states.
+actions and single-line form fields use the same 52px minimum height and 16px type.
+Button shape follows the hotel's configured appearance. Compact and icon controls
+use 44px targets; calendar cells use 40px on desktop and 44px on phones. Image
+targets keep their image layout and share the interaction states.
 Primary buttons use the configured hotel accent with contrast-aware text; outlined
 and icon controls use the same accent hue. `Heading.tsx` gives public titles a bold
 body-font base and italic display-font accents for h1 and h2 only; h3 uses normal
 sans-serif styling. Existing emphasized phrases are preserved, and plain titles
-emphasize their last word in the exact configured hotel accent. All styling uses Tailwind.
+emphasize their last word in the exact configured hotel accent.
+
+All public buttons share 180ms hover/press feedback using the independent CSS
+`scale` property so GSAP transforms and anchored popover positions remain intact.
+Disabled actions do not scale; reduced-motion preferences and the hotel's Off
+motion preset suppress animation. Portal buttons retain their separate 46px
+design system and share equivalent motion rules. Third-party payment-widget
+controls retain their vendor styling.
 
 Verification:
 

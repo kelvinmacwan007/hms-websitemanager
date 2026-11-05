@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Type } from "lucide-react";
+import { PortalIcon } from "./PortalIcon";
 import { Field, useEditor } from "./editor-fields";
 
 const fontNotes: Record<string, string> = {
@@ -19,7 +20,9 @@ export function TypographyControls() {
   return (
     <section className="wm-typography-design">
       <header className="wm-design-heading">
-        <span className="wm-design-heading-icon wm-type-heading-icon">Aa</span>
+        <PortalIcon className="wm-design-heading-icon">
+          <Type size={24} />
+        </PortalIcon>
         <div>
           <h2>Typography</h2>
           <p>Choose fonts for your website to match your brand style.</p>

@@ -1468,7 +1468,7 @@
   border-color: #e8ded6;
   background: var(--wm-surface);
 }
-.wm-studio-dashboard .wm-button:hover {
+.wm-studio-dashboard .wm-button:hover:not(:disabled) {
   background: var(--wm-brand-soft);
 }
 .wm-studio-dashboard .wm-button-primary {
@@ -1480,6 +1480,14 @@
 .wm-studio-dashboard .wm-button-primary:hover:not(:disabled) {
   background: #152c50;
   color: #ffffff;
+}
+.wm-studio-dashboard .wm-button:disabled {
+  background: #edf0f5;
+  border-color: #d7dfe9;
+  color: #637187;
+  opacity: 1;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 .wm-studio-dashboard .wm-save-idle {
   background: var(--wm-surface);

@@ -61,7 +61,6 @@ try {
     ? [process.env.QA_HEADER_TEMPLATE]
     : ["minimal", "centered", "contact", "announcement", "transparent"];
   const preview = await context.newPage();
-  const stickySignatures = new Map();
   preview.setDefaultNavigationTimeout(60000);
   preview.on("pageerror", (error) => errors.push(error.message));
   for (const template of templates) {
@@ -124,6 +123,7 @@ try {
     }
     for (const width of [1600, 1024, 390, 320]) {
       await preview.setViewportSize({ width, height: 1000 });
+      const expandedHeight = await header.evaluate((h) => h.getBoundingClientRect().height);
       await preview.evaluate(() => window.scrollTo(0, 500));
       await preview.waitForFunction(
         () =>
@@ -144,13 +144,16 @@ try {
         };
       });
       assert.equal(signature.overflow, false, `${template}: sticky overflow at ${width}`);
-      if (stickySignatures.has(width))
-        assert.deepEqual(
-          signature,
-          stickySignatures.get(width),
-          `${template}: shared sticky design at ${width}`,
-        );
-      else stickySignatures.set(width, signature);
+      assert.equal(
+        signature.height,
+        template === "minimal" && width >= 1024
+          ? await header
+              .locator("nav")
+              .first()
+              .evaluate((nav) => nav.getBoundingClientRect().height)
+          : expandedHeight,
+        `${template}: sticky header preserves its layout at ${width}`,
+      );
       if (width === 390) {
         await sticky.getByRole("button", { name: "Open navigation", exact: true }).click();
         await preview.getByRole("navigation", { name: "Mobile navigation", exact: true }).waitFor();

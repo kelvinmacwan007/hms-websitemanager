@@ -175,8 +175,8 @@ export function HomeTemplate({
                 </Heading>
                 <p>{dining.description}</p>
                 {dining.hours && <small>{dining.hours}</small>}
-                <Link hotel={hotel} href="/dining" className={websiteClassName("home-text-link")}>
-                  Discover dining <ArrowUpRight size={19} />
+                <Link hotel={hotel} href="/menu" className={websiteClassName("home-text-link")}>
+                  View menu <ArrowUpRight size={19} />
                 </Link>
               </div>
               {dining.image && (

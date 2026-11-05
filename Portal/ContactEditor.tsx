@@ -7,7 +7,6 @@ import {
   Share2,
   Plus,
   Trash2,
-  FileText,
   ExternalLink,
 } from "lucide-react";
 import { Card, Field, Toggle, useEditor } from "./editor-fields";
@@ -201,23 +200,19 @@ export function ContactEditor() {
         </div>
       </Card>
       <Card
-        icon={<FileText size={25} />}
         title="Contact page settings"
-        description="Manage this page's visibility and content on your website."
-        action={
-          previewPage ? (
+        description="Show this page in your website and navigation."
+        className="wm-page-settings"
+        action={<Toggle compact label="Show this page" path={["pages", "contact", "enabled"]} />}
+      >
+        {previewPage && (
+          <div className="wm-inline-actions">
             <button type="button" className="wm-button" onClick={() => previewPage("contact")}>
               <ExternalLink size={16} />
               Preview page
             </button>
-          ) : undefined
-        }
-      >
-        <Toggle
-          label="Show this page"
-          path={["pages", "contact", "enabled"]}
-          hint="Include the page in your published website and navigation."
-        />
+          </div>
+        )}
         <div className="wm-contact-page-titles">
           <Field label="Small heading above the title" path={["pages", "contact", "eyebrow"]} />
           <Field label="Page heading" path={["pages", "contact", "title"]} />

@@ -1,12 +1,14 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import { RestaurantMenus } from "../src/components/menu/RestaurantMenus";
 import type { CSSProperties } from "react";
 import { appearanceVariables } from "../src/lib/branding/appearance";
 import { createTheme } from "../src/lib/branding/theme";
 import { ArrowUpRight, MapPin, Star } from "lucide-react";
 import { AmenityIcon } from "../src/components/amenities/AmenityIcon";
 import { visibleRooms } from "../src/lib/booking/visibility";
+import { bannerImages } from "../src/lib/website/bannerImages";
 import { PAGE_LABELS, safeImageUrl, type PageKey, type WebsiteDocument } from "./content";
 
 export function WebsitePreview({
@@ -30,7 +32,7 @@ export function WebsitePreview({
     "--preview-heading": hotel.branding.fontHeading || "Georgia",
     "--preview-body": hotel.branding.fontBody || "Arial",
   } as CSSProperties;
-  const hero = hotel.heroSlides?.find((image) => safeImageUrl(image.url)) || hotel.heroImage;
+  const hero = bannerImages(hotel)[0];
   const selected = pages[page];
   function photos() {
     return (
@@ -98,16 +100,7 @@ export function WebsitePreview({
     );
   }
   function dining() {
-    return hotel.dining?.map((item) => (
-      <article className="wm-site-dining" key={item.id}>
-        {safeImageUrl(item.image?.url) && (
-          <img src={safeImageUrl(item.image?.url)} alt={item.image?.alt || item.name} />
-        )}
-        <h4>{item.name}</h4>
-        <p>{item.description}</p>
-        <small>{item.hours}</small>
-      </article>
-    ));
+    return <RestaurantMenus menus={hotel.menus} />;
   }
   function reviews() {
     return hotel.testimonials?.map((item) => (

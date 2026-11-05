@@ -1,7 +1,18 @@
-.header {
+.shell {
   position: sticky;
   top: 0;
   z-index: 40;
+  height: var(--header-expanded-height, auto);
+  pointer-events: none;
+}
+.overlayShell {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0;
+}
+.header {
+  position: relative;
+  pointer-events: auto;
   background: var(--color-surface, white);
   color: var(--color-text);
   box-shadow: 0 1px 0 var(--color-border);
@@ -72,16 +83,17 @@
 }
 .cart,
 .book {
+  line-height: 1.5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  min-height: 2.875rem;
+  min-height: var(--site-control-height);
   padding: 0.75rem 1.5rem;
   border: 1px solid var(--color-brand);
   border-radius: 62.4375rem;
   white-space: nowrap;
-  font-size: 1.125rem;
+  font-size: var(--site-control-font);
   font-weight: 600;
 }
 .cart {
@@ -101,8 +113,8 @@
 .search {
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.75rem;
+  width: var(--site-control-icon);
+  height: var(--site-control-icon);
   flex-shrink: 0;
   color: var(--color-brand);
 }
@@ -118,6 +130,10 @@
   padding-block: 0.875rem;
   white-space: nowrap;
   font-size: 1.125rem;
+  transition: color 180ms ease;
+}
+.navigation a:hover {
+  color: var(--color-brand);
 }
 .navigation a[aria-current] {
   color: var(--color-brand);
@@ -207,7 +223,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.625rem 1.125rem;
-  min-height: 2.625rem;
+  min-height: var(--site-control-compact);
   padding: 0.625rem 3.375rem;
   background: var(--color-brand);
   color: #fff;
@@ -241,7 +257,7 @@
   color: #fff;
   box-shadow: none;
 }
-.overlay:not([data-compact="true"]) .row {
+.overlay .row {
   min-height: 6.875rem;
 }
 .overlay:not([data-compact="true"]) :is(.navigation a, .search, .hotelName) {
@@ -252,7 +268,13 @@
   border-color: #ffffffaa;
 }
 .overlay:not([data-compact="true"]) :global([data-menu-background]) {
-  background: #ffffff26;
+  color: #fff;
+}
+.overlay:not([data-compact="true"]) :global([data-menu-background])::before {
+  background: #ffffff1a;
+}
+.overlay:not([data-compact="true"]) :global([data-menu-background])::after {
+  color: inherit;
 }
 .overlay:not([data-compact="true"]) .lightLogo {
   display: block;
@@ -271,35 +293,14 @@
   color: var(--color-text);
   box-shadow: 0 0.25rem 1.25rem #0001;
 }
-.header:not([data-compact="true"]) .stickyRow {
-  display: none;
-}
 .header[data-compact="true"] {
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: 0 0.25rem 1.25rem #0001;
 }
-.header[data-compact="true"] .templateLayout {
-  display: none;
-}
-.header[data-compact="true"] .stickyRow {
-  display: flex;
-  min-height: 4.75rem;
-  padding-block: 0.75rem;
-}
-.header[data-compact="true"] .stickyRow .logo {
-  height: 3.25rem;
-}
 @media (min-width: 64rem) {
-  .header[data-template="minimal"] .stickyRow .cart {
-    display: inline-flex;
-    padding-inline: 1.5rem;
-  }
-  .header[data-template="minimal"] .stickyRow .cart span {
-    display: inline;
-  }
-  .header[data-template="minimal"] .stickyRow .book {
-    padding-inline: 1.5rem;
+  .header[data-compact="true"][data-template="minimal"] .masthead {
+    display: none;
   }
 }
 .menuToggle {
@@ -380,9 +381,9 @@
     display: none;
   }
   .book {
-    font-size: 1.125rem;
-    padding: 0.625rem 1rem;
-    min-height: 2.625rem;
+    font-size: var(--site-control-font);
+    padding: 0 1rem;
+    min-height: var(--site-control-compact);
   }
   .book svg {
     display: none;
@@ -390,8 +391,8 @@
   .menuToggle {
     display: grid;
     place-items: center;
-    width: 2.625rem;
-    height: 2.625rem;
+    width: var(--site-control-icon);
+    height: var(--site-control-icon);
     border: 1px solid currentColor;
     border-radius: 50%;
     order: -1;
@@ -413,7 +414,7 @@
     color: var(--color-brand);
     font-weight: 600;
   }
-  .overlay:not([data-compact="true"]) .row {
+  .overlay .row {
     min-height: 5.125rem;
   }
   .announcement {
@@ -445,11 +446,11 @@
   }
   .book {
     padding-inline: 0.75rem;
-    font-size: 1.125rem;
+    font-size: var(--site-control-font);
   }
   .menuToggle {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: var(--site-control-icon);
+    height: var(--site-control-icon);
   }
   .announcement {
     padding-block: 0.5rem;

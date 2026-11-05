@@ -32,6 +32,7 @@ function fixture({
   staySearch = stay,
   occupancy = 2,
   petsAllowed,
+  addOnRequests = [],
 } = {}) {
   let session = null,
     creations = 0,
@@ -94,7 +95,7 @@ function fixture({
       }),
     },
     "@/lib/booking/demoSelection": {
-      resolveDemoSelection: () => ({ lines: [{ room, quantity: 1 }] }),
+      resolveDemoSelection: () => ({ lines: [{ room, quantity: 1 }], addOnRequests }),
     },
     "@/lib/booking/search": { parseAvailabilitySearch: () => ({ search: staySearch }) },
     "@/lib/booking/hmsValidation": { parseHmsGuest, validateReservationRooms },
@@ -272,4 +273,17 @@ test("family booking rejects missing children, pet mismatches and known pet rest
     );
     assert.equal(app.stats().creations, 0);
   }
+});
+
+test("validated service requests reach HMS notes without being recorded as paid charges", async () => {
+  const app = fixture({
+    addOnRequests: [{ item: { id: "parking", name: "Car parking" }, quantity: 2 }],
+  });
+  assert.equal((await app.reserve()).status, 200);
+  assert.match(
+    app.stats().forwardedReservation.reservationNotes,
+    /Requested services \(subject to hotel confirmation\): 2 x Car parking/,
+  );
+  assert.equal(app.stats().charges, 0);
+  assert.equal(app.stats().session.state, "reserved");
 });

@@ -521,3 +521,32 @@ test("guest validation excludes browser-supplied guest status and verifies alloc
   validateReservationRooms([room], 2, 1);
   assert.throws(() => validateReservationRooms([room], 3, 1));
 });
+
+test("HMS login distinguishes rejected credentials from an unavailable API endpoint", async () => {
+  const source = readFileSync(new URL("../src/lib/manager/hmsAuth.ts", import.meta.url), "utf8");
+  const { outputText } = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS },
+  });
+  for (const status of [401, 403, 404, 500, 503]) {
+    const exports = {};
+    new Function("require", "exports", outputText)((name) => {
+      if (name === "server-only") return {};
+      if (name.endsWith("/client")) return { hmsFetch: async () => new Response("", { status }) };
+      if (name === "./hmsAccess") return { hmsManagerProperties: () => [] };
+      throw new Error(`Unexpected dependency: ${name}`);
+    }, exports);
+    const result = exports.authenticateHmsManager("test-user", "test-password", "test-customer");
+    if (status === 401 || status === 403) assert.equal(await result, null);
+    else await assert.rejects(result, new RegExp(`HTTP ${status}`));
+  }
+});
+
+test("HMS property reads report missing login endpoints without blaming credentials", async () => {
+  const { HmsWebsiteIntegration } = loadAdapter(
+    async () => new Response("Not Found", { status: 404 }),
+  );
+  await assert.rejects(
+    new HmsWebsiteIntegration(connection).getPropertyProfile(),
+    /endpoint was not found.*404.*PATEL_HMS_API_URL/,
+  );
+});

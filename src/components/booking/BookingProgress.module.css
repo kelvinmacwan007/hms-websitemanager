@@ -1,0 +1,126 @@
+.progress {
+  margin-top: 32px;
+  padding-block: 8px;
+}
+.progress ol {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.progress li {
+  position: relative;
+  min-width: 0;
+}
+.progress li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 23px;
+  left: calc(50% + 38px);
+  right: calc(-50% + 38px);
+  height: 2px;
+  background: var(--color-border);
+  pointer-events: none;
+}
+.progress li[data-state="complete"]::after {
+  background: var(--color-brand);
+}
+.progress li[data-state="current"]::after {
+  background: linear-gradient(90deg, var(--color-brand), var(--color-border));
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 84px;
+  padding: 0 4px;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+.number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.progress li[data-state="current"] .number,
+.progress li[data-state="complete"] .number {
+  border-color: var(--color-brand);
+  background: var(--color-brand);
+  color: var(--color-on-brand, #fff);
+}
+.progress li[data-state="current"] .item,
+.progress li[data-state="complete"] .item {
+  color: var(--color-brand);
+}
+.progress a.item:hover .label {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.progress a.item:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.shortLabel {
+  display: none;
+}
+@media (max-width: 767px) {
+  .progress {
+    margin-top: 24px;
+  }
+  .item {
+    gap: 10px;
+    min-height: 72px;
+    font-size: 0.8125rem;
+  }
+  .number {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .progress li:not(:last-child)::after {
+    top: 17px;
+    left: calc(50% + 25px);
+    right: calc(-50% + 25px);
+  }
+}
+@media (max-width: 480px) {
+  .item {
+    font-size: 0.6875rem;
+    padding-inline: 1px;
+  }
+  .number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+  .progress li:not(:last-child)::after {
+    top: 15px;
+    left: calc(50% + 20px);
+    right: calc(-50% + 20px);
+  }
+  .shortLabel {
+    display: inline;
+  }
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

@@ -1,5 +1,9 @@
 "use client";
 
+import { BannerImageEditor } from "./BannerImageEditor";
+import type { ToastType } from "./toast";
+import { PortalIcon } from "./PortalIcon";
+
 /* Native images keep this component portable across React hosts. */
 /* eslint-disable @next/next/no-img-element */
 import { createContext, useContext, useId, useRef, useState, type ReactNode } from "react";
@@ -14,11 +18,15 @@ import {
   Copy,
   RotateCcw,
   Pencil,
+  RefreshCw,
 } from "lucide-react";
+import { EditorSidePanel } from "./EditorSidePanel";
 import { safeImageUrl, valueAt, type ContentPath, type WebsiteDocument } from "./content";
 
 type EditorContextValue = {
   presentationOnly?: boolean;
+  resync?: () => void;
+  syncing?: boolean;
   syncLogo?: () => Promise<{ logoUrl?: string; syncedAt: string }>;
   websiteUrl?: string;
   previewPage?: (page: import("./content").PageKey) => void;
@@ -29,7 +37,7 @@ type EditorContextValue = {
   ) => void;
   content: WebsiteDocument;
   update: (path: ContentPath, value: unknown) => void;
-  notify: (message: string, error?: boolean) => void;
+  notify: (message: string, type?: boolean | ToastType) => void;
   uploadImage?: (file: File) => Promise<string>;
   analyzeLogo?: (url: string) => Promise<import("../src/lib/branding/logoPalette").LogoPalette>;
 };
@@ -40,23 +48,53 @@ export function useEditor() {
   return context;
 }
 
+export function HmsSyncButton({
+  label,
+  onSync,
+  syncing,
+}: {
+  label: string;
+  onSync?: () => void;
+  syncing?: boolean;
+}) {
+  const context = useContext(EditorContext);
+  const refresh = onSync ?? context?.resync;
+  const pending = syncing ?? context?.syncing ?? false;
+  if (!refresh) return null;
+  return (
+    <button
+      type="button"
+      className="wm-icon-button"
+      aria-label={label}
+      title={pending ? "Syncing from Patel HMS…" : label}
+      disabled={pending}
+      aria-busy={pending}
+      onClick={refresh}
+    >
+      <RefreshCw size={18} aria-hidden="true" />
+    </button>
+  );
+}
+
 export function Card({
   title,
   description,
   children,
   action,
   icon,
+  className,
 }: {
   title: string;
   description?: string;
   children: ReactNode;
   action?: ReactNode;
   icon?: ReactNode;
+  className?: string;
 }) {
   return (
-    <section className="wm-card">
+    <section className={`wm-card${className ? ` ${className}` : ""}`}>
       <header className="wm-card-heading">
-        {icon && <span className="wm-card-heading-icon">{icon}</span>}
+        {icon && <PortalIcon className="wm-card-heading-icon">{icon}</PortalIcon>}
         <div>
           <h2>{title}</h2>
           {description && <p>{description}</p>}
@@ -147,22 +185,35 @@ export function Field({
   );
 }
 
-export function Toggle({ label, path, hint }: { label: string; path: ContentPath; hint?: string }) {
+export function Toggle({
+  label,
+  path,
+  hint,
+  compact = false,
+}: {
+  label: string;
+  path: ContentPath;
+  hint?: string;
+  compact?: boolean;
+}) {
   const { content, update } = useEditor();
+  const id = useId();
   return (
-    <label className="wm-toggle-row">
+    <div className={`wm-toggle-row${compact ? " wm-toggle-compact" : ""}`}>
       <span>
-        <strong>{label}</strong>
-        {hint && <small>{hint}</small>}
+        <strong id={`${id}-label`}>{label}</strong>
+        {hint && <small id={`${id}-hint`}>{hint}</small>}
       </span>
       <input
         type="checkbox"
         role="switch"
+        aria-labelledby={`${id}-label`}
+        aria-describedby={hint ? `${id}-hint` : undefined}
         checked={Boolean(valueAt(content, path))}
         onChange={(event) => update(path, event.target.checked)}
       />
       <span className="wm-switch" aria-hidden="true" />
-    </label>
+    </div>
   );
 }
 
@@ -414,21 +465,27 @@ export function ImageField({
 export function Collection({
   title,
   description,
+  emptyMessage,
   singular,
   path,
   create,
   children,
   summary,
   locked = false,
+  sidePanel = false,
+  syncFromHms = false,
 }: {
   title: string;
   description?: string;
+  emptyMessage?: string;
   singular: string;
   path: ContentPath;
   create?: () => unknown;
   children: (path: ContentPath, index: number) => ReactNode;
   summary: (item: Record<string, unknown>) => string;
   locked?: boolean;
+  sidePanel?: boolean;
+  syncFromHms?: boolean;
 }) {
   const { content, update } = useEditor();
   const items = (valueAt(content, path) ?? []) as Record<string, unknown>[];
@@ -439,6 +496,53 @@ export function Collection({
     update(path, next);
     setOpened(index + offset);
   }
+  function renderBody(index: number) {
+    return (
+      <div className="wm-collection-body">
+        {children([...path, index], index)}
+        <div className="wm-row-actions">
+          <button
+            type="button"
+            className="wm-button wm-button-small"
+            onClick={() => move(index, -1)}
+            disabled={index === 0}
+          >
+            <ArrowUp size={14} />
+            Move up
+          </button>
+          <button
+            type="button"
+            className="wm-button wm-button-small"
+            onClick={() => move(index, 1)}
+            disabled={index === items.length - 1}
+          >
+            <ArrowDown size={14} />
+            Move down
+          </button>
+          {!locked && (
+            <button
+              type="button"
+              className="wm-button wm-button-small wm-danger"
+              onClick={() => {
+                if (
+                  window.confirm(`Remove this ${singular.toLowerCase()}? You can undo this change.`)
+                ) {
+                  update(
+                    path,
+                    items.filter((_, at) => at !== index),
+                  );
+                  setOpened(null);
+                }
+              }}
+            >
+              <Trash2 size={14} />
+              Remove
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
   return (
     <Card
       title={title}
@@ -447,20 +551,24 @@ export function Collection({
         `${items.length} ${items.length === 1 ? singular.toLowerCase() : title.toLowerCase()} · ${locked ? "supplied by Patel HMS" : "add, edit, and reorder"}`
       }
       action={
-        !locked &&
-        create && (
-          <button
-            type="button"
-            className="wm-button wm-button-small"
-            disabled={items.length >= 250}
-            onClick={() => {
-              update(path, [...items, create()]);
-              setOpened(items.length);
-            }}
-          >
-            <Plus size={15} />
-            Add {singular.toLowerCase()}
-          </button>
+        syncFromHms ? (
+          <HmsSyncButton label={`Sync ${title.toLowerCase()} from Patel HMS`} />
+        ) : (
+          !locked &&
+          create && (
+            <button
+              type="button"
+              className="wm-button wm-button-small"
+              disabled={items.length >= 250}
+              onClick={() => {
+                update(path, [...items, create()]);
+                setOpened(items.length);
+              }}
+            >
+              <Plus size={15} />
+              Add {singular.toLowerCase()}
+            </button>
+          )
         )
       }
     >
@@ -469,9 +577,10 @@ export function Collection({
           <ImagePlus size={28} />
           <strong>No {title.toLowerCase()} yet</strong>
           <p>
-            {locked
-              ? "Room types will appear automatically when supplied by Patel HMS. Manage room types in Patel HMS."
-              : `Add your first ${singular.toLowerCase()} to get started.`}
+            {emptyMessage ??
+              (locked
+                ? "Room types will appear automatically when supplied by Patel HMS. Manage room types in Patel HMS."
+                : `Add your first ${singular.toLowerCase()} to get started.`)}
           </p>
         </div>
       ) : (
@@ -479,7 +588,7 @@ export function Collection({
           {items.map((item, index) => (
             <details
               key={typeof item.id === "string" ? item.id : index}
-              open={opened === index}
+              open={!sidePanel && opened === index}
               onToggle={(event) => {
                 if (event.currentTarget.open && opened !== index) setOpened(index);
               }}
@@ -494,54 +603,18 @@ export function Collection({
                 <span>{summary(item) || `Untitled ${singular.toLowerCase()}`}</span>
                 <span className="wm-item-edit">Edit</span>
               </summary>
-              <div className="wm-collection-body">
-                {children([...path, index], index)}
-                <div className="wm-row-actions">
-                  <button
-                    type="button"
-                    className="wm-button wm-button-small"
-                    onClick={() => move(index, -1)}
-                    disabled={index === 0}
-                  >
-                    <ArrowUp size={14} />
-                    Move up
-                  </button>
-                  <button
-                    type="button"
-                    className="wm-button wm-button-small"
-                    onClick={() => move(index, 1)}
-                    disabled={index === items.length - 1}
-                  >
-                    <ArrowDown size={14} />
-                    Move down
-                  </button>
-                  {!locked && (
-                    <button
-                      type="button"
-                      className="wm-button wm-button-small wm-danger"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `Remove this ${singular.toLowerCase()}? You can undo this change.`,
-                          )
-                        ) {
-                          update(
-                            path,
-                            items.filter((_, at) => at !== index),
-                          );
-                          setOpened(null);
-                        }
-                      }}
-                    >
-                      <Trash2 size={14} />
-                      Remove
-                    </button>
-                  )}
-                </div>
-              </div>
+              {!sidePanel && renderBody(index)}
             </details>
           ))}
         </div>
+      )}
+      {sidePanel && opened !== null && items[opened] && (
+        <EditorSidePanel
+          title={summary(items[opened]) || `New ${singular.toLowerCase()}`}
+          onClose={() => setOpened(null)}
+        >
+          {renderBody(opened)}
+        </EditorSidePanel>
       )}
     </Card>
   );
@@ -567,6 +640,9 @@ export function ImageCollection({
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState("");
   const [dragging, setDragging] = useState(false);
+  const [bannerDraft, setBannerDraft] = useState<
+    import("../src/types/hotel").GalleryImage | null | undefined
+  >(undefined);
   const [opened, setOpened] = useState<string | null>(null);
   const roomId =
     path[0] === "hotel" && path[1] === "rooms"
@@ -639,34 +715,46 @@ export function ImageCollection({
       icon={icon}
       description={
         banner
-          ? `${images.length} ${images.length === 1 ? "photo" : "photos"} uploaded. Add more images to create a slider.`
+          ? `${images.length} of 7 banner images. Add photos to create a slider.`
           : `${images.length} ${images.length === 1 ? "photo" : "photos"} | upload, edit, and reorder`
       }
       action={
-        <div className="wm-inline-actions">
+        banner ? (
           <button
             type="button"
-            className="wm-button wm-button-small"
-            disabled={uploading || images.length >= 250}
-            onClick={() => input.current?.click()}
+            className="wm-button wm-button-primary"
+            disabled={images.length >= 7}
+            onClick={() => setBannerDraft(null)}
           >
-            <Upload size={15} />
-            {uploading ? "Uploading..." : "Upload images"}
+            <Plus size={18} />
+            Add banner images
           </button>
-          <button
-            type="button"
-            className="wm-button wm-button-small"
-            disabled={uploading || images.length >= 250}
-            onClick={() => {
-              const image = newImage();
-              appendImages(path, [image], roomId);
-              setOpened(image.id);
-            }}
-          >
-            <Plus size={15} />
-            Add image link
-          </button>
-        </div>
+        ) : (
+          <div className="wm-inline-actions">
+            <button
+              type="button"
+              className="wm-button wm-button-small"
+              disabled={uploading || images.length >= 250}
+              onClick={() => input.current?.click()}
+            >
+              <Upload size={15} />
+              {uploading ? "Uploading..." : "Upload images"}
+            </button>
+            <button
+              type="button"
+              className="wm-button wm-button-small"
+              disabled={uploading || images.length >= 250}
+              onClick={() => {
+                const image = newImage();
+                appendImages(path, [image], roomId);
+                setOpened(image.id);
+              }}
+            >
+              <Plus size={15} />
+              Add image link
+            </button>
+          </div>
+        )
       }
     >
       <input
@@ -678,45 +766,58 @@ export function ImageCollection({
         aria-label={`Upload multiple ${title.toLowerCase()}`}
         onChange={(event) => void upload(Array.from(event.target.files ?? []))}
       />
-      <div
-        className={`wm-photo-drop${dragging ? " is-dragging" : ""}`}
-        onDragOver={(event) => {
-          event.preventDefault();
-          if (!uploading) setDragging(true);
-        }}
-        onDragLeave={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false);
-        }}
-        onDrop={(event) => {
-          event.preventDefault();
-          setDragging(false);
-          void upload(Array.from(event.dataTransfer.files));
-        }}
-      >
-        <ImagePlus size={24} />
-        <div>
-          <strong>Upload multiple images</strong>
-          <p>
-            Drag photos here, or choose several files with Upload images. PNG, JPEG, WebP, or GIF,
-            up to 2 MB each.
-          </p>
+      {!banner && (
+        <div
+          className={`wm-photo-drop${dragging ? " is-dragging" : ""}`}
+          onDragOver={(event) => {
+            event.preventDefault();
+            if (!uploading) setDragging(true);
+          }}
+          onDragLeave={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+              setDragging(false);
+          }}
+          onDrop={(event) => {
+            event.preventDefault();
+            setDragging(false);
+            void upload(Array.from(event.dataTransfer.files));
+          }}
+        >
+          <ImagePlus size={24} />
+          <div>
+            <strong>Upload multiple images</strong>
+            <p>
+              Drag photos here, or choose several files with Upload images. PNG, JPEG, WebP, or GIF,
+              up to 2 MB each.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       {uploading && (
         <p role="status" className="wm-note">
           {progress}
         </p>
       )}
       {!images.length && (
-        <p className="wm-note">No photos yet. Upload images together to build your gallery.</p>
+        <p className="wm-note">
+          {banner
+            ? safeImageUrl(content.hotel.heroImage?.url)
+              ? "No banner images selected. Your website uses the Property Cover Image from Patel HMS."
+              : "No banner images selected. The connected HMS data has not supplied a Property Cover Image yet."
+            : "No photos yet. Upload images together to build your gallery."}
+        </p>
       )}
       <fieldset className="wm-photo-stack" disabled={uploading}>
         {images.map((image, index) => {
           const detail = (
-            <details key={image.id} open={opened === image.id}>
+            <details key={image.id} open={!banner && opened === image.id}>
               <summary
                 onClick={(event) => {
                   event.preventDefault();
+                  if (banner) {
+                    setBannerDraft(image);
+                    return;
+                  }
                   setOpened(opened === image.id ? null : image.id);
                 }}
               >
@@ -745,7 +846,7 @@ export function ImageCollection({
                 <Field
                   label="Category"
                   path={[...path, index, "category"]}
-                  hint="For example: Rooms, Dining, or Wellness."
+                  hint="For example: Rooms, Menu, or Wellness."
                 />
                 <div className="wm-row-actions">
                   <button
@@ -809,6 +910,28 @@ export function ImageCollection({
           );
         })}
       </fieldset>
+      {banner && bannerDraft !== undefined && (
+        <BannerImageEditor
+          image={bannerDraft || undefined}
+          onClose={() => setBannerDraft(undefined)}
+          onSave={(added) => {
+            if (added.length > 7) {
+              notify("A banner can contain at most 7 images.", "warning");
+              return;
+            }
+            update(path, added);
+            notify(
+              added.length
+                ? `${added.length} banner image${added.length === 1 ? "" : "s"} saved to your draft.`
+                : safeImageUrl(content.hotel.heroImage?.url)
+                  ? "Banner selection cleared. Your website will use the Property Cover Image from Patel HMS."
+                  : "Banner selection cleared. HMS has not supplied a Property Cover Image yet.",
+              !added.length && !safeImageUrl(content.hotel.heroImage?.url) ? "warning" : "success",
+            );
+            setBannerDraft(undefined);
+          }}
+        />
+      )}
     </Card>
   );
 }

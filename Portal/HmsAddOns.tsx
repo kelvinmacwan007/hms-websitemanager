@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card } from "./editor-fields";
+import { Card, HmsSyncButton } from "./editor-fields";
 import { AddOnList } from "../src/components/extras/AddOnList";
 import type { HotelAddOn } from "../src/types/hotel";
 import { ScrollableHmsList } from "./ScrollableHmsList";
@@ -38,14 +38,11 @@ export function HmsAddOns() {
       title="Add-ons from Patel HMS"
       description="Active services and listed rates from HMS. Manage these in Patel HMS; final charges are confirmed by the hotel."
       action={
-        <button
-          type="button"
-          className="wm-button wm-button-small"
-          disabled={loading}
-          onClick={() => setRefresh((v) => v + 1)}
-        >
-          Refresh from HMS
-        </button>
+        <HmsSyncButton
+          label="Sync add-ons from Patel HMS"
+          syncing={loading}
+          onSync={() => setRefresh((v) => v + 1)}
+        />
       }
     >
       {loading ? (

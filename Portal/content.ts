@@ -71,7 +71,7 @@ export const PAGE_LABELS: Record<PageKey, string> = {
   rooms: "Rooms",
   gallery: "Gallery",
   offers: "Offers",
-  dining: "Dining",
+  dining: "Menu",
   experiences: "Experiences",
   reviews: "Guest reviews",
   faq: "FAQs",
@@ -86,7 +86,7 @@ const headings: Record<PageKey, string> = {
   rooms: "Your space to unwind.",
   gallery: "A closer look at your stay.",
   offers: "More reasons to stay.",
-  dining: "Good food. Great company.",
+  dining: "Menus",
   experiences: "Make the most of your stay.",
   reviews: "Words from our guests.",
   faq: "A little help before you arrive.",
@@ -187,8 +187,8 @@ export function createWebsiteDocument(hotel?: Hotel): WebsiteDocument {
       {
         id: "dining",
         enabled: true,
-        eyebrow: "Dining",
-        title: "Restaurants and dining.",
+        eyebrow: "Menu",
+        title: "Explore our menus.",
       },
       { id: "location", enabled: true, eyebrow: "Location", title: "Find us." },
       {
@@ -441,6 +441,35 @@ const schema = object({
       }),
       true,
     ),
+    menus: array(
+      object({
+        id: "string",
+        name: "string",
+        pdfUrl: optionalString,
+        sections: array(
+          object({
+            id: "string",
+            title: "string",
+            column: "string",
+            boxed: "boolean",
+            items: array(
+              object({
+                id: "string",
+                name: "string",
+                description: "string",
+                price: "string",
+                image: { ...(image as { fields: Record<string, Rule> }), optional: true },
+                itemType: optionalString,
+                vintage: optionalString,
+                status: optionalString,
+                available: optionalBoolean,
+              }),
+            ),
+          }),
+        ),
+      }),
+      true,
+    ),
     dining: array(
       object({
         id: "string",
@@ -537,6 +566,8 @@ function checkShape(value: unknown, rule: Rule, path: string): void {
 export function parseWebsiteDocument(value: unknown): WebsiteDocument {
   checkShape(value, schema, "Website");
   const document = value as WebsiteDocument;
+  if ((document.hotel.heroSlides?.length || 0) > 7)
+    throw new Error("A banner can contain at most 7 images.");
   if (
     document.setupStep !== undefined &&
     (!Number.isInteger(document.setupStep) || document.setupStep < 0 || document.setupStep > 6)
@@ -770,6 +801,7 @@ export function preservePmsData(draft: WebsiteDocument, current: WebsiteDocument
       currency: current.hotel.currency,
       location: current.hotel.location,
       extras: current.hotel.extras,
+      heroImage: current.hotel.heroImage,
       contact: {
         ...draft.hotel.contact,
         phone: current.hotel.contact.phone,
@@ -802,6 +834,7 @@ export function presentationPayload(document: WebsiteDocument) {
       amenities: hotel.amenities,
       offers: hotel.offers,
       dining: hotel.dining,
+      menus: hotel.menus,
       testimonials: hotel.testimonials,
       policies: hotel.policies,
       faqs: hotel.faqs,

@@ -1,17 +1,15 @@
+import { getBookingContext } from "@/lib/booking/context";
 import { notFound, redirect } from "next/navigation";
 import { cartQuery, selectRequestedRoom } from "@/lib/booking/cart";
 import { selectedAddOnRequests } from "@/lib/booking/addOnRequests";
 import { pageEnabled } from "@/lib/website/pages";
 import { BookingPageContent } from "@/components/booking/BookingPageContent";
-import { SiteShell } from "@/components/layout/SiteShell";
-import { getWebsiteProvider } from "@/lib/api/provider";
 import { isDemoPaymentMode } from "@/lib/payment/demoMode";
 import { parseAvailabilitySearch } from "@/lib/booking/search";
 import { createHotelMetadata } from "@/lib/seo/metadata";
 import { DEFAULT_BOOKING_SETTINGS, offsetDate, propertyDate } from "@/lib/booking/settings";
 import type { Hotel } from "@/types/hotel";
 import { AddOnRequests } from "@/components/extras/AddOnRequests";
-import { resolveTenant } from "@/lib/tenant/resolveTenant";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
@@ -22,14 +20,12 @@ function getDefaultSearch(hotel: Hotel) {
 }
 
 export async function generateMetadata() {
-  const hotel = await getWebsiteProvider().getHotel(await resolveTenant());
+  const { hotel } = await getBookingContext();
   return createHotelMetadata(hotel, "/booking");
 }
 
 export default async function BookingPage({ searchParams }: Props) {
-  const tenant = await resolveTenant();
-  const provider = getWebsiteProvider();
-  const hotel = await provider.getHotel(tenant);
+  const { tenant, provider, hotel } = await getBookingContext();
   if (!pageEnabled(hotel, "booking")) notFound();
   const params = await searchParams;
   const parsed = parseAvailabilitySearch(params, hotel.bookingSettings, hotel.timeZone);
@@ -69,7 +65,7 @@ export default async function BookingPage({ searchParams }: Props) {
   const isDemo = isDemoPaymentMode();
 
   return (
-    <SiteShell hotel={hotel} showMobileBookingCta={false}>
+    <>
       <AddOnRequests items={hotel.addOns ?? []} selected={params.addon} />
       <BookingPageContent
         pageContent={hotel.website?.pages.booking}
@@ -79,6 +75,6 @@ export default async function BookingPage({ searchParams }: Props) {
         isDemo={isDemo}
         searchParams={params}
       />
-    </SiteShell>
+    </>
   );
 }

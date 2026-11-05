@@ -1,0 +1,44 @@
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+  gap: 32px;
+}
+.content {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+.confirmation {
+  border: 1px solid var(--color-border);
+  border-radius: var(--site-card-radius);
+  padding: 32px;
+  text-align: center;
+  background: var(--color-surface);
+}
+.confirmation > svg {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 14px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #e4f5eb;
+  color: #16804c;
+}
+.confirmation h2 {
+  color: var(--color-brand);
+  font: 600 1.75rem/1.2 var(--font-display);
+}
+.confirmation p {
+  margin-top: 16px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+@media (max-width: 1023px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}

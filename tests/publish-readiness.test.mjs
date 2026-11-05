@@ -57,65 +57,81 @@ test("HMS readiness requires a positive current rate for the property's room and
 test("every live publish action checks HMS before writing; drafts remain available", async () => {
   for (const action of ["publish", "apply-publish", "apply-website", "apply-draft", "draft"]) {
     for (const readiness of [false, null, true]) {
-      let writes = 0;
-      let checks = 0;
-      const hosted = action.startsWith("apply-") && action !== "apply-website";
-      const hotel = { configured: true, id: "property", rooms: [] };
-      const { POST } = load("src/app/api/website/document/route.ts", {
-        "@/lib/api/body": { readLimitedText: (request) => request.text() },
-        "@/lib/tenant/resolveTenant": { resolveTenant: async () => ({ id: "hotel-a" }) },
-        "@/lib/api/provider": { getOperationalProvider: () => ({ getHotel: async () => hotel }) },
-        "@/lib/website/authorization": { developmentAuthorization: { authorize: async () => {} } },
-        "@/lib/website/persistence": {
-          getWebsitePersistence: () => ({
-            saveDraft: async () => {
-              writes++;
-            },
-            publishDocument: async () => {
-              writes++;
-            },
-          }),
-        },
-        "@/lib/website/presentation": {
-          validatePresentation: () => ({
-            content: { branding: {} },
-            paymentSettings: { mode: "pay-at-property" },
-          }),
-          presentationDocument: () => ({ hotel }),
-        },
-        "../../../../../Portal/content": { contentIssues: () => [] },
-        "@/lib/api/mode": { isMockMode: () => false },
-        "@/lib/tenant/domains": {
-          publishHotelDomain: async () => ({ publishedSubdomain: "hotel" }),
-          publicHotelUrl: () => "https://hotel.example.com",
-        },
-        "@/lib/manager/session": { isManagerHost: () => hosted },
-        "@/services/patelHms/rateReadiness": {
-          HMS_RATES_REQUIRED: "Verified HMS rates are required to publish.",
-          hmsRateReadiness: async () => {
-            checks++;
-            return readiness;
+      for (const setup of ["ready", "missing-sync", "missing-website"]) {
+        let writes = 0;
+        let checks = 0;
+        const hosted = action.startsWith("apply-") && action !== "apply-website";
+        const hotel = {
+          configured: true,
+          id: "property",
+          name: "Hotel",
+          description: "Hotel description",
+          branding: { logoUrl: "https://example.com/logo.png", primaryColor: "#1c355e" },
+          heroImage: { url: setup === "missing-website" ? "" : "https://example.com/hero.jpg" },
+          rooms: setup === "missing-sync" ? [] : [{ id: "room-a", ratePlans: [] }],
+        };
+        const { websiteSetupReadiness } = load("Portal/setup-readiness.ts", {
+          "./content": { safeImageUrl: (url) => (/^https:\/\//.test(url || "") ? url : undefined) },
+        });
+        const { POST } = load("src/app/api/website/document/route.ts", {
+          "@/lib/api/body": { readLimitedText: (request) => request.text() },
+          "@/lib/tenant/resolveTenant": { resolveTenant: async () => ({ id: "hotel-a" }) },
+          "@/lib/api/provider": { getOperationalProvider: () => ({ getHotel: async () => hotel }) },
+          "@/lib/website/authorization": {
+            developmentAuthorization: { authorize: async () => {} },
           },
-        },
-      });
-      const response = await POST(
-        new Request("https://hotel.example.com/api/website/document", {
-          method: "POST",
-          body: JSON.stringify({ action, document: {} }),
-        }),
-      );
-      // Legacy draft/publish actions are already disallowed in live mode.
-      if (["draft", "publish"].includes(action)) {
-        assert.equal(response.status, 403);
-        assert.equal(writes, 0);
-      } else if (action === "apply-draft") {
-        assert.equal(response.status, 200);
-        assert.equal(checks, 0);
-        assert.equal(writes, 1);
-      } else {
-        assert.equal(checks, 1);
-        assert.equal(response.status, readiness === true ? 200 : 409);
-        assert.equal(writes, readiness === true ? 2 : 0);
+          "@/lib/website/persistence": {
+            getWebsitePersistence: () => ({
+              saveDraft: async () => {
+                writes++;
+              },
+              publishDocument: async () => {
+                writes++;
+              },
+            }),
+          },
+          "@/lib/website/presentation": {
+            validatePresentation: () => ({
+              content: { branding: {} },
+              paymentSettings: { mode: "pay-at-property" },
+            }),
+            presentationDocument: () => ({ hotel, pages: { home: { title: "Welcome" } } }),
+          },
+          "../../../../../Portal/content": { contentIssues: () => [] },
+          "../../../../../Portal/setup-readiness": { websiteSetupReadiness },
+          "@/lib/api/mode": { isMockMode: () => false },
+          "@/lib/tenant/domains": {
+            publishHotelDomain: async () => ({ publishedSubdomain: "hotel" }),
+            publicHotelUrl: () => "https://hotel.example.com",
+          },
+          "@/lib/manager/session": { isManagerHost: () => hosted },
+          "@/services/patelHms/rateReadiness": {
+            HMS_RATES_REQUIRED: "Verified HMS rates are required to publish.",
+            hmsRateReadiness: async () => {
+              checks++;
+              return readiness;
+            },
+          },
+        });
+        const response = await POST(
+          new Request("https://hotel.example.com/api/website/document", {
+            method: "POST",
+            body: JSON.stringify({ action, document: {} }),
+          }),
+        );
+        // Legacy draft/publish actions are already disallowed in live mode.
+        if (["draft", "publish"].includes(action)) {
+          assert.equal(response.status, 403);
+          assert.equal(writes, 0);
+        } else if (action === "apply-draft") {
+          assert.equal(response.status, 200);
+          assert.equal(checks, 0);
+          assert.equal(writes, 1);
+        } else {
+          assert.equal(checks, 1);
+          assert.equal(response.status, readiness === true && setup === "ready" ? 200 : 409);
+          assert.equal(writes, readiness === true && setup === "ready" ? 2 : 0);
+        }
       }
     }
   }

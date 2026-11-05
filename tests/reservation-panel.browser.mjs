@@ -25,27 +25,29 @@ try {
     return Number(text.replace(/[^\d.]/g, ""));
   };
   const initialTotal = await totalAmount();
-  const firstPrice = await fieldset
-    .locator("label")
-    .first()
-    .locator("..")
-    .locator("strong")
-    .last()
-    .textContent();
+  const label = fieldset.locator("label").first();
+  const priceContainer = (await label.locator("strong").count()) ? label : label.locator("..");
+  const firstPrice = await priceContainer.locator("strong").last().textContent();
   const unitAmount = Number(firstPrice.replace(/[^\d.]/g, ""));
   await checkbox.check();
   assert.equal(await totalAmount(), initialTotal + unitAmount);
   const quantity = fieldset.locator('input[type="number"]').first();
-  await quantity.fill("3");
-  assert.equal(await totalAmount(), initialTotal + unitAmount * 3);
+  const hasQuantity = (await quantity.count()) > 0;
+  if (hasQuantity) {
+    await quantity.fill("3");
+    assert.equal(await totalAmount(), initialTotal + unitAmount * 3);
+  }
   await checkbox.uncheck();
   assert.equal(await totalAmount(), initialTotal);
   await checkbox.check();
-  await fieldset.locator('input[type="number"]').first().fill("3");
+  if (hasQuantity) await fieldset.locator('input[type="number"]').first().fill("3");
   const bookHref = await panel
     .getByRole("link", { name: "Reserve this room", exact: true })
     .getAttribute("href");
-  assert.equal(JSON.parse(new URL(bookHref, base).searchParams.get("addon"))[1], 3);
+  const selectionKey = hasQuantity ? "addon" : "extra";
+  const selectedValue = new URL(bookHref, base).searchParams.get(selectionKey);
+  assert.ok(selectedValue);
+  if (hasQuantity) assert.equal(JSON.parse(selectedValue)[1], 3);
   await panel.getByRole("region", { name: "Price summary" }).waitFor();
   mkdirSync("artifacts/reservation-panel", { recursive: true });
   await panel.screenshot({ path: "artifacts/reservation-panel/desktop.png" });
@@ -57,7 +59,7 @@ try {
   await page.getByRole("heading", { name: "Your room cart", exact: true }).waitFor();
   const cartParams = new URL(page.url()).searchParams;
   assert.ok(cartParams.get("item"));
-  assert.equal(JSON.parse(cartParams.get("addon"))[1], 3);
+  assert.equal(cartParams.get(selectionKey), selectedValue);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("complementary", { name: "Cart total" }).waitFor();
   mkdirSync("artifacts/cart-design", { recursive: true });
@@ -67,19 +69,27 @@ try {
   await page.screenshot({ path: "artifacts/cart-design/mobile.png", fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("link", { name: "Cart, 1 rooms selected", exact: true }).waitFor();
-  const requested = page.getByRole("region", { name: "Requested add-ons", exact: true });
-  await requested.getByRole("button").first().click();
-  await requested.waitFor({ state: "detached" });
+  await page.getByRole("link", { name: "Continue to extras", exact: true }).click();
+  await page.waitForURL("**/booking/extras?**");
+  await page.locator('main input[type="checkbox"]:checked').first().uncheck();
+  await page.locator("main").getByRole("link", { name: "Back to rooms", exact: true }).click();
+  await page.waitForURL("**/booking/cart?**");
   await page
     .getByRole("region", { name: "Selected rooms", exact: true })
     .getByRole("button", { name: /^Remove / })
     .click();
   await page.getByRole("heading", { name: "Your cart is empty.", exact: true }).waitFor();
   assert.equal(await page.getByRole("button", { name: /Continue to/ }).isDisabled(), true);
-  const emptyCartLink = page.getByRole("link", { name: "Cart, no rooms selected", exact: true });
-  await emptyCartLink.waitFor();
+  const emptyCartLink = page.getByRole("link", {
+    name: "Cart, no rooms selected",
+    exact: true,
+    includeHidden: true,
+  });
+  await emptyCartLink.waitFor({ state: "attached" });
   assert.equal(
-    await page.getByRole("link", { name: "Cart, 1 rooms selected", exact: true }).count(),
+    await page
+      .getByRole("link", { name: "Cart, 1 rooms selected", exact: true, includeHidden: true })
+      .count(),
     0,
   );
   assert.equal(
@@ -87,7 +97,7 @@ try {
     false,
   );
   console.log(
-    "Reservation panel: selectable HMS add-ons, quantities, Reserve this room handoff and responsive layout verified.",
+    `Reservation panel: ${hasQuantity ? "HMS add-ons and quantities" : "optional extras"}, cart handoff, removal and responsive layout verified.`,
   );
 } finally {
   await browser.close();

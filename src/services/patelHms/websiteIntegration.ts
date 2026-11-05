@@ -117,7 +117,12 @@ export class HmsWebsiteIntegration {
         cache: "no-store",
       },
     );
-    if (!response.ok) throw new Error("Patel HMS login failed.");
+    if (!response.ok)
+      throw new Error(
+        response.status === 404
+          ? "Patel HMS login endpoint was not found (HTTP 404). Check PATEL_HMS_API_URL."
+          : `Patel HMS login failed (HTTP ${response.status}).`,
+      );
     const data = (await response.json()) as LoginResponse;
     if (!data.token || !Number.isFinite(Date.parse(data.expiration)))
       throw new Error("Patel HMS returned an invalid login response.");

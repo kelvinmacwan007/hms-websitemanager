@@ -8,7 +8,13 @@ import { useMotionPreset } from "./MotionWrapper";
 
 gsap.registerPlugin(useGSAP);
 
-export function PageEntryMotion({ children }: { children: React.ReactNode }) {
+export function PageEntryMotion({
+  children,
+  enabled = true,
+}: {
+  children: React.ReactNode;
+  enabled?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const preset = useMotionPreset();
@@ -16,7 +22,8 @@ export function PageEntryMotion({ children }: { children: React.ReactNode }) {
   useGSAP(
     () => {
       const root = ref.current;
-      if (!root || preset === "off") return;
+      // A persistent layout must not mutate a streamed page before its hydration commits.
+      if (!root || !enabled || preset === "off") return;
       const media = gsap.matchMedia();
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const heading = root.querySelector<HTMLElement>("h1");
@@ -46,7 +53,7 @@ export function PageEntryMotion({ children }: { children: React.ReactNode }) {
       });
       return () => media.revert();
     },
-    { scope: ref, dependencies: [pathname, preset], revertOnUpdate: true },
+    { scope: ref, dependencies: [pathname, preset, enabled], revertOnUpdate: true },
   );
 
   return (

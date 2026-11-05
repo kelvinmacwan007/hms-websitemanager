@@ -31,7 +31,7 @@ test("central SEO controls preserve per-page overrides, site defaults and social
   assert.equal(room.alternates.canonical, "https://hotel.example.com/rooms");
   assert.equal(room.robots, "noindex, follow");
   assert.equal(createHotelMetadata(hotel).title, "Official hotel website");
-  assert.equal(createHotelMetadata(hotel, "/dining").title, `Dining | ${hotel.name}`);
+  assert.equal(createHotelMetadata(hotel, "/dining").title, `Menu | ${hotel.name}`);
   assert.equal(createHotelMetadata(hotel, "/dining").description, "Default hotel description");
 });
 

@@ -19,7 +19,7 @@ function load(relative) {
   });
   new Function("require", "exports", outputText)((specifier) => {
     if (specifier === "server-only") return {};
-    if (specifier.startsWith("node:")) return require(specifier);
+    if (specifier.startsWith("node:") || specifier === "react") return require(specifier);
     if (specifier === "next/headers")
       return {
         headers: async () => new Headers(),
@@ -49,6 +49,65 @@ const { validateEnquiry, enquiryRecipient } = load("src/lib/contact/delivery.ts"
 const { validateMedia } = load("src/lib/website/media.ts");
 const { loadPreview, savePreview } = load("src/lib/website/preview.ts");
 const hotel = () => structuredClone(demoHotel);
+const { websiteSetupReadiness } = load("Portal/setup-readiness.ts");
+
+test("publishing requires complete hotel sync and website, including verified rates", () => {
+  const ready = createWebsiteDocument(hotel());
+  ready.hotel.name = "Test hotel";
+  ready.hotel.description = "Hotel description";
+  ready.hotel.branding.logoUrl = "https://example.com/logo.png";
+  ready.hotel.branding.primaryColor = "#1c355e";
+  ready.hotel.heroSlides = [];
+  ready.hotel.heroImage = { id: "hero", url: "https://example.com/hero.jpg", alt: "Hotel" };
+  ready.pages.home.title = "Welcome";
+  assert.ok(ready.hotel.rooms.length);
+  assert.equal(websiteSetupReadiness(ready, true).canPublish, true);
+  for (const rateState of [false, null]) {
+    const result = websiteSetupReadiness(ready, rateState);
+    assert.equal(result.synced, false);
+    assert.equal(result.canPublish, false);
+  }
+  for (const change of [
+    (doc) => {
+      doc.hotel.name = "";
+    },
+    (doc) => {
+      doc.hotel.description = "";
+    },
+    (doc) => {
+      doc.hotel.branding.logoUrl = "";
+    },
+    (doc) => {
+      doc.hotel.branding.primaryColor = "";
+    },
+    (doc) => {
+      doc.hotel.rooms = [];
+    },
+  ]) {
+    const document = structuredClone(ready);
+    change(document);
+    assert.equal(websiteSetupReadiness(document, true).canPublish, false);
+  }
+  for (const change of [
+    (doc) => {
+      doc.hotel.heroImage.url = "";
+    },
+    (doc) => {
+      doc.hotel.heroImage.url = "javascript:alert(1)";
+    },
+    (doc) => {
+      doc.pages.home.title = "   ";
+    },
+  ]) {
+    const document = structuredClone(ready);
+    change(document);
+    const result = websiteSetupReadiness(document, true);
+    assert.equal(result.synced, true);
+    assert.equal(result.websiteReady, false);
+    assert.equal(result.canPublish, false);
+    assert.match(result.error, /Complete Website/);
+  }
+});
 test("temporary previews are tenant scoped, expire and cannot be read in production", () => {
   const priorEnv = process.env.NODE_ENV;
   process.env.NODE_ENV = "development";
@@ -415,6 +474,17 @@ test("contact validation blocks header injection and uses configured recipient",
 test("media rejects spoofed MIME and extensions", async () => {
   await assert.rejects(validateMedia(new File(["not PNG"], "logo.png", { type: "image/png" })));
   await assert.rejects(validateMedia(new File(["not PNG"], "logo.svg", { type: "image/png" })));
+});
+
+test("media accepts images up to 5 MB and rejects larger uploads", async () => {
+  const bytes = new Uint8Array(5 * 1024 * 1024);
+  bytes.set([137, 80, 78, 71, 13, 10, 26, 10]);
+  const result = await validateMedia(new File([bytes], "item.png", { type: "image/png" }));
+  assert.equal(result.bytes.length, bytes.length);
+  await assert.rejects(
+    validateMedia(new File([bytes, new Uint8Array(1)], "item.png", { type: "image/png" })),
+    /5 MB/,
+  );
 });
 test("operational merge keeps capacity bed type and availability", () => {
   const current = hotel().rooms;

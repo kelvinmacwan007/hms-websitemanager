@@ -316,6 +316,549 @@ export const demoHotel: Hotel = {
       ctaLabel: "Explore Offer",
     },
   ],
+  menus: [
+    {
+      id: "dinner",
+      name: "Dinner",
+      sections: [
+        {
+          id: "market-salads-&-starters",
+          title: "Market Salads & Starters",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Baby Gem Caesar",
+              price: "$24",
+              description: "Parmigiano reggiano - lemon black pepper emulsion - herb crouton",
+            },
+            {
+              id: "dish-1",
+              name: "Blue Iceberg",
+              price: "$22",
+              description: "Smoked bacon - point reyes blue - cherry tomato",
+            },
+            {
+              id: "dish-2",
+              name: "Maple & Bourbon Bacon",
+              price: "$30",
+              description: "Apple cabbage slaw - pickled mustard seeds",
+            },
+            {
+              id: "dish-3",
+              name: "Scallion Salad",
+              price: "$20",
+              description: "Mixed greens, gochujang vinaigrette",
+            },
+            {
+              id: "dish-4",
+              name: "Burrata",
+              price: "$28",
+              description: "Marinated beetroot - pickled red onions - basil oil",
+            },
+          ],
+        },
+        {
+          id: "shellfish-platters",
+          title: "Shellfish Platters",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Shellfish Platter",
+              price: "$54",
+              description:
+                "Oysters - ceviche - clams - mussels - lobster. Two person minimum / price per person",
+            },
+          ],
+        },
+        {
+          id: "surf-&-turf",
+          title: "Surf & Turf",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Filet & Lobster Tail",
+              price: "$89",
+              description: "",
+            },
+            {
+              id: "dish-1",
+              name: "Filet & Grilled Prawns",
+              price: "$79",
+              description: "",
+            },
+          ],
+        },
+        {
+          id: "sides",
+          title: "Sides",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Yukon Gold Mashed Potatoes",
+              price: "$19",
+              description: "Parmesan crust",
+            },
+            {
+              id: "dish-1",
+              name: "Tater Tots",
+              price: "$19",
+              description: "",
+            },
+            {
+              id: "dish-2",
+              name: "Parmesan Truffle Fries",
+              price: "$19",
+              description: "",
+            },
+            {
+              id: "dish-3",
+              name: "Sweet Corn Pudding",
+              price: "$19",
+              description: "",
+            },
+            {
+              id: "dish-4",
+              name: "Crispy Brussels Sprouts",
+              price: "$19",
+              description: "To share",
+            },
+          ],
+        },
+        {
+          id: "the-meats",
+          title: "The Meats",
+          column: "center",
+          boxed: true,
+          items: [
+            {
+              id: "dish-0",
+              name: "Filet",
+              price: "$58",
+              description: "6oz.",
+            },
+            {
+              id: "dish-1",
+              name: "Wagyu Flat Iron",
+              price: "$52",
+              description: "8oz.",
+            },
+            {
+              id: "dish-2",
+              name: "Spinalis",
+              price: "$78",
+              description: "8oz.",
+            },
+            {
+              id: "dish-3",
+              name: "Filet",
+              price: "$72",
+              description: "10oz.",
+            },
+            {
+              id: "dish-4",
+              name: "Ribeye",
+              price: "$81",
+              description: "10oz.",
+            },
+            {
+              id: "dish-5",
+              name: "NY Strip",
+              price: "$69",
+              description: "14oz.",
+            },
+            {
+              id: "dish-6",
+              name: "Bone-In Filet",
+              price: "$88",
+              description: "14oz.",
+            },
+            {
+              id: "dish-7",
+              name: "Dry-Aged Delmonico",
+              price: "$112",
+              description: "14oz.",
+            },
+            {
+              id: "dish-8",
+              name: "Cowgirl Bone-In Ribeye",
+              price: "$98",
+              description: "16oz.",
+            },
+            {
+              id: "dish-9",
+              name: "Dry-Aged Porterhouse",
+              price: "$112",
+              description: "28oz.",
+            },
+            {
+              id: "dish-10",
+              name: "Dry-Aged Tomahawk",
+              price: "$160",
+              description: "34oz.",
+            },
+          ],
+        },
+        {
+          id: "sauces",
+          title: "Sauces",
+          column: "center",
+          boxed: true,
+          items: [
+            {
+              id: "dish-0",
+              name: "Au Poivre",
+              price: "$2",
+              description: "",
+            },
+            {
+              id: "dish-1",
+              name: "Red Wine",
+              price: "$2",
+              description: "",
+            },
+            {
+              id: "dish-2",
+              name: "Bearnaise",
+              price: "$4",
+              description: "",
+            },
+            {
+              id: "dish-3",
+              name: "Horseradish",
+              price: "$3",
+              description: "",
+            },
+            {
+              id: "dish-4",
+              name: "Chimichurri",
+              price: "$2",
+              description: "",
+            },
+          ],
+        },
+        {
+          id: "entrees",
+          title: "Entrees",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Maple Rubbed Salmon",
+              price: "$52",
+              description: "Pickled cherry tomatoes - broccolini - olive dressing",
+            },
+            {
+              id: "dish-1",
+              name: "Free Range Chicken",
+              price: "$22",
+              description: "Peas & beans - confit garlic - toasted mustard seed jus",
+            },
+            {
+              id: "dish-2",
+              name: "Braised Beef Short Rib",
+              price: "$56",
+              description: "Creamed potatoes - roasted pepper relish - crispy shallots",
+            },
+            {
+              id: "dish-3",
+              name: "Maine Lobster Linguini",
+              price: "$66",
+              description: "Tomato - lemon - garlic - creamy lobster sauce",
+            },
+            {
+              id: "dish-4",
+              name: "Mushroom & Truffle Tagliatelle",
+              price: "$55",
+              description: "Pecorino - braised mushrooms - baby spinach",
+            },
+            {
+              id: "dish-5",
+              name: "Roasted Lamb Rack",
+              price: "$66",
+              description: "Glazed carrots - baby kale - rosemary jus",
+            },
+          ],
+        },
+        {
+          id: "mac-&-cheese",
+          title: "Mac & Cheese",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Traditional",
+              price: "$19",
+              description: "",
+            },
+            {
+              id: "dish-1",
+              name: "Bacon",
+              price: "$22",
+              description: "",
+            },
+            {
+              id: "dish-2",
+              name: "Lobster",
+              price: "$32",
+              description: "",
+            },
+          ],
+        },
+        {
+          id: "desserts",
+          title: "Desserts",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Bag O' Donuts",
+              price: "$15",
+              description: "Cinnamon sugar - dulce de leche - raspberry - chocolate",
+            },
+            {
+              id: "dish-1",
+              name: "Chocolate Cake",
+              price: "$15",
+              description: "Chocolate ganache sauce",
+            },
+            {
+              id: "dish-2",
+              name: "Cheesecake",
+              price: "$19",
+              description: "Raspberry coulis - berries",
+            },
+            {
+              id: "dish-3",
+              name: "Apple Pie",
+              price: "$19",
+              description: "Cinnamon crumble - maple creme fraiche",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "lunch",
+      name: "Lunch",
+      sections: [
+        {
+          id: "fresh-&-seasonal",
+          title: "Fresh & Seasonal",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Garden Salad",
+              price: "$18",
+              description: "Seasonal leaves - citrus vinaigrette",
+            },
+            {
+              id: "dish-1",
+              name: "Burrata",
+              price: "$24",
+              description: "Heirloom tomatoes - basil",
+            },
+          ],
+        },
+        {
+          id: "lunch-favorites",
+          title: "Lunch Favorites",
+          column: "center",
+          boxed: true,
+          items: [
+            {
+              id: "dish-0",
+              name: "Steak Frites",
+              price: "$38",
+              description: "Grilled flat iron - parmesan fries",
+            },
+            {
+              id: "dish-1",
+              name: "Market Fish",
+              price: "$32",
+              description: "Seasonal vegetables - lemon butter",
+            },
+            {
+              id: "dish-2",
+              name: "Roast Chicken Sandwich",
+              price: "$24",
+              description: "Sourdough - herb mayonnaise",
+            },
+          ],
+        },
+        {
+          id: "something-sweet",
+          title: "Something Sweet",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Chocolate Cake",
+              price: "$15",
+              description: "Chocolate ganache",
+            },
+            {
+              id: "dish-1",
+              name: "Seasonal Sorbet",
+              price: "$12",
+              description: "Ask for today's flavors",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "brunch",
+      name: "Brunch",
+      sections: [
+        {
+          id: "slow-mornings",
+          title: "Slow Mornings",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Buttermilk Pancakes",
+              price: "$22",
+              description: "Berries - maple syrup",
+            },
+            {
+              id: "dish-1",
+              name: "Avocado Toast",
+              price: "$20",
+              description: "Sourdough - radish - herbs",
+            },
+          ],
+        },
+        {
+          id: "brunch-classics",
+          title: "Brunch Classics",
+          column: "center",
+          boxed: true,
+          items: [
+            {
+              id: "dish-0",
+              name: "Eggs Benedict",
+              price: "$26",
+              description: "Poached eggs - hollandaise",
+            },
+            {
+              id: "dish-1",
+              name: "Steak & Eggs",
+              price: "$38",
+              description: "Grilled steak - eggs your way",
+            },
+          ],
+        },
+        {
+          id: "at-the-table",
+          title: "At the Table",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Fresh Orange Juice",
+              price: "$8",
+              description: "",
+            },
+            {
+              id: "dish-1",
+              name: "House Coffee",
+              price: "$5",
+              description: "",
+            },
+            {
+              id: "dish-2",
+              name: "Seasonal Fruit",
+              price: "$12",
+              description: "",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "wine",
+      name: "Wine List",
+      sections: [
+        {
+          id: "sparkling",
+          title: "Sparkling",
+          column: "left",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "House Prosecco",
+              price: "$14",
+              description: "By the glass",
+            },
+          ],
+        },
+        {
+          id: "white-&-rose",
+          title: "White & Rose",
+          column: "center",
+          boxed: true,
+          items: [
+            {
+              id: "dish-0",
+              name: "Sauvignon Blanc",
+              price: "$14",
+              description: "By the glass",
+            },
+            {
+              id: "dish-1",
+              name: "Chardonnay",
+              price: "$16",
+              description: "By the glass",
+            },
+            {
+              id: "dish-2",
+              name: "Provence Rose",
+              price: "$15",
+              description: "By the glass",
+            },
+          ],
+        },
+        {
+          id: "red",
+          title: "Red",
+          column: "right",
+          boxed: false,
+          items: [
+            {
+              id: "dish-0",
+              name: "Pinot Noir",
+              price: "$16",
+              description: "By the glass",
+            },
+            {
+              id: "dish-1",
+              name: "Cabernet Sauvignon",
+              price: "$18",
+              description: "By the glass",
+            },
+          ],
+        },
+      ],
+    },
+  ],
   dining: [
     {
       id: "terrace",
