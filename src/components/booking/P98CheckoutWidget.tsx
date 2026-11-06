@@ -36,6 +36,7 @@ export function P98CheckoutWidget({
   >("loading");
   const [scriptReady, setScriptReady] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
+  const completed = useRef(false);
   const reportedCallback = useRef(onTestPaymentReported);
   useEffect(() => {
     reportedCallback.current = onTestPaymentReported;
@@ -47,16 +48,21 @@ export function P98CheckoutWidget({
     return () => clearTimeout(timeout);
   }, [scriptReady, valid]);
   useEffect(() => {
-    if (!scriptReady || !valid || !mountRef.current) return;
+    if (!scriptReady || !valid || !mountRef.current || completed.current) return;
     const mount = mountRef.current;
     let active = true;
     let ready = false;
     let reported = false;
     function reportSuccess() {
-      if (!active || reported) return;
+      if (!active || reported || completed.current) return;
       reported = true;
+      completed.current = true;
       clearTimeout(timeout);
       observer.disconnect();
+      // Hide the provider receipt before it paints while the confirmation route loads.
+      // Keep the SDK mounted until navigation completes; removing it here can restart it.
+      mount.hidden = true;
+      mount.inert = true;
       setStatus(reportedCallback.current ? "redirecting" : "unverified");
       reportedCallback.current?.();
     }
@@ -94,10 +100,14 @@ export function P98CheckoutWidget({
       if (!existing)
         window.startCheckoutWidget(
           config.widgetId,
-          checkoutWidgetOptions(amount, guest, (data) => {
-            if (isReportedUatSuccess(data)) reportSuccess();
-            else if (active) setStatus("unverified");
-          }),
+          checkoutWidgetOptions(
+            amount,
+            { firstName: guest.firstName, lastName: guest.lastName, email: guest.email },
+            (data) => {
+              if (isReportedUatSuccess(data)) reportSuccess();
+              else if (active && !completed.current) setStatus("unverified");
+            },
+          ),
         );
       queueMicrotask(() => {
         if (active) checkReady();
@@ -116,7 +126,7 @@ export function P98CheckoutWidget({
       observer.disconnect();
       mount.replaceChildren();
     };
-  }, [scriptReady, valid, amount, config.widgetId, guest]);
+  }, [scriptReady, valid, amount, config.widgetId, guest.firstName, guest.lastName, guest.email]);
   if (!valid)
     return (
       <p className={styles.error} role="alert">

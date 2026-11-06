@@ -184,3 +184,68 @@ test("checkout prefill is tab-scoped, selection-scoped, minimal and expires", ()
     else delete globalThis.sessionStorage;
   }
 });
+
+test("widget success hides the SDK immediately and ignores repeated or late results", () => {
+  const effects = [],
+    statuses = [];
+  const mount = {
+    hidden: false,
+    inert: false,
+    querySelector: () => null,
+    contains: () => false,
+    replaceChildren() {},
+  };
+  let state = 0,
+    callback,
+    reported = 0;
+  const output = ts.transpileModule(
+    readFileSync("src/components/booking/P98CheckoutWidget.tsx", "utf8"),
+    {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+    },
+  ).outputText;
+  const exports = {};
+  const react = {
+    useState: (value) => [state++ === 1 ? true : value, (next) => statuses.push(next)],
+    useRef: (value) => ({ current: value === null ? mount : value }),
+    useEffect: (fn) => effects.push(fn),
+  };
+  const require = (name) => {
+    if (name === "react") return react;
+    if (name === "react/jsx-runtime") return { jsx: () => null, jsxs: () => null };
+    if (name === "next/script" || name.endsWith(".css")) return { default: {} };
+    if (name.endsWith("/p98pay")) return { checkoutWidgetOptions };
+    if (name.endsWith("/uatReceipt")) return { isReportedUatSuccess, hasReportedUatReceipt };
+    throw Error(name);
+  };
+  new Function("require", "exports", "window", "document", "MutationObserver", output)(
+    require,
+    exports,
+    {
+      startCheckoutWidget: (_id, options) => {
+        callback = options.events[0].onAfterSubmit;
+      },
+    },
+    { getElementById: () => null },
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+  exports.P98CheckoutWidget({
+    config: { widgetId: "fixture", currency: "USD" },
+    amount: 25,
+    currency: "USD",
+    guest: { firstName: "Jordan", lastName: "Guest", email: "jordan@example.com" },
+    onTestPaymentReported: () => reported++,
+  });
+  const cleanups = effects.map((effect) => effect());
+  callback({ success: true });
+  callback({ success: true });
+  callback({ transactionStatus: "Failed" });
+  assert.equal(reported, 1);
+  assert.equal(mount.hidden, true);
+  assert.equal(mount.inert, true);
+  assert.deepEqual(statuses, ["redirecting"]);
+  cleanups.forEach((cleanup) => cleanup?.());
+});
