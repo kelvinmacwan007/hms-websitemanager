@@ -72,9 +72,10 @@ export function BookingFlowFrame({
             scrollTo(0, true);
         }}
       >
-        {!pathname.endsWith("/widget-preview") && !pathname.endsWith("/confirmation") && (
-          <BookingProgressDisplay {...progress} />
-        )}
+        {pathname !== "/booking" &&
+          pathname !== "/booking/" &&
+          !pathname.endsWith("/widget-preview") &&
+          !pathname.endsWith("/confirmation") && <BookingProgressDisplay {...progress} />}
         <div data-booking-step-content>{children}</div>
       </div>
     </BookingProgressContext.Provider>

@@ -1,5 +1,5 @@
 export const BOOKING_STEPS = [
-  "Rooms",
+  "Cart",
   "Extras",
   "Guest details",
   "Payment",
