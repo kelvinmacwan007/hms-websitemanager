@@ -11,7 +11,7 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.wm-root.wm-studio-dashboard .wm-dashboard-management>.wm-card {
+.wm-root.wm-studio-dashboard .wm-dashboard-management > .wm-card {
   min-width: 0;
   margin: 0;
   padding: var(--wm-space-card);
@@ -78,7 +78,7 @@
 }
 
 /* The parent gap owns page spacing; children must not add a second gap. */
-.wm-root.wm-studio-dashboard .wm-workspace>* {
+.wm-root.wm-studio-dashboard .wm-workspace > * {
   margin-block: 0;
   min-width: 0;
 }
@@ -88,7 +88,9 @@
   margin-bottom: 0;
 }
 
-.wm-root.wm-studio-dashboard .wm-workspace> :is(.wm-address-panel, .wm-domain-card, .wm-setup-stepper, .wm-notice, .wm-workspace-banner) {
+.wm-root.wm-studio-dashboard
+  .wm-workspace
+  > :is(.wm-address-panel, .wm-domain-card, .wm-setup-stepper, .wm-notice, .wm-workspace-banner) {
   margin-bottom: 0;
 }
 
@@ -120,15 +122,20 @@
   align-self: start;
 }
 
-.wm-root.wm-studio-dashboard .wm-editor-column> :is(.wm-section-header-card, .wm-section-help, .wm-info) {
+.wm-root.wm-studio-dashboard
+  .wm-editor-column
+  > :is(.wm-section-header-card, .wm-section-help, .wm-info) {
   margin: 0;
 }
 
-.wm-root.wm-studio-dashboard :is(.wm-editor-fields,
-  .wm-home-design,
-  .wm-contact-design,
-  .wm-identity-design,
-  .wm-colors-design) {
+.wm-root.wm-studio-dashboard
+  :is(
+    .wm-editor-fields,
+    .wm-home-design,
+    .wm-contact-design,
+    .wm-identity-design,
+    .wm-colors-design
+  ) {
   gap: var(--wm-space-section);
 }
 
@@ -137,8 +144,10 @@
   margin-bottom: 0;
 }
 
-.wm-root.wm-studio-dashboard .wm-editor-fields> :is(.wm-setup, .wm-address-panel, .wm-domain-card, .wm-advanced),
-.wm-root.wm-studio-dashboard .wm-preview-column> :is(.wm-preview-card, .wm-publish-card) {
+.wm-root.wm-studio-dashboard
+  .wm-editor-fields
+  > :is(.wm-setup, .wm-address-panel, .wm-domain-card, .wm-advanced),
+.wm-root.wm-studio-dashboard .wm-preview-column > :is(.wm-preview-card, .wm-publish-card) {
   margin-block: 0;
 }
 
@@ -147,14 +156,17 @@
   gap: var(--wm-space-section);
 }
 
-.wm-root.wm-studio-dashboard :is(.wm-section-header-card,
-  .wm-address-panel,
-  .wm-setup-reference.wm-setup-stepper,
-  .wm-id-card,
-  .wm-color-generate-card,
-  .wm-colors-main-card,
-  .wm-typography-design,
-  .wm-experience-design) {
+.wm-root.wm-studio-dashboard
+  :is(
+    .wm-section-header-card,
+    .wm-address-panel,
+    .wm-setup-reference.wm-setup-stepper,
+    .wm-id-card,
+    .wm-color-generate-card,
+    .wm-colors-main-card,
+    .wm-typography-design,
+    .wm-experience-design
+  ) {
   padding: var(--wm-space-card);
 }
 
@@ -295,7 +307,7 @@
   background: #e6f6ee;
 }
 
-.wm-address-live-panel>a {
+.wm-address-live-panel > a {
   overflow-wrap: anywhere;
   color: #13894f;
   font-weight: 600;

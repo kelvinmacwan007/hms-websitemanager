@@ -48,13 +48,12 @@ export function DemoStayPreview({ room, rate, search, nights, extras, initialExt
 
   return (
     <main className={websiteClassName("container py-12 md:py-16 lg:py-20")}>
-      <p className={websiteClassName("eyebrow")}>Demo booking preview</p>
+      <p className={websiteClassName("eyebrow")}>Your reservation</p>
       <Heading as="h1" className={websiteClassName("section-title mt-4")}>
-        Your sample stay.
+        Your selected stay.
       </Heading>
       <p className={websiteClassName("mt-5 max-w-2xl leading-7 text-muted")}>
-        This is an estimate using static demo data. No room is held, no payment is collected, and no
-        reservation is created.
+        Review your room, dates, and optional services before continuing.
       </p>
       <div className={websiteClassName("mt-10 grid gap-10 lg:grid-cols-[1fr_360px]")}>
         <div>
@@ -120,15 +119,14 @@ export function DemoStayPreview({ room, rate, search, nights, extras, initialExt
               Review guest details.
             </Heading>
             <p className={websiteClassName("mt-3 max-w-xl leading-7 text-muted")}>
-              See the demo checkout with this room and estimate. No reservation or payment is
-              processed.
+              Continue to checkout to review your guest details and selected stay.
             </p>
             <Link
               href={`/booking/checkout?${checkoutQuery}`}
               className={websiteClassName("brand-button mt-6")}
             >
               <span className={websiteClassName("button-text-container")}>
-                <span className={websiteClassName("button-text")}>Continue to demo checkout</span>
+                <span className={websiteClassName("button-text")}>Continue to checkout</span>
               </span>
             </Link>
           </section>
@@ -140,7 +138,7 @@ export function DemoStayPreview({ room, rate, search, nights, extras, initialExt
           aria-live="polite"
         >
           <Heading as="h2" className={websiteClassName("font-display text-2xl")}>
-            Sample estimate
+            Stay estimate
           </Heading>
           <div className={websiteClassName("mt-6 flex justify-between gap-4 text-sm")}>
             <span>
@@ -171,7 +169,7 @@ export function DemoStayPreview({ room, rate, search, nights, extras, initialExt
             <span>{money(roomSubtotal + extrasSubtotal)}</span>
           </div>
           <p className={websiteClassName("mt-4 text-xs leading-5 text-muted")}>
-            Sample prices before taxes or local charges. Final terms are provided by the hotel.
+            Prices shown exclude taxes or local charges. Final terms are provided by the hotel.
           </p>
         </aside>
       </div>

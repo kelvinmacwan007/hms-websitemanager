@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { GuestInput } from "./GuestInput";
+import { validateGuestForm } from "@/lib/booking/guestForm";
 import { BookingStaySummary } from "./BookingStaySummary";
 import flow from "./BookingFlow.module.css";
 import { useEffect, useState } from "react";
@@ -121,7 +123,7 @@ function GuestFields({
       <div className={websiteClassName("grid gap-5 sm:grid-cols-2")}>
         <label>
           Adults in this room
-          <input
+          <GuestInput
             className={inputClass}
             name={field("totalAdult")}
             type="number"
@@ -133,7 +135,7 @@ function GuestFields({
         </label>
         <label>
           Children in this room
-          <input
+          <GuestInput
             className={inputClass}
             name={field("totalChild")}
             type="number"
@@ -146,7 +148,7 @@ function GuestFields({
         {maxPets > 0 && (
           <label>
             Pets requested for this room
-            <input
+            <GuestInput
               className={inputClass}
               name={field("pets")}
               type="number"
@@ -179,10 +181,11 @@ function GuestFields({
         ).map(([key, label, type, autoComplete]) => (
           <label key={key}>
             {label}
-            <input
+            <GuestInput
               className={inputClass}
               name={field(key)}
               type={type}
+              placeholder={key === "mobile" ? "+1 202 555 0147" : undefined}
               autoComplete={autoComplete}
               maxLength={150}
               required
@@ -191,7 +194,7 @@ function GuestFields({
         ))}
         <label>
           ZIP / postal code
-          <input
+          <GuestInput
             className={inputClass}
             name={field("zipCode")}
             value={zip}
@@ -246,6 +249,7 @@ function GuestFields({
               value={value}
               onChange={(event) => change(event.target.value)}
               required
+              disabled={(key === "stateId" && !country) || (key === "cityId" && !state)}
             >
               <option value="">Select {label.toLowerCase()}</option>
               {options.map((option) => (
@@ -292,6 +296,7 @@ export function HmsCheckout({
   const allocation = allocateParty(rooms, search);
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!validateGuestForm(event.currentTarget)) return;
     setBusy(true);
     setError("");
     const form = new FormData(event.currentTarget);
@@ -459,9 +464,9 @@ export function HmsCheckout({
                 />
               ))}
               <label className={websiteClassName("flex items-start gap-3")}>
-                <input type="checkbox" required className={websiteClassName("mt-1")} />I authorize
-                the hotel to create this reservation and understand payment may be required. I have
-                reviewed the hotel’s policies.
+                <GuestInput type="checkbox" required className={websiteClassName("mt-1")} />I
+                authorize the hotel to create this reservation and understand payment may be
+                required. I have reviewed the hotel’s policies.
               </label>
               {error && (
                 <p role="alert" className={websiteClassName("text-error")}>

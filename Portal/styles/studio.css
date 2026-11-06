@@ -694,7 +694,7 @@
     box-shadow 180ms,
     transform 180ms;
 }
-.wm-studio-dashboard .wm-button:active {
+.wm-studio-dashboard .wm-button:not(:disabled):not([aria-disabled="true"]):active {
   transform: translateY(1px);
 }
 .wm-studio-dashboard .wm-discard {

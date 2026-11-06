@@ -191,7 +191,11 @@ export default async function AboutPage() {
                     className={websiteClassName("flex min-h-64 flex-col bg-surface p-7")}
                   >
                     <span className={websiteClassName("text-brand")}>
-                      <AmenityIcon iconUrl={amenity.iconUrl} iconKey={amenity.iconKey} />
+                      <AmenityIcon
+                        iconUrl={amenity.iconUrl}
+                        iconKey={amenity.iconKey}
+                        label={amenity.label}
+                      />
                     </span>
                     <Heading as="h3" className={websiteClassName("mt-7 font-display text-2xl")}>
                       {amenity.label}

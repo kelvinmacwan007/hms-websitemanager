@@ -120,12 +120,12 @@ export function P98CheckoutWidget({
   if (!valid)
     return (
       <p className={styles.error} role="alert">
-        This test merchant supports positive USD amounts only. Contact the hotel for this payment.
+        This payment method supports positive USD amounts only. Contact the hotel for other payment
+        options.
       </p>
     );
   return (
     <div className={styles.widget}>
-      <div className={styles.testNotice}>UAT test payment · Use test payment details only.</div>
       {status === "loading" && (
         <p className={styles.status} role="status">
           Loading secure checkout...
@@ -144,7 +144,7 @@ export function P98CheckoutWidget({
       )}
       {status === "redirecting" && (
         <p className={styles.status} role="status">
-          Test payment response received. Opening confirmation…
+          Payment response received. Opening confirmation…
         </p>
       )}
       <div

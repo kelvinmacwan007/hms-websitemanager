@@ -4,6 +4,7 @@ import type {
 } from "../../services/patelHms/integrationTypes";
 import type { AvailabilitySearch } from "../../types/hotel";
 import { guestParty } from "./party.ts";
+import { guestFieldError } from "./guestValidation.ts";
 
 export function parseHmsGuest(value: unknown): HmsReservationGuest {
   if (!value || typeof value !== "object" || Array.isArray(value))
@@ -16,9 +17,14 @@ export function parseHmsGuest(value: unknown): HmsReservationGuest {
       (guest[key] as string).length > 150
     )
       throw new Error("Complete all required guest details.");
+  for (const key of ["firstName", "lastName", "email", "zipCode"]) {
+    const error = guestFieldError(key, guest[key] as string, true);
+    if (error) throw new Error(error);
+  }
   if (
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.email as string) ||
-    !/^[+0-9 ()-]{5,30}$/.test(guest.mobile as string)
+    !/^[+0-9 ()-]{7,30}$/.test(guest.mobile as string) ||
+    !/^\d{7,15}$/.test((guest.mobile as string).replace(/\D/g, ""))
   )
     throw new Error("Invalid email or phone number.");
   for (const key of ["countryId", "stateId", "cityId"])

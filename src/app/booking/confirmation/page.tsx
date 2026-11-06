@@ -8,6 +8,8 @@ import { isDemoPaymentMode } from "@/lib/payment/demoMode";
 import { HmsPayment } from "@/components/booking/HmsPayment";
 import { BookingProgress } from "@/components/booking/BookingProgress";
 import { getCheckoutWidgetConfig } from "@/lib/payment/p98payConfig";
+import { parseCartItems } from "@/lib/booking/cart";
+import { selectedAddOnRequests } from "@/lib/booking/addOnRequests";
 import { UatPaymentConfirmation } from "@/components/booking/UatPaymentConfirmation";
 
 export const metadata = { title: "Reservation status", robots: "noindex, nofollow" };
@@ -32,9 +34,41 @@ export default async function ConfirmationPage({
       if (Array.isArray(value)) value.forEach((item) => query.append(key, item));
       else if (value !== undefined) query.set(key, value);
     }
+    const requestedRooms =
+      parseCartItems(params) ??
+      (typeof params.room === "string" ? [{ roomSlug: params.room, rateId: "", quantity: 1 }] : []);
+    const roomDetails = requestedRooms.flatMap((item) => {
+      const room = hotel.rooms.find((room) => room.slug === item.roomSlug);
+      return room
+        ? [
+            {
+              name: room.name,
+              quantity: item.quantity,
+              bedType: room.bedType,
+              image: room.images[0],
+            },
+          ]
+        : [];
+    });
+    const stay = {
+      address: [
+        hotel.location.address,
+        hotel.location.city,
+        hotel.location.region,
+        hotel.location.country,
+      ]
+        .filter(Boolean)
+        .join(", "),
+      image: roomDetails[0]?.image ?? hotel.heroImage,
+      rooms: roomDetails.map(({ name, quantity, bedType }) => ({ name, quantity, bedType })),
+      addOns: selectedAddOnRequests(hotel.addOns ?? [], params.addon).map(({ item, quantity }) => ({
+        name: item.name,
+        quantity,
+      })),
+    };
     return (
       <>
-        <UatPaymentConfirmation hotelName={hotel.name} query={query.toString()} />
+        <UatPaymentConfirmation hotelName={hotel.name} query={query.toString()} stay={stay} />
       </>
     );
   }

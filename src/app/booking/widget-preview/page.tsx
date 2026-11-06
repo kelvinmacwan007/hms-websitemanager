@@ -4,7 +4,7 @@ import { CheckoutWidgetPreview } from "@/components/booking/CheckoutWidgetPrevie
 import { getCheckoutWidgetConfig } from "@/lib/payment/p98payConfig";
 
 export const metadata = {
-  title: "UAT payment widget preview",
+  title: "Payment widget preview",
   robots: { index: false, follow: false },
 };
 

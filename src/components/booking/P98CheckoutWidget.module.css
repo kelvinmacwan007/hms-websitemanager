@@ -23,15 +23,6 @@
   min-height: 340px;
   margin-top: 18px;
 }
-.testNotice {
-  padding: 12px 16px;
-  border: 1px solid #efd5a8;
-  border-radius: 12px;
-  background: #fff8ed;
-  color: #855511;
-  font-size: 13px;
-  line-height: 1.5;
-}
 .status {
   margin: 16px 0 0;
   font-size: 14px;

@@ -22,7 +22,11 @@ export function AmenitiesGrid({ amenities }: { amenities: HotelAmenity[] }) {
         {amenities.map((amenity) => (
           <article key={amenity.id} className={websiteClassName("bg-surface p-7")}>
             <div className={websiteClassName("text-brand")}>
-              <AmenityIcon iconUrl={amenity.iconUrl} iconKey={amenity.iconKey} />
+              <AmenityIcon
+                iconUrl={amenity.iconUrl}
+                iconKey={amenity.iconKey}
+                label={amenity.label}
+              />
             </div>
             <Heading as="h3" className={websiteClassName("mt-5 text-lg font-bold")}>
               {amenity.label}

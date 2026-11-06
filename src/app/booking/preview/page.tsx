@@ -11,7 +11,7 @@ import { parseAvailabilitySearch } from "@/lib/booking/search";
 type Params = Record<string, string | string[] | undefined>;
 type Props = { searchParams: Promise<Params> };
 
-export const metadata = { title: "Demo Stay Preview", robots: "noindex, nofollow" };
+export const metadata = { title: "Stay overview", robots: "noindex, nofollow" };
 
 export default async function BookingPreviewPage({ searchParams }: Props) {
   if (!isDemoPaymentMode()) notFound();
@@ -32,7 +32,7 @@ export default async function BookingPreviewPage({ searchParams }: Props) {
       <>
         <main className={websiteClassName("container py-20")}>
           <Heading as="h1" className={websiteClassName("section-title")}>
-            This sample stay is no longer available.
+            This stay is no longer available.
           </Heading>
           <Link href="/booking" className={websiteClassName("brand-button mt-8")}>
             <span className={websiteClassName("button-text-container")}>

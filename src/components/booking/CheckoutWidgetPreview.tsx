@@ -11,7 +11,7 @@ export function CheckoutWidgetPreview() {
         <h1 className="text-2xl font-bold">Payment widget preview</h1>
         <p className="mb-6 mt-3 text-sm leading-6">
           The same HMS-themed widget is connected to the booking checkout. This standalone page uses
-          a fixed test amount of USD 15.55.
+          an amount of USD 15.55.
         </p>
         <P98CheckoutWidget
           config={{ environment: "uat", widgetId: "cnmbiqhj", currency: "USD" }}

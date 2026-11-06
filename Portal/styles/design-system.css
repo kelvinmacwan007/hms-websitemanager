@@ -10,12 +10,12 @@
 @media (hover: hover) and (pointer: fine) {
   .wm-root.wm-studio-dashboard
     :is(button, a.wm-button, summary.wm-button):not(:disabled):not([aria-disabled="true"]):hover {
-    scale: 1.01;
+    scale: none;
   }
 }
 .wm-root.wm-studio-dashboard
   :is(button, a.wm-button, summary.wm-button):not(:disabled):not([aria-disabled="true"]):active {
-  scale: 0.98;
+  scale: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .wm-root.wm-studio-dashboard :is(button, a.wm-button, summary.wm-button) {
@@ -824,5 +824,31 @@
   .wm-root.wm-studio-dashboard[data-editor-section] .wm-publish-menu-actions {
     top: auto;
     right: 16px;
+  }
+}
+
+/* Simple hover treatment for the three main header actions. */
+.wm-root.wm-studio-dashboard
+  .wm-heading-actions
+  :is(.wm-header-preview, .wm-save-button, .wm-publish-idle > .wm-button) {
+  transition: background-color 180ms ease-out;
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wm-root.wm-studio-dashboard
+    .wm-heading-actions
+    :is(.wm-header-preview, .wm-save-button, .wm-publish-idle > .wm-button):not(:disabled):not(
+      [aria-disabled="true"]
+    ):hover {
+    scale: none;
+    transform: none;
+  }
+  .wm-root.wm-studio-dashboard .wm-heading-actions .wm-header-preview:not(:disabled):hover {
+    background-color: #ffe6d5;
+  }
+  .wm-root.wm-studio-dashboard
+    .wm-heading-actions
+    :is(.wm-save-button, .wm-publish-idle > .wm-button):not(:disabled):hover {
+    background-color: #254776;
   }
 }

@@ -280,50 +280,53 @@ test("room catalogue pagination is scoped to the configured property", async () 
   assert.equal(pages[1].pager.pageNo, 2);
 });
 
-test("add-ons paginate, filter inactive services and reject cross-property or invalid rates", async () => {
-  const pages = [];
+test("add-ons use the documented property GET, filter inactive items and reject invalid data", async () => {
   let invalid = "";
+  const calls = [];
   const { HmsWebsiteIntegration } = loadAdapter(async (url, init) => {
     if (String(url).endsWith("/Account/login"))
       return Response.json({
         token: "test",
         expiration: new Date(Date.now() + 3600000).toISOString(),
       });
-    assert.ok(String(url).endsWith("/RoomManagement/add-ons"));
-    const input = JSON.parse(init.body);
-    pages.push(input);
+    assert.ok(String(url).endsWith("/RoomManagement/add-ons/property-a"));
+    assert.equal(init.method, "GET");
+    assert.equal(init.body, undefined);
+    calls.push(String(url));
+    const item = {
+      id: "breakfast",
+      name: "Breakfast",
+      propertyId: invalid === "property" ? "other" : "property-a",
+      rateAmount: invalid === "price" ? -1 : 10,
+      isActive: 1,
+    };
     return Response.json({
       response: 1,
-      data: {
-        records: [
-          {
-            id: `extra-${input.pager.pageNo}`,
-            name: "Breakfast",
-            propertyId: invalid === "property" ? "other" : "property-a",
-            rateAmount: invalid === "price" ? -1 : 10,
-            isActive: 1,
-          },
-          {
-            id: "inactive",
-            name: "Inactive",
-            propertyId: "property-a",
-            rateAmount: 0,
-            isActive: 0,
-          },
-        ],
-        pager: { totalPages: 2 },
-      },
+      data:
+        invalid === "shape"
+          ? { records: [item] }
+          : invalid === "null"
+            ? [null]
+            : [
+                item,
+                { ...item },
+                { ...item, id: "free", rateAmount: 0 },
+                { ...item, id: "inactive", isActive: 0 },
+              ],
     });
   }, true);
   const api = new HmsWebsiteIntegration(connection);
-  assert.equal((await api.getAddOns()).length, 2);
-  assert.equal(pages.length, 2);
-  assert.equal(pages[0].filter.propertyId, "property-a");
-  assert.equal(pages[0].filter.isActive, 1);
-  invalid = "property";
-  await assert.rejects(api.getAddOns(), /Invalid property add-on/);
-  invalid = "price";
-  await assert.rejects(api.getAddOns(), /Invalid property add-on/);
+  const items = await api.getAddOns();
+  assert.deepEqual(
+    items.map((item) => item.id),
+    ["breakfast", "free"],
+  );
+  assert.equal(items[1].rateAmount, 0);
+  assert.equal(calls.length, 1);
+  for (const scenario of ["property", "price", "shape", "null"]) {
+    invalid = scenario;
+    await assert.rejects(api.getAddOns(), /Invalid property add-on/);
+  }
 });
 
 test("current read-only policy blocks service writes before login or API access", async () => {

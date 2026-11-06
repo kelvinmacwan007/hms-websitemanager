@@ -14,7 +14,7 @@ import { websiteClassName } from "@/lib/ui/websiteStyles";
 import { Checkbox } from "@/components/common/Checkbox";
 
 import Link from "next/link";
-import { CalendarDays, Gift, ArrowRight, LockKeyhole, Info } from "lucide-react";
+import { CalendarDays, ArrowRight, LockKeyhole, Info } from "lucide-react";
 import { useState } from "react";
 import { formatMoney } from "@/lib/utils/format";
 import type { HotelAddOn, HotelExtra, HotelRoom } from "@/types/hotel";
@@ -25,11 +25,13 @@ export function RoomReservationPanel({
   extras,
   today,
   addOns = [],
+  addOnsUnavailable = false,
 }: {
   room: HotelRoom;
   extras: HotelExtra[];
   today: string;
   addOns?: HotelAddOn[];
+  addOnsUnavailable?: boolean;
 }) {
   const params = useSearchParams();
   const { settings, timeZone } = useBookingSettings();
@@ -198,16 +200,22 @@ export function RoomReservationPanel({
           </select>
         </label>
       )}
+      {addOnsUnavailable && (
+        <p role="status" className={websiteClassName("mb-4 text-sm text-muted")}>
+          Add-ons could not be loaded. Please refresh or contact the hotel for available services.
+        </p>
+      )}
       {(eligibleAddOns.length > 0 || pricedExtras.length > 0) && (
         <fieldset className={styles.addOns}>
           <legend>
             Add-ons <em>(optional)</em>
           </legend>
+          <p className={styles.addOnIntro}>Enhance your stay with optional services.</p>
           <div className={styles.addOnList} data-lenis-prevent>
             {eligibleAddOns.map((item) => {
               const quantity = addOnQuantities[item.id] ?? 0;
               return (
-                <div key={item.id} className={styles.addOnRow}>
+                <div key={item.id} className={styles.addOnRow} data-selected={quantity > 0}>
                   <label className={styles.addOnLabel}>
                     <Checkbox
                       checked={quantity > 0}
@@ -218,7 +226,6 @@ export function RoomReservationPanel({
                         }))
                       }
                     />
-                    <Gift size={22} className={styles.serviceIcon} aria-hidden="true" />
                     <span>
                       <strong>{item.name}</strong>
                       <small>{item.description || "Arrange with the hotel"}</small>
@@ -227,26 +234,63 @@ export function RoomReservationPanel({
                   <div className={styles.addOnPrice}>
                     <strong>{formatMoney(item.price)}</strong>
                     {quantity > 0 && (
-                      <input
-                        type="number"
-                        min={1}
-                        max={99}
-                        value={quantity}
-                        aria-label={`${item.name} quantity`}
-                        onChange={(event) =>
-                          setAddOnQuantities((current) => ({
-                            ...current,
-                            [item.id]: Math.max(1, Math.min(99, Number(event.target.value) || 1)),
-                          }))
-                        }
-                      />
+                      <div
+                        className={styles.quantityControl}
+                        role="group"
+                        aria-label={`${item.name} quantity controls`}
+                      >
+                        <button
+                          type="button"
+                          aria-label={`Decrease ${item.name} quantity`}
+                          disabled={quantity <= 1}
+                          onClick={() =>
+                            setAddOnQuantities((current) => ({
+                              ...current,
+                              [item.id]: Math.max(1, quantity - 1),
+                            }))
+                          }
+                        >
+                          ?
+                        </button>
+                        <input
+                          data-compact-control
+                          type="number"
+                          min={1}
+                          max={99}
+                          value={quantity}
+                          aria-label={`${item.name} quantity`}
+                          onChange={(event) =>
+                            setAddOnQuantities((current) => ({
+                              ...current,
+                              [item.id]: Math.max(1, Math.min(99, Number(event.target.value) || 1)),
+                            }))
+                          }
+                        />
+                        <button
+                          type="button"
+                          aria-label={`Increase ${item.name} quantity`}
+                          disabled={quantity >= 99}
+                          onClick={() =>
+                            setAddOnQuantities((current) => ({
+                              ...current,
+                              [item.id]: Math.min(99, quantity + 1),
+                            }))
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
               );
             })}
             {pricedExtras.map((extra) => (
-              <label key={extra.id} className={styles.addOnRow}>
+              <label
+                key={extra.id}
+                className={styles.addOnRow}
+                data-selected={selectedExtras.includes(extra.id)}
+              >
                 <span className={styles.addOnLabel}>
                   <Checkbox
                     checked={selectedExtras.includes(extra.id)}
@@ -258,13 +302,14 @@ export function RoomReservationPanel({
                       )
                     }
                   />
-                  <Gift size={22} className={styles.serviceIcon} aria-hidden="true" />
                   <span>
                     <strong>{extra.name}</strong>
                     <small>{extra.charge === "per-night" ? "Per night" : "Per stay"}</small>
                   </span>
                 </span>
-                <strong>{formatMoney(extra.price)}</strong>
+                <span className={styles.addOnPrice}>
+                  <strong>{formatMoney(extra.price)}</strong>
+                </span>
               </label>
             ))}
           </div>

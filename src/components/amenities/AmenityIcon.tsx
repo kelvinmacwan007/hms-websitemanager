@@ -22,6 +22,7 @@ import {
   BedDouble,
   Star,
   Monitor,
+  Martini,
 } from "lucide-react";
 
 const icons = {
@@ -46,6 +47,7 @@ const icons = {
   gallery: Images,
   tv: Monitor,
   coffee: Coffee,
+  bar: Martini,
 };
 
 export function AmenityIcon({
@@ -71,34 +73,42 @@ export function AmenityIcon({
         onError={() => setFailedUrl(iconUrl)}
       />
     );
-  const inferred =
-    label &&
-    (/wi[\s-]?fi/i.test(label)
-      ? Wifi
-      : /coffee|breakfast/i.test(label)
-        ? Coffee
-        : /air.condition|cooling/i.test(label)
-          ? Wind
-          : /\btv\b|television/i.test(label)
-            ? Monitor
-            : /room service/i.test(label)
-              ? BedDouble
-              : /parking/i.test(label)
-                ? Car
-                : /restaurant|dining/i.test(label)
-                  ? Utensils
-                  : /spa|wellness/i.test(label)
-                    ? Sparkles
-                    : /front.?desk|reception/i.test(label)
-                      ? ConciergeBell
-                      : /fitness|gym/i.test(label)
-                        ? Dumbbell
-                        : /pool/i.test(label)
-                          ? Waves
-                          : undefined);
-  const Icon = iconUrl
-    ? Star
-    : iconKey && Object.hasOwn(icons, iconKey)
+  const hint = `${label ?? ""} ${iconUrl?.split("/").pop()?.split("?")[0]?.replace(/[-_]/g, " ") ?? ""}`;
+  const inferred = /wi[\s-]?fi/i.test(hint)
+    ? Wifi
+    : /coffee|breakfast/i.test(hint)
+      ? Coffee
+      : /air.condition|cooling/i.test(hint)
+        ? Wind
+        : /\btv\b|television/i.test(hint)
+          ? Monitor
+          : /room service/i.test(hint)
+            ? BedDouble
+            : /parking/i.test(hint)
+              ? Car
+              : /restaurant|dining/i.test(hint)
+                ? Utensils
+                : /spa|wellness/i.test(hint)
+                  ? Sparkles
+                  : /front.?desk|reception/i.test(hint)
+                    ? ConciergeBell
+                    : /fitness|gym/i.test(hint)
+                      ? Dumbbell
+                      : /pool/i.test(hint)
+                        ? Waves
+                        : /bar|lounge/i.test(hint)
+                          ? Martini
+                          : /laundry|washing/i.test(hint)
+                            ? WashingMachine
+                            : /accessible|wheelchair/i.test(hint)
+                              ? Accessibility
+                              : /pets?/i.test(hint)
+                                ? PawPrint
+                                : /airport|transfer/i.test(hint)
+                                  ? Plane
+                                  : undefined;
+  const Icon =
+    iconKey && Object.hasOwn(icons, iconKey)
       ? icons[iconKey as keyof typeof icons]
       : inferred || Star;
   return <Icon size={22} aria-hidden="true" />;

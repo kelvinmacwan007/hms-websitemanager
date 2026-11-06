@@ -76,9 +76,7 @@ export function BookingPageContent({
             )}
           >
             <div>
-              <p className={websiteClassName("eyebrow")}>
-                {isDemo ? "Sample search" : "Search results"}
-              </p>
+              <p className={websiteClassName("eyebrow")}>Search results</p>
               <Heading
                 as="h2"
                 className={websiteClassName(`mt-3 font-display ${styles.sectionTitle}`)}
@@ -96,7 +94,7 @@ export function BookingPageContent({
             </div>
             {isDemo && (
               <p className={websiteClassName(`text-xs max-w-xs text-right ${styles.resultNote}`)}>
-                Sample availability &amp; rates. No reservation can be made in demo mode.
+                Availability and rates are subject to confirmation.
               </p>
             )}
           </div>

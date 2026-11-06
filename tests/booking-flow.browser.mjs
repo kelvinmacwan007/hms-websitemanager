@@ -48,10 +48,10 @@ try {
   await page.locator("input[name=firstName]").fill("Test");
   await page.locator("input[name=lastName]").fill("Guest");
   await page.locator("input[name=email]").fill("test@example.com");
-  await page.locator("input[name=phone]").fill("3055550100");
+  await page.locator("[data-phone-display]").fill("3055550100");
   await page.locator("select[name=prefix]").selectOption("Mr");
   for (const box of await page.locator("input[type=checkbox][required]").all()) await box.check();
-  await page.getByRole("button", { name: "Review sample details", exact: true }).click();
+  await page.getByRole("button", { name: "Review details", exact: true }).click();
   const inlinePayment = page.getByRole("button", { name: "Continue to payment", exact: true });
   if (await inlinePayment.count()) {
     await inlinePayment.click();

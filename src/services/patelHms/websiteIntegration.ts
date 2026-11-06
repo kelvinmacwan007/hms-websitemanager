@@ -233,37 +233,27 @@ export class HmsWebsiteIntegration {
   }
 
   async getAddOns(): Promise<HmsAddOn[]> {
-    const items = new Map<string, HmsAddOn>();
-    for (let pageNo = 1; pageNo <= 100; pageNo++) {
-      const page = await this.read<{ records: HmsAddOn[]; pager: { totalPages: number } }>(
-        "api/v1/RoomManagement/add-ons",
-        {
-          pager: { pageNo, pageSize: 100 },
-          filter: {
-            propertyId: this.connection.propertyId,
-            propertyIds: [this.connection.propertyId],
-            isActive: 1,
-          },
-        },
-      );
-      if (
-        !Array.isArray(page.records) ||
-        !Number.isInteger(page.pager?.totalPages) ||
-        page.pager.totalPages < 0 ||
-        page.records.some(
-          (item) =>
-            item.propertyId !== this.connection.propertyId ||
-            !item.id ||
-            !item.name?.trim() ||
-            !Number.isFinite(item.rateAmount) ||
-            item.rateAmount < 0,
-        )
+    const records = await this.read<HmsAddOn[]>(
+      `api/v1/RoomManagement/add-ons/${encodeURIComponent(this.connection.propertyId)}`,
+    );
+    if (
+      !Array.isArray(records) ||
+      records.some(
+        (item) =>
+          !item ||
+          item.propertyId !== this.connection.propertyId ||
+          typeof item.id !== "string" ||
+          !item.id ||
+          typeof item.name !== "string" ||
+          !item.name.trim() ||
+          !Number.isFinite(item.rateAmount) ||
+          item.rateAmount < 0,
       )
-        throw new Error("Invalid property add-on catalogue.");
-      for (const item of page.records) if (item.isActive === 1) items.set(item.id, item);
-      if (pageNo >= page.pager.totalPages) return [...items.values()];
-    }
-    throw new Error("Add-on catalogue exceeds supported pagination.");
+    )
+      throw new Error("Invalid property add-on catalogue.");
+    const items = new Map<string, HmsAddOn>();
+    for (const item of records) if (item.isActive === 1) items.set(item.id, item);
+    return [...items.values()];
   }
 
   getRateForecast(roomTypeMasterId: string, fromDate: string): Promise<HmsForecastDay[]> {

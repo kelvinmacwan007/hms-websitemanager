@@ -79,7 +79,7 @@ export function HmsAmenities() {
                 <li key={item.id} className={styles.item}>
                   <div className={styles.card}>
                     <span className={styles.icon}>
-                      <AmenityIcon iconUrl={item.iconUrl} />
+                      <AmenityIcon iconUrl={item.iconUrl} label={item.label} />
                     </span>
                     <strong>{item.label}</strong>
                   </div>

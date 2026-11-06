@@ -296,7 +296,7 @@ export function RoomCartPicker({
         )}
         <p className={websiteClassName("mt-3 text-xs leading-5 text-muted")}>
           {isDemo
-            ? "Sample rates only. No rooms are held."
+            ? "Rates and availability are subject to confirmation."
             : "Availability and prices must be confirmed before booking."}
         </p>
       </aside>

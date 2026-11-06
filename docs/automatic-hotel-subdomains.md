@@ -33,15 +33,15 @@ The manager hostname must also reach this same application. Its explicit configu
 
 ## 3 Access and infrastructure required
 
-| Requirement | Who provides it | What must be available |
-| --- | --- | --- |
-| Domain and authoritative DNS access | Domain owner | Permission to edit the active DNS zone for kelvinmacwan.com |
-| Node application hosting | Hosting administrator | Next.js server runtime and environment settings |
-| Wildcard host routing | Hosting provider or server administrator | New hotel hostnames reach the existing Node application automatically |
-| HTTPS coverage | Hosting provider or server administrator | Certificate valid for each hotel hostname and automated renewal |
-| Durable application storage | Hosting administrator | Writable storage retained across restarts and deployments |
-| HMS access | Patel HMS | Reachable API and valid hotel accounts with verified property membership |
-| Backups and monitoring | Deployment team | Recoverable website content, domain records and encrypted connections |
+| Requirement                         | Who provides it                          | What must be available                                                   |
+| ----------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| Domain and authoritative DNS access | Domain owner                             | Permission to edit the active DNS zone for kelvinmacwan.com              |
+| Node application hosting            | Hosting administrator                    | Next.js server runtime and environment settings                          |
+| Wildcard host routing               | Hosting provider or server administrator | New hotel hostnames reach the existing Node application automatically    |
+| HTTPS coverage                      | Hosting provider or server administrator | Certificate valid for each hotel hostname and automated renewal          |
+| Durable application storage         | Hosting administrator                    | Writable storage retained across restarts and deployments                |
+| HMS access                          | Patel HMS                                | Reachable API and valid hotel accounts with verified property membership |
+| Backups and monitoring              | Deployment team                          | Recoverable website content, domain records and encrypted connections    |
 
 For this project use Node.js 22, `npm ci`, `npm run build`, and `npm run start`. Set the server port through the hosting platform. Keep the application process running with the platform's process manager or, on a VPS, a service manager.
 
@@ -73,10 +73,10 @@ Edit DNS at the provider hosting the authoritative nameservers. This may be Host
 
 Illustrative records for a VPS with a fixed public IPv4 address:
 
-| Type | Host name | Destination | Purpose |
-| --- | --- | --- | --- |
-| A | * | YOUR_SERVER_IPV4 | New hotel subdomains |
-| A | websites | YOUR_SERVER_IPV4 | Explicit manager address |
+| Type | Host name | Destination      | Purpose                  |
+| ---- | --------- | ---------------- | ------------------------ |
+| A    | *         | YOUR_SERVER_IPV4 | New hotel subdomains     |
+| A    | websites  | YOUR_SERVER_IPV4 | Explicit manager address |
 
 For managed hosting, use the A or CNAME destination supplied for your application. Do not use a guessed IP address. Do not create an A record and CNAME at the same DNS name. Add IPv6 records only when IPv6 is correctly served by the application endpoint.
 
@@ -188,16 +188,16 @@ DNS lookup success alone is not proof of a working website. Also inspect the cer
 
 ## 11 Troubleshooting
 
-| Symptom | Check first |
-| --- | --- |
-| New name does not resolve | Authoritative DNS zone and wildcard destination |
-| DNS resolves but hosting error appears | Hostname acceptance and wildcard routing at the hosting front end |
-| Certificate warning | Certificate name coverage, issuance and renewal |
-| Correct HTTPS but hotel not found | Published domain registry, root domain and preserved Host header |
-| Customer code missing | Exact lowercase WEBSITE_MANAGER_AUTH value and restart after changes |
-| Hotel loading error | Server logs, HMS reachability, tenant object format, writable storage and decryptable connections |
-| Existing hotels disappear after deploy | Persistent data path, retained data and stable tenant mappings |
-| All hotel links show the same hotel | Proxy Host header, tenant resolution and any CDN cache key |
+| Symptom                                | Check first                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| New name does not resolve              | Authoritative DNS zone and wildcard destination                                                   |
+| DNS resolves but hosting error appears | Hostname acceptance and wildcard routing at the hosting front end                                 |
+| Certificate warning                    | Certificate name coverage, issuance and renewal                                                   |
+| Correct HTTPS but hotel not found      | Published domain registry, root domain and preserved Host header                                  |
+| Customer code missing                  | Exact lowercase WEBSITE_MANAGER_AUTH value and restart after changes                              |
+| Hotel loading error                    | Server logs, HMS reachability, tenant object format, writable storage and decryptable connections |
+| Existing hotels disappear after deploy | Persistent data path, retained data and stable tenant mappings                                    |
+| All hotel links show the same hotel    | Proxy Host header, tenant resolution and any CDN cache key                                        |
 
 Use server logs to identify the actual exception before changing credentials or data. Redact passwords, access tokens and session secrets when sharing logs.
 

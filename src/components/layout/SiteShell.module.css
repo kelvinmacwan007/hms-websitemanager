@@ -117,7 +117,8 @@
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
-  .site
+  :global(html:not([data-site-motion="off"]))
+    .site
     :global(
       :is(.brand-button, .accent-button, [data-shimmer]):not(:disabled):not(
           [aria-disabled="true"]

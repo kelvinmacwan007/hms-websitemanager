@@ -21,6 +21,16 @@ try {
     .filter({ has: page.locator('input[name="checkIn"]') })
     .first();
   await form.waitFor();
+  // Wait for hydration before clicking SSR-rendered controls on a cold production page.
+  await page.waitForFunction(() => {
+    const button = document.querySelector('button[aria-haspopup="dialog"]');
+    return (
+      button &&
+      Object.keys(button).some(
+        (key) => key.startsWith("__reactProps") && typeof button[key]?.onClick === "function",
+      )
+    );
+  });
   for (const width of [1440, 1024, 768, 640, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });
     for (const label of ["Check-in", "Check-out"]) {

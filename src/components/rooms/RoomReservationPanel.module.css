@@ -70,24 +70,24 @@
   align-items: center;
   min-height: 22px;
   color: var(--color-text);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .dateRow .dateButton {
   grid-column: 1 / -1;
   width: 100%;
-  min-height: 44px;
+  min-height: var(--site-control-height, 52px);
   margin-top: 6px;
-  padding: 8px 12px;
+  padding: 12px var(--site-control-padding, 16px);
   border: 1px solid var(--color-border, #e7e5e2);
-  border-radius: 8px;
+  border-radius: var(--site-control-radius, 12px);
   background: var(--color-surface, #fff);
   box-shadow: none;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.4;
+  font-size: var(--site-control-font, 1rem);
+  font-weight: 400;
+  line-height: 1.5;
   transition:
     border-color 160ms ease,
     background 160ms ease;
@@ -101,10 +101,10 @@
 }
 .guestFields {
   --guest-columns: minmax(0, 1.85fr) minmax(0, 1fr);
-  --guest-control-padding: 8px 12px;
-  --guest-control-height: 44px;
-  --guest-control-radius: 8px;
-  --guest-control-font: 0.8125rem;
+  --guest-control-padding: 12px var(--site-control-padding, 16px);
+  --guest-control-height: var(--site-control-height, 52px);
+  --guest-control-radius: var(--site-control-radius, 12px);
+  --guest-control-font: var(--site-control-font, 1rem);
   --guest-label-color: var(--color-text);
   --guest-field-gap: 6px;
   padding-bottom: 18px;
@@ -126,15 +126,24 @@
   display: grid;
   gap: 8px;
   margin-bottom: 16px;
-  font-size: 1.125rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .rateSelect select {
   min-width: 0;
   width: 100%;
-  padding: 8px;
-  background: transparent;
+  min-height: var(--site-control-height, 52px);
+  padding: 12px var(--site-control-padding, 16px);
+  background: var(--color-surface, #fff);
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--site-control-radius, 12px);
+  color: var(--color-text);
+  font-size: var(--site-control-font, 1rem);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
 }
 .addOns {
   min-width: 0;
@@ -147,47 +156,71 @@
   float: left;
   width: 100%;
   padding: 0;
-  margin-bottom: 16px;
-  font-size: 1.125rem;
-  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 .addOns legend em {
-  font-family: Georgia, serif;
-  font-size: 1.125rem;
+  font-family: var(--font-hotel-heading), Georgia, serif;
+  color: var(--color-brand);
   font-weight: 400;
+}
+.addOnIntro {
+  clear: both;
+  margin: 0 0 16px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 .addOnList {
   clear: both;
   display: grid;
-  gap: 18px;
-  max-height: 235px;
+  gap: 6px;
+  max-height: 320px;
   overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--site-control-radius, 12px);
+  background: var(--color-surface, #fff);
   scrollbar-width: thin;
+  scrollbar-color: #a8a8a8 transparent;
   overscroll-behavior: contain;
 }
 .addOnRow {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  font-size: 1.125rem;
+  min-width: 0;
+  padding: 14px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.addOnRow[data-selected="true"] {
+  border-color: color-mix(in srgb, var(--color-brand) 65%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 5%, white);
 }
 .addOnLabel {
   display: flex;
   flex: 1;
-  align-items: flex-start;
-  gap: 10px;
-  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  min-width: 120px;
   cursor: pointer;
 }
-.serviceIcon {
-  flex-shrink: 0;
-  color: var(--color-brand);
+.addOnLabel > span:last-child {
+  min-width: 0;
 }
 .addOnLabel strong {
   display: block;
-  font-weight: 600;
-  line-height: 1.3;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 .addOnLabel small {
   display: -webkit-box;
@@ -196,23 +229,95 @@
   overflow: hidden;
   margin-top: 4px;
   color: var(--color-text-muted);
-  font-size: 1.125rem;
+  font-size: 0.875rem;
   line-height: 1.5;
 }
-.addOnPrice {
-  display: grid;
-  justify-items: end;
-  gap: 6px;
+.addOnRow .addOnLabel input:checked + span {
+  border-color: var(--color-brand);
+  background: var(--color-brand);
+  color: white;
 }
-.addOnPrice input {
-  width: 44px;
-  padding: 3px 4px;
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 4px;
+.addOnPrice {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.addOnPrice > strong {
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-brand) 5%, white);
+  color: var(--color-brand);
+  font-size: 1.125rem;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.addOnRow[data-selected="true"] .addOnPrice:has(.quantityControl) {
+  flex-basis: 100%;
+  justify-content: space-between;
+  padding-left: 36px;
+}
+.addOnRow[data-selected="true"] .addOnPrice > strong {
   background: transparent;
-  color: inherit;
+  padding-inline: 0;
+}
+.quantityControl {
+  display: flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-brand) 30%, transparent);
+  border-radius: 10px;
+  background: var(--color-surface, white);
+  overflow: hidden;
+}
+.quantityControl button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.quantityControl button:hover:not(:disabled) {
+  background: var(--color-brand-soft);
+}
+.quantityControl button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.quantityControl :is(button, input):focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: -3px;
+}
+.quantityControl input {
+  appearance: textfield;
+  width: 38px;
+  min-width: 0;
+  height: 26px;
+  padding: 0 2px;
+  border: 0;
+  border-inline: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
   font: inherit;
+  font-size: 1rem;
   text-align: center;
+}
+.quantityControl input::-webkit-inner-spin-button,
+.quantityControl input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .addOnRow {
+    transition: none;
+  }
 }
 .summary {
   border-top: 1px solid var(--color-border, #e7e5e2);

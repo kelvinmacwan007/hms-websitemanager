@@ -141,3 +141,61 @@ html[data-site-motion="off"] .website-body:not(:has(.wm-root)) :is(button, [role
 [data-website-appearance] .website-body:not(:has(.wm-root)) :is(h1, h2, h3) {
   letter-spacing: var(--website-heading-spacing, -0.015em);
 }
+
+/* Stop Lenis inertia for booking dialogs without changing sticky layout. The
+   popover hook blocks background wheel/touch scrolling and contains its own scroll. */
+html.lenis.lenis-stopped:has(dialog[data-booking-popover][open]) {
+  overflow: visible;
+}
+
+/* Field-like buttons share the same stationary interaction as text inputs. */
+.website-body:not(:has(.wm-root))
+  :is(input, select, textarea, button[aria-haspopup], [role="combobox"]):not(#checkoutWidget *):is(
+    :hover,
+    :active,
+    :focus,
+    :focus-visible
+  ) {
+  scale: none !important;
+  transform: none !important;
+}
+/* One contiguous focus indicator, without the global offset outline plus ring. */
+.website-body:not(:has(.wm-root))
+  :is(
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea,
+    button[aria-haspopup],
+    [role="combobox"]
+  ):not([data-control-inner]):not([data-control-group] *):not(#checkoutWidget *):is(
+    :focus,
+    :focus-visible
+  ) {
+  border-color: var(--color-brand) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px var(--color-brand) !important;
+}
+
+/* Composite fields draw focus on their outer surface only. */
+.website-body:not(:has(.wm-root))
+  [data-control-group]
+  :is(input, select, button):is(:focus, :focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+@media print {
+  body:has([data-payment-summary="true"]) {
+    background: white;
+  }
+  body:has([data-payment-summary="true"]) :is(header, footer, nav) {
+    display: none !important;
+  }
+  body:has([data-payment-summary="true"]) * {
+    visibility: hidden;
+  }
+  body:has([data-payment-summary="true"]) [data-payment-summary="true"],
+  body:has([data-payment-summary="true"]) [data-payment-summary="true"] * {
+    visibility: visible;
+  }
+}

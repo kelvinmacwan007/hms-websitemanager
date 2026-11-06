@@ -37,14 +37,13 @@ export function CheckoutPaymentWidget({
     <section className={websiteClassName("surface-panel p-6 md:p-8")}>
       <h2 className={websiteClassName("text-2xl font-semibold")}>Secure payment</h2>
       <p className={websiteClassName("mt-3 mb-6 text-sm leading-6 text-muted")}>
-        This is a UAT test transaction; it does not create a hotel reservation.
+        Review the amount and your details before continuing.
       </p>
       {guest ? (
         <>
           {!hasGuest && (
             <p role="status" className={websiteClassName("mb-5 text-sm leading-6 text-muted")}>
-              Enter your name and email in the secure checkout below to test payment for your
-              selected stay.
+              Enter your name and email in the secure checkout below for your selected stay.
             </p>
           )}
           <P98CheckoutWidget

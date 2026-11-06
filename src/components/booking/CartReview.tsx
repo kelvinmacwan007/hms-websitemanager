@@ -5,6 +5,7 @@ import { Heading } from "@/components/common/Heading";
 import { websiteClassName } from "@/lib/ui/websiteStyles";
 
 import { Checkbox } from "@/components/common/Checkbox";
+import { QuantityStepper } from "@/components/common/QuantityStepper";
 
 import Link from "next/link";
 import {
@@ -17,12 +18,7 @@ import {
   BedDouble,
   Pencil,
   Trash2,
-  Minus,
-  Plus,
   Info,
-  Gift,
-  PawPrint,
-  Clock,
 } from "lucide-react";
 import { BookingProgress } from "./BookingProgress";
 import { RoomCard } from "@/components/rooms/RoomCard";
@@ -150,9 +146,7 @@ export function CartReview({
         <div className={styles.layout}>
           <div className={styles.main}>
             <header className={styles.heading}>
-              <p className={websiteClassName("eyebrow")}>
-                {isDemo ? "Demo booking" : "Your reservation"}
-              </p>
+              <p className={websiteClassName("eyebrow")}>Your reservation</p>
               <Heading as="h1">{step === 1 ? "Your room cart" : "Add extras to your stay"}</Heading>
               <p>
                 {step === 1
@@ -251,21 +245,12 @@ export function CartReview({
             )}
             {step === 2 && (eligibleAddOns.length > 0 || eligibleExtras.length === 0) && (
               <section className={styles.card} aria-label="Extras and services">
-                <h2>
-                  <Gift size={24} /> Extras &amp; services
-                </h2>
+                <h2>Extras &amp; services</h2>
                 {eligibleAddOns.length > 0 ? (
                   <div className={styles.serviceList}>
                     {eligibleAddOns.map((item) => {
                       const quantity =
                         requests.find((request) => request.item.id === item.id)?.quantity || 0;
-                      const Icon = /pet/i.test(item.name)
-                        ? PawPrint
-                        : /bed/i.test(item.name)
-                          ? BedDouble
-                          : /check/i.test(item.name)
-                            ? Clock
-                            : Gift;
                       return (
                         <div className={styles.service} key={item.id} data-selected={quantity > 0}>
                           <Checkbox
@@ -273,39 +258,23 @@ export function CartReview({
                             checked={quantity > 0}
                             onChange={(event) => changeService(item, event.target.checked ? 1 : 0)}
                           />
-                          <span className={styles.serviceIcon}>
-                            <Icon size={24} aria-hidden="true" />
-                          </span>
                           <div className={styles.serviceCopy}>
                             <strong>{item.name}</strong>
-                            <p>{item.description}</p>
+                            {item.description && <p>{item.description}</p>}
                             <small>Hotel confirmation required</small>
                           </div>
-                          <div className={styles.serviceControls}>
+                          <div className={styles.servicePrice}>
                             <strong>{formatMoney(item.price)}</strong>
                             <small>Listed price</small>
-                            <div>
-                              <button
-                                type="button"
-                                aria-label={`Decrease ${item.name}`}
-                                disabled={!quantity}
-                                onClick={() => changeService(item, quantity - 1)}
-                              >
-                                <Minus size={16} />
-                              </button>
-                              <output aria-label={`${item.name} quantity`} aria-live="polite">
-                                {quantity}
-                              </output>
-                              <button
-                                type="button"
-                                aria-label={`Increase ${item.name}`}
-                                disabled={quantity >= 99}
-                                onClick={() => changeService(item, quantity + 1)}
-                              >
-                                <Plus size={16} />
-                              </button>
-                            </div>
                           </div>
+                          <QuantityStepper
+                            className={styles.serviceControls}
+                            value={quantity}
+                            label={`${item.name} quantity`}
+                            decreaseLabel={`Decrease ${item.name}`}
+                            increaseLabel={`Increase ${item.name}`}
+                            onChange={(value) => changeService(item, value)}
+                          />
                         </div>
                       );
                     })}
@@ -326,24 +295,26 @@ export function CartReview({
             )}
             {step === 2 && eligibleExtras.length > 0 && (
               <section className={styles.card}>
-                <h2>
-                  <Gift size={24} /> Optional extras
-                </h2>
+                <h2>Optional extras</h2>
                 <div className={styles.extraList}>
                   {eligibleExtras.map((extra) => (
-                    <label key={extra.id}>
+                    <label
+                      key={extra.id}
+                      className={styles.service}
+                      data-selected={selectedIds.has(extra.id)}
+                    >
                       <Checkbox
                         checked={selectedIds.has(extra.id)}
                         onChange={(event) => toggleExtra(extra.id, event.target.checked)}
                       />
-                      <span>
+                      <span className={styles.serviceCopy}>
                         <strong>{extra.name}</strong>
                         <small>{extra.description}</small>
                       </span>
-                      <strong>
-                        {formatMoney(extra.price)}
+                      <span className={styles.servicePrice}>
+                        <strong>{formatMoney(extra.price)}</strong>
                         <small>{extra.charge === "per-night" ? "per night" : "per stay"}</small>
-                      </strong>
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -418,10 +389,7 @@ export function CartReview({
               </>
             )}
             <p className={styles.notice}>
-              <Info size={17} />{" "}
-              {isDemo
-                ? "Demo only. No rooms are held and no payment is collected."
-                : "Availability and final prices are rechecked before confirmation."}
+              <Info size={17} /> Availability and final prices are rechecked before confirmation.
             </p>
           </aside>
         </div>

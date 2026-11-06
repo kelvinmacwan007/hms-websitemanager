@@ -2,7 +2,7 @@ import { websiteClassName } from "@/lib/ui/websiteStyles";
 import { pageEnabled } from "@/lib/website/pages";
 import { Header } from "@/components/navigation/Header";
 import { Footer } from "@/components/layout/Footer";
-import { isMockMode } from "@/lib/api/mode";
+import { isDemoPaymentMode } from "@/lib/payment/demoMode";
 import type { Hotel } from "@/types/hotel";
 import { BookingSettingsProvider } from "@/components/booking/BookingSettingsContext";
 import { propertyDate } from "@/lib/booking/settings";
@@ -28,13 +28,16 @@ export function SiteShell({
       today={propertyDate(hotel.timeZone)}
     >
       <div className={`${styles.site} hotel-site`}>
-        {isMockMode() ? (
+        {isDemoPaymentMode() ? (
           <div
+            data-demo-banner
+            role="note"
             className={websiteClassName(
               "bg-brand-dark px-4 py-2 text-center text-xs font-semibold text-white",
             )}
           >
-            Demo website: sample content and rates. Reservations are not enabled.
+            Demo website - bookings and payments are for demonstration only. No rooms are reserved.
+            Use payment-provider test details only.
           </div>
         ) : null}
         <a href="#main-content" className={websiteClassName("skip-link")}>

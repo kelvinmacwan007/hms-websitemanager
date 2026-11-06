@@ -1,5 +1,10 @@
 "use client";
 
+import { PhoneInput } from "./PhoneInput";
+import { GuestInput } from "./GuestInput";
+import { GuestSelect } from "./GuestSelect";
+import { GuestLocationFields } from "./GuestLocationFields";
+import { validateGuestForm } from "@/lib/booking/guestForm";
 import { BookingStaySummary } from "./BookingStaySummary";
 import { Heading } from "@/components/common/Heading";
 
@@ -67,6 +72,8 @@ export function DemoCheckout({
   paymentHref,
   settings = DEFAULT_BOOKING_SETTINGS,
 }: Props) {
+  const [countryCode, setCountryCode] = useState("");
+  const [formError, setFormError] = useState("");
   const [guest, setGuest] = useState<GuestDetails | null>(null);
   const [reviewed, setReviewed] = useState(false);
   const [payment, setPayment] = useState<{ amount: number; currency: string } | null>(null);
@@ -104,6 +111,12 @@ export function DemoCheckout({
 
   function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setFormError("");
+    if (event.currentTarget.querySelector('[data-location-pending="true"]')) {
+      setFormError("Wait for location choices to load, or retry if loading failed.");
+      return;
+    }
+    if (!validateGuestForm(event.currentTarget, countryCode)) return;
     const form = new FormData(event.currentTarget);
     setGuest({
       prefix: String(form.get("prefix") ?? ""),
@@ -167,15 +180,14 @@ export function DemoCheckout({
           )}
         >
           <div>
-            <p className={websiteClassName("eyebrow")}>Demo checkout</p>
+            <p className={websiteClassName("eyebrow")}>Your reservation</p>
             <Heading as="h1" className={websiteClassName("mt-3 font-display text-4xl md:text-5xl")}>
               {payment ? "Payment" : "Guest details"}
             </Heading>
           </div>
           <p className={websiteClassName("max-w-md text-sm leading-6 text-muted")}>
-            Review your selected stay at {hotelName}. Continue to payment to test checkout using
-            your stay total. Guest details stay in this browser tab; no hotel reservation is
-            created.
+            Review your selected stay at {hotelName}, enter your guest details, and continue to
+            payment.
           </p>
         </div>
 
@@ -194,7 +206,7 @@ export function DemoCheckout({
                   Secure payment
                 </Heading>
                 <p className={websiteClassName("mt-3 mb-6 text-sm leading-6 text-muted")}>
-                  Your stay was rechecked. Test payment amount:{" "}
+                  Your stay was rechecked. Payment amount:{" "}
                   {formatMoney({ amount: payment.amount, currency: payment.currency })}.
                   {payment.amount !== estimate &&
                     " The price changed since you opened checkout; review the updated total before paying."}
@@ -222,7 +234,7 @@ export function DemoCheckout({
                   <p className={websiteClassName("eyebrow")}>Details reviewed</p>
                 </div>
                 <Heading as="h2" className={websiteClassName("mt-4 font-display text-3xl")}>
-                  Your sample details are ready.
+                  Your details are ready.
                 </Heading>
                 <dl
                   className={websiteClassName(
@@ -265,8 +277,8 @@ export function DemoCheckout({
                     "mt-6 border-l-4 border-brand bg-brand-soft p-4 text-sm leading-6",
                   )}
                 >
-                  This is only a demo review. No reservation, payment, or message was sent to the
-                  hotel.
+                  Review the details below before continuing. Your reservation is confirmed only
+                  after the hotel provides a booking reference.
                 </p>
                 <div className={websiteClassName("mt-7 flex flex-wrap gap-3")}>
                   <button
@@ -315,6 +327,11 @@ export function DemoCheckout({
               </section>
             ) : (
               <form onSubmit={review} className={websiteClassName("space-y-10")}>
+                {formError && (
+                  <p role="alert" className="text-red-700">
+                    {formError}
+                  </p>
+                )}
                 <section className={websiteClassName("border-t border-line pt-7")}>
                   <div className={websiteClassName("flex items-baseline justify-between gap-4")}>
                     <Heading as="h2" className={websiteClassName("font-display text-2xl")}>
@@ -323,37 +340,33 @@ export function DemoCheckout({
                     <span className={websiteClassName("text-xs text-muted")}>* Required</span>
                   </div>
                   <div className={websiteClassName("mt-6 grid gap-4 sm:grid-cols-12")}>
-                    <label
+                    <div
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-3",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-3",
                       )}
                     >
                       Prefix *
-                      <select
-                        className={websiteClassName(inputClass)}
+                      <GuestSelect
+                        label="Prefix"
                         name="prefix"
                         autoComplete="honorific-prefix"
+                        className={websiteClassName(inputClass)}
                         defaultValue={guest?.prefix ?? ""}
                         required
-                      >
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        <option value="Mr">Mr</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Mx">Mx</option>
-                        <option value="Dr">Dr</option>
-                        <option value="Prefer not to say">Prefer not to say</option>
-                      </select>
-                    </label>
+                        placeholder="Select"
+                        searchPlaceholder="Search prefix..."
+                        options={["Mr", "Ms", "Mrs", "Mx", "Dr", "Prefer not to say"].map(
+                          (name) => ({ code: name, name }),
+                        )}
+                      />
+                    </div>
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-6",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-6",
                       )}
                     >
                       First name *
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="firstName"
                         autoComplete="given-name"
@@ -364,11 +377,11 @@ export function DemoCheckout({
                     </label>
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-3",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-3",
                       )}
                     >
                       Middle initial
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="middleInitial"
                         autoComplete="additional-name"
@@ -378,11 +391,11 @@ export function DemoCheckout({
                     </label>
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-6",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-6",
                       )}
                     >
                       Last name *
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="lastName"
                         autoComplete="family-name"
@@ -393,28 +406,23 @@ export function DemoCheckout({
                     </label>
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-6",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-6",
                       )}
                     >
                       Phone {settings.requirePhone ? "*" : "(optional)"}
-                      <input
-                        className={websiteClassName(inputClass)}
+                      <PhoneInput
                         name="phone"
-                        type="tel"
-                        autoComplete="tel"
-                        inputMode="tel"
                         defaultValue={guest?.phone}
                         required={settings.requirePhone}
-                        maxLength={32}
                       />
                     </label>
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-12",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-12",
                       )}
                     >
                       Email address *
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="email"
                         type="email"
@@ -424,7 +432,7 @@ export function DemoCheckout({
                         maxLength={160}
                       />
                       <span className={websiteClassName("text-xs font-normal text-muted")}>
-                        Your confirmation email would be sent here in a live booking.
+                        Use the email address where you would like to receive booking updates.
                       </span>
                     </label>
                   </div>
@@ -435,42 +443,20 @@ export function DemoCheckout({
                     Address
                   </Heading>
                   <div className={websiteClassName("mt-6 grid gap-4 sm:grid-cols-12")}>
+                    <GuestLocationFields
+                      required={settings.requireAddress}
+                      initial={guest ?? undefined}
+                      inputClass={inputClass}
+                      onCountryChange={setCountryCode}
+                    />
+
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-6",
-                      )}
-                    >
-                      Country or region {settings.requireAddress ? "*" : "(optional)"}
-                      <input
-                        className={websiteClassName(inputClass)}
-                        name="country"
-                        autoComplete="country-name"
-                        defaultValue={guest?.country}
-                        required={settings.requireAddress}
-                        maxLength={80}
-                      />
-                    </label>
-                    <label
-                      className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-6",
-                      )}
-                    >
-                      State or province
-                      <input
-                        className={websiteClassName(inputClass)}
-                        name="region"
-                        autoComplete="address-level1"
-                        defaultValue={guest?.region}
-                        maxLength={80}
-                      />
-                    </label>
-                    <label
-                      className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-12",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-12",
                       )}
                     >
                       Address 1 {settings.requireAddress ? "*" : "(optional)"}
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="address"
                         autoComplete="address-line1"
@@ -479,30 +465,17 @@ export function DemoCheckout({
                         maxLength={160}
                       />
                     </label>
+
                     <label
                       className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-7",
-                      )}
-                    >
-                      City {settings.requireAddress ? "*" : "(optional)"}
-                      <input
-                        className={websiteClassName(inputClass)}
-                        name="city"
-                        autoComplete="address-level2"
-                        defaultValue={guest?.city}
-                        required={settings.requireAddress}
-                        maxLength={80}
-                      />
-                    </label>
-                    <label
-                      className={websiteClassName(
-                        "grid min-w-0 gap-2 text-sm font-semibold sm:col-span-5",
+                        "grid min-w-0 content-start gap-2 text-sm font-semibold sm:col-span-5",
                       )}
                     >
                       Zip or postal code {settings.requireAddress ? "*" : "(optional)"}
-                      <input
+                      <GuestInput
                         className={websiteClassName(inputClass)}
                         name="postalCode"
+                        countryCode={countryCode}
                         autoComplete="postal-code"
                         defaultValue={guest?.postalCode}
                         required={settings.requireAddress}
@@ -550,8 +523,8 @@ export function DemoCheckout({
                     )}
                   >
                     {widgetConfig
-                      ? "Secure test checkout opens in the next step here. Use P98Pay UAT test card details only. No hotel reservation will be created."
-                      : "The next screen simulates payment without collecting card details. A real checkout requires the hotel's verified booking and payment integrations."}
+                      ? "Secure checkout opens in the next step. Review your details before continuing."
+                      : "Review your payment options in the next step. Confirmation requires a booking reference from the hotel."}
                   </p>
                 </section>
 
@@ -603,7 +576,8 @@ export function DemoCheckout({
                     <label className={websiteClassName("flex cursor-pointer items-start gap-3")}>
                       <Checkbox required className={websiteClassName("mt-0.5")} />
                       <span>
-                        I understand this is a sample checkout and does not make a reservation.
+                        I understand my reservation is confirmed only after I receive a booking
+                        reference.
                       </span>
                     </label>
                   </div>
@@ -615,11 +589,11 @@ export function DemoCheckout({
                   )}
                 >
                   <p className={websiteClassName("text-sm text-muted")}>
-                    No reservation will be made.
+                    Review your details before continuing.
                   </p>
                   <button type="submit" className={websiteClassName("brand-button")}>
                     <span className={websiteClassName("button-text-container")}>
-                      <span className={websiteClassName("button-text")}>Review sample details</span>
+                      <span className={websiteClassName("button-text")}>Review details</span>
                     </span>
                   </button>
                 </div>

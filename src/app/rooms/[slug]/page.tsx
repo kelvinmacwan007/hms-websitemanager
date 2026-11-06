@@ -38,7 +38,7 @@ export default async function RoomDetailsPage({ params }: { params: Promise<{ sl
       <main className={websiteClassName("container py-12 md:py-16")}>
         <div
           className={websiteClassName(
-            "grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_390px] xl:gap-14",
+            "grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_420px] xl:grid-cols-[minmax(0,1fr)_480px] 2xl:grid-cols-[minmax(0,1fr)_520px] xl:gap-14",
           )}
         >
           <div className={websiteClassName("min-w-0")}>
@@ -79,7 +79,11 @@ export default async function RoomDetailsPage({ params }: { params: Promise<{ sl
                 {room.amenities.map((amenity) => (
                   <div className={websiteClassName("flex items-center gap-4")} key={amenity.id}>
                     <span className={websiteClassName("text-brand")}>
-                      <AmenityIcon iconUrl={amenity.iconUrl} iconKey={amenity.iconKey} />
+                      <AmenityIcon
+                        iconUrl={amenity.iconUrl}
+                        iconKey={amenity.iconKey}
+                        label={amenity.label}
+                      />
                     </span>
                     <span>
                       <strong className={websiteClassName("block")}>{amenity.label}</strong>
@@ -112,6 +116,7 @@ export default async function RoomDetailsPage({ params }: { params: Promise<{ sl
             room={displayed.rooms.find((candidate) => candidate.id === room.id) ?? room}
             extras={hotel.extras ?? []}
             addOns={hotel.addOns ?? []}
+            addOnsUnavailable={hotel.addOnsUnavailable}
             today={today}
           />
         </div>

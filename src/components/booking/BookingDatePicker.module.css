@@ -19,6 +19,8 @@
   outline-offset: 5px;
 }
 .dialog {
+  box-sizing: border-box;
+  overscroll-behavior: contain;
   position: fixed;
   inset: auto;
   width: min(660px, calc(100vw - 32px));
@@ -40,6 +42,10 @@
   animation: enter 180ms ease-out;
 }
 .title {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--color-surface, white);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -186,6 +192,10 @@
   color: white;
 }
 .footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: var(--color-surface, white);
   display: flex;
   align-items: center;
   justify-content: space-between;

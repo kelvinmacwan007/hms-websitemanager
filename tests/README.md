@@ -67,3 +67,8 @@ under `artifacts/manager-responsive`. Edits stay in the browser; it does not sav
 or publish website changes. It signs out when the checks finish.
 
 `booking-flow.browser.mjs` checks the five-step flow, preserves selected extras through guest checkout, verifies payment and confirmation guards, and checks responsive layouts at five widths. It uses mock hotel data on QA_URL (default port 3001) and never submits a payment. `booking-steps.test.mjs` checks step links preserve booking parameters. See docs/booking-flow-integration.md for HMS and P98Pay boundaries.
+
+`phone-input.browser.mjs` checks the default US calling code, 10-digit US cap,
+all 245 local flag assets, country search and wheel scrolling, UK/India masks,
+international paste, validation, mobile bounds and hydration errors. Use an
+isolated mock production server through `QA_URL`; it does not submit a booking.

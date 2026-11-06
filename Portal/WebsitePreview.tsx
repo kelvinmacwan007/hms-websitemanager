@@ -73,7 +73,7 @@ export function WebsitePreview({
           .filter((item) => item.enabled !== false)
           .map((item) => (
             <article key={item.id}>
-              <AmenityIcon iconUrl={item.iconUrl} iconKey={item.iconKey} />
+              <AmenityIcon iconUrl={item.iconUrl} iconKey={item.iconKey} label={item.label} />
               <strong>{item.label}</strong>
               <p>{item.description}</p>
             </article>

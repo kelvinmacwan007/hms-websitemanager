@@ -251,6 +251,7 @@ export function BookingDatePicker({
       {open &&
         createPortal(
           <dialog
+            data-booking-popover
             ref={dialog}
             id={id}
             className={styles.dialog}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useState } from "react";
+import { QuantityStepper } from "@/components/common/QuantityStepper";
 import { createPortal } from "react-dom";
-import { BedDouble, ChevronDown, Minus, Plus, Users, X } from "lucide-react";
+import { BedDouble, ChevronDown, Users, X } from "lucide-react";
 import type { AvailabilitySearch } from "@/types/hotel";
 import { guestParty } from "@/lib/booking/party";
 import styles from "./GuestPicker.module.css";
@@ -128,6 +129,7 @@ export function GuestPicker({
       {open &&
         createPortal(
           <dialog
+            data-booking-popover
             ref={dialog}
             id={id}
             aria-label={open === "rooms" ? "Rooms" : "Guests"}
@@ -169,29 +171,14 @@ export function GuestPicker({
                       {hint}
                     </span>
                   </div>
-                  <div className={styles.counter}>
-                    <button
-                      type="button"
-                      aria-label={`Decrease ${label.toLowerCase()}`}
-                      aria-describedby={`${id}-${key}-hint`}
-                      disabled={party[key] <= min}
-                      onClick={() => change(key, -1)}
-                    >
-                      <Minus size={18} />
-                    </button>
-                    <output aria-label={label} aria-live="polite">
-                      {party[key]}
-                    </output>
-                    <button
-                      type="button"
-                      aria-label={`Increase ${label.toLowerCase()}`}
-                      aria-describedby={`${id}-${key}-hint`}
-                      disabled={party[key] >= max}
-                      onClick={() => change(key, 1)}
-                    >
-                      <Plus size={18} />
-                    </button>
-                  </div>
+                  <QuantityStepper
+                    value={party[key]}
+                    min={min}
+                    max={max}
+                    label={label}
+                    describedBy={`${id}-${key}-hint`}
+                    onChange={(value) => change(key, value - party[key])}
+                  />
                 </div>
               ))}
             <p className={styles.note}>

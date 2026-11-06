@@ -136,7 +136,11 @@ export function HomeTemplate({
                           "home-experience-icon [&_svg]:!h-14 [&_svg]:!w-14 [&_svg]:!stroke-[1.25]",
                         )}
                       >
-                        <AmenityIcon iconUrl={amenity.iconUrl} iconKey={amenity.iconKey} />
+                        <AmenityIcon
+                          iconUrl={amenity.iconUrl}
+                          iconKey={amenity.iconKey}
+                          label={amenity.label}
+                        />
                         <span>0{index + 1}</span>
                       </div>
                       <Heading as="h3" className="!text-[1.75rem] !leading-9 md:!text-3xl">

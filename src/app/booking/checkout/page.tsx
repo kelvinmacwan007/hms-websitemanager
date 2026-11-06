@@ -30,7 +30,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
       <>
         <main className={websiteClassName("container py-20")}>
           <Heading as="h1" className={websiteClassName("section-title")}>
-            This sample stay is no longer available.
+            This stay is no longer available.
           </Heading>
           <Link href="/booking" className={websiteClassName("brand-button mt-8")}>
             <span className={websiteClassName("button-text-container")}>

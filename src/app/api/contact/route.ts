@@ -30,7 +30,8 @@ export async function POST(request: Request) {
       return Response.json(
         {
           delivered: false,
-          message: "Details checked. Enquiry not sent: this demo has no email delivery provider.",
+          message:
+            "Your enquiry details have been checked. Delivery is unavailable; please contact the hotel directly.",
         },
         { headers: { "Cache-Control": "no-store" } },
       );

@@ -67,7 +67,7 @@ export function DemoPayment({
       if (!response.ok)
         throw new Error(
           response.status === 409
-            ? "This sample stay changed. Please search again."
+            ? "Your selected stay changed. Please search again."
             : "The payment preview could not be completed.",
         );
       const payment = (await response.json()) as PaymentSummary;
@@ -99,16 +99,14 @@ export function DemoPayment({
           <ArrowLeft size={18} /> Back to guest details
         </Link>
         <div className={websiteClassName("mt-5 border-b border-line pb-7")}>
-          <p className={websiteClassName("eyebrow")}>
-            {widgetConfig ? "UAT checkout" : "Demo checkout"}
-          </p>
+          <p className={websiteClassName("eyebrow")}>Your reservation</p>
           <Heading as="h1" className={websiteClassName("mt-3 font-display text-4xl md:text-5xl")}>
-            {widgetConfig ? "Payment" : "Payment preview"}
+            Payment
           </Heading>
           <p className={websiteClassName("mt-4 max-w-2xl text-sm leading-6 text-muted")}>
             {widgetConfig
-              ? "Your selected rooms, nights and extras determine the test payment amount below. Complete checkout using P98Pay UAT test details only; no hotel reservation will be created."
-              : "See how approval, decline, and pending states work. No card information is requested, no money is charged, and no reservation is created."}
+              ? "Review the amount for your selected rooms, nights, and extras before continuing."
+              : "Review the payment options and amount for your selected stay."}
           </p>
         </div>
 
@@ -145,21 +143,21 @@ export function DemoPayment({
                   )}
                 </div>
                 <p className={websiteClassName("eyebrow mt-5")}>
-                  Sample transaction / {result.status}
+                  Payment response / {result.status}
                 </p>
                 <Heading as="h2" className={websiteClassName("mt-2 font-display text-3xl")}>
                   {result.status === "approved"
-                    ? "Approval preview complete"
+                    ? "Payment response received"
                     : result.status === "pending"
-                      ? "Pending payment preview"
-                      : "Sample payment declined"}
+                      ? "Payment pending"
+                      : "Payment declined"}
                 </Heading>
                 <p className={websiteClassName("mt-4 leading-7 text-muted")}>
                   {result.status === "approved"
-                    ? "This preview shows an approved sample payment. No money was charged and no reservation was created."
+                    ? "A payment response was received. Your reservation remains unconfirmed until the hotel provides a booking reference."
                     : result.status === "pending"
-                      ? "This preview shows a pending payment. A reservation would remain unconfirmed until payment is verified."
-                      : "This sample attempt was declined. Your selected stay is unchanged; you can retry the preview."}
+                      ? "Payment verification is pending. Your reservation remains unconfirmed."
+                      : "Payment was declined. Your selected stay is unchanged; please try again."}
                 </p>
                 <dl
                   className={websiteClassName(
@@ -167,7 +165,7 @@ export function DemoPayment({
                   )}
                 >
                   <div>
-                    <dt className={websiteClassName("text-muted")}>Sample amount</dt>
+                    <dt className={websiteClassName("text-muted")}>Amount</dt>
                     <dd className={websiteClassName("mt-1 font-semibold")}>
                       {money(result.amount)}
                     </dd>
@@ -182,15 +180,14 @@ export function DemoPayment({
                     "mt-6 border-l-4 border-brand bg-brand-soft p-4 text-sm leading-6",
                   )}
                 >
-                  This is a demonstration only. No payment was processed, no rooms were reserved,
-                  and there is no confirmation number.
+                  A reservation is confirmed only when the hotel provides a booking reference.
                 </p>
                 <button
                   type="button"
                   className={websiteClassName("ghost-button mt-7 gap-2")}
                   onClick={() => setResult(null)}
                 >
-                  <RotateCcw size={16} /> Try another outcome
+                  <RotateCcw size={16} /> Try again
                 </button>
               </section>
             ) : (
@@ -208,10 +205,10 @@ export function DemoPayment({
                 >
                   <CreditCard size={25} className={websiteClassName("mt-1 shrink-0 text-brand")} />
                   <div>
-                    <p className={websiteClassName("font-semibold")}>Card payment preview</p>
+                    <p className={websiteClassName("font-semibold")}>Card payment</p>
                     <p className={websiteClassName("mt-2 text-sm leading-6 text-muted")}>
-                      A live checkout will open the hotel&apos;s approved hosted payment page. This
-                      demo never collects card number, expiry, or security code.
+                      Payment details are entered only through the hotel&apos;s secure payment
+                      provider.
                     </p>
                   </div>
                 </div>
@@ -223,10 +220,9 @@ export function DemoPayment({
                   <div className={websiteClassName("flex gap-3")}>
                     <ShieldCheck size={22} className={websiteClassName("shrink-0 text-brand")} />
                     <div>
-                      <p className={websiteClassName("font-semibold")}>Sample estimate checked</p>
+                      <p className={websiteClassName("font-semibold")}>Stay estimate checked</p>
                       <p className={websiteClassName("mt-2 text-sm leading-6 text-muted")}>
-                        The sample selection and amount are checked again when you preview an
-                        outcome.
+                        Your selection and amount are checked again before confirmation.
                       </p>
                     </div>
                   </div>
@@ -249,7 +245,7 @@ export function DemoPayment({
                   )}
                 >
                   The amount shown is an estimate before taxes or local charges, not a payable
-                  total. Choose a sample result to test the flow.
+                  total. Final charges require hotel confirmation.
                 </div>
                 {error ? (
                   <p
@@ -268,7 +264,7 @@ export function DemoPayment({
                   >
                     <span className={websiteClassName("button-text-container")}>
                       <span className={websiteClassName("button-text")}>
-                        {busy ? "Checking stay..." : "Preview approval"}
+                        {busy ? "Checking stay..." : "Continue"}
                       </span>
                     </span>
                   </button>
@@ -278,7 +274,7 @@ export function DemoPayment({
                     disabled={busy}
                     onClick={() => preview("declined")}
                   >
-                    Preview decline
+                    Payment declined
                   </button>
                   <button
                     type="button"
@@ -286,7 +282,7 @@ export function DemoPayment({
                     disabled={busy}
                     onClick={() => preview("pending")}
                   >
-                    Preview pending
+                    Payment pending
                   </button>
                 </div>
               </section>

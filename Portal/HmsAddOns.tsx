@@ -20,8 +20,15 @@ export function HmsAddOns() {
           method: "POST",
           signal: controller.signal,
         });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Could not fetch add-ons.");
+        const result = await response.json().catch(() => null);
+        if (!response.ok)
+          throw new Error(
+            response.status === 401 || response.status === 403
+              ? "Please sign in to the website manager again, then sync add-ons."
+              : result?.error || "Could not fetch add-ons. Please try syncing again.",
+          );
+        if (!result || !Array.isArray(result.items))
+          throw new Error("No valid add-ons response was received. Please try syncing again.");
         setItems(result.items);
       } catch (e) {
         if (!controller.signal.aborted)

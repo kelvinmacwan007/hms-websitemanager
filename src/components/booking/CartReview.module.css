@@ -25,95 +25,82 @@
 }
 .serviceList {
   display: grid;
-  gap: 16px;
+  gap: 10px;
   margin-top: 20px;
 }
 .service {
   display: grid;
-  grid-template-columns: auto 48px minmax(0, 1fr) auto;
+  grid-template-columns: 24px minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 16px;
-  padding: 18px;
+  gap: 18px;
+  min-width: 0;
+  padding: 16px 18px;
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--site-control-radius, 12px);
+  background: var(--color-surface, white);
+  box-shadow: 0 2px 6px rgb(25 30 28 / 3%);
+  transition:
+    background-color var(--site-control-duration, 180ms) ease,
+    border-color var(--site-control-duration, 180ms) ease;
 }
 .service[data-selected="true"] {
-  border-color: var(--color-brand);
-  background: var(--color-brand-soft);
+  border-color: color-mix(in srgb, var(--color-brand) 60%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 5%, var(--color-surface, white));
 }
-.serviceIcon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: var(--color-background);
-  color: var(--color-brand);
+.service input:checked + span {
+  border-color: var(--color-brand);
+  background: var(--color-brand);
+  color: white;
 }
 .serviceCopy {
   min-width: 0;
 }
 .serviceCopy strong {
+  display: block;
   font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 .serviceCopy p {
-  margin: 6px 0;
+  margin: 4px 0;
   color: var(--color-text-muted);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 .serviceCopy small,
-.serviceControls > small {
+.servicePrice small {
   display: block;
+  margin-top: 3px;
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
 }
-.serviceControls {
+.servicePrice {
+  min-width: 70px;
   text-align: right;
 }
-.serviceControls > strong {
+.servicePrice strong {
+  display: block;
   color: var(--color-brand);
+  font-size: 1.125rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
-.serviceControls > div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-.serviceControls button {
-  display: grid;
-  place-items: center;
-  width: var(--site-control-icon);
-  height: var(--site-control-icon);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-surface);
-  color: var(--color-brand);
-}
-.serviceControls button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.serviceControls output {
-  min-width: 24px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .service {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: 24px minmax(0, 1fr) auto;
     gap: 12px;
-    padding: 14px;
-  }
-  .serviceIcon {
-    display: none;
+    padding: 14px 12px;
   }
   .serviceControls {
-    grid-column: 2;
-    text-align: left;
+    grid-column: 2 / -1;
+    justify-self: end;
   }
-  .serviceControls > div {
-    justify-content: flex-start;
+}
+@media (prefers-reduced-motion: reduce) {
+  .service {
+    transition: none;
   }
 }
 .selectedRooms {
@@ -416,15 +403,6 @@
   display: grid;
   gap: 16px;
   margin-top: 18px;
-}
-.extraList > label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: 1.125rem;
-}
-.extraList > label > span:nth-child(2) {
-  flex: 1;
 }
 .extraList small {
   display: block;

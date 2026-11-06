@@ -39,14 +39,12 @@ try {
   await page.locator("input[name=firstName]").fill("Test");
   await page.locator("input[name=lastName]").fill("Guest");
   await page.locator("input[name=email]").fill("test@example.com");
-  await page.locator("input[name=phone]").fill("3055550100");
+  await page.locator("[data-phone-display]").fill("+1 305 555 0100");
   await page.locator("select[name=prefix]").selectOption("Mr");
   for (const checkbox of await page.locator("input[type=checkbox][required]").all())
     await checkbox.check();
-  await page.getByRole("button", { name: "Review sample details", exact: true }).click();
-  await page
-    .getByRole("heading", { name: "Your sample details are ready.", exact: true })
-    .waitFor();
+  await page.getByRole("button", { name: "Review details", exact: true }).click();
+  await page.getByRole("heading", { name: "Your details are ready.", exact: true }).waitFor();
   const checkoutUrl = page.url();
   await page.getByRole("button", { name: "Continue to payment", exact: true }).click();
   await page.getByRole("region", { name: "Secure payment", exact: true }).waitFor();
@@ -72,16 +70,14 @@ try {
   );
   assert.equal(fields.find((field) => field.name === "amount").readOnly, true);
   await page.getByRole("link", { name: "Back to guest details", exact: true }).click();
-  await page
-    .getByRole("heading", { name: "Your sample details are ready.", exact: true })
-    .waitFor();
+  await page.getByRole("heading", { name: "Your details are ready.", exact: true }).waitFor();
   await page.getByRole("button", { name: "Edit details", exact: true }).click();
   assert.equal(await page.locator("input[name=firstName]").inputValue(), "Test");
   assert.equal(await page.locator("input[name=email]").inputValue(), "test@example.com");
   await page.locator("input[name=firstName]").fill("Updated");
   for (const checkbox of await page.locator("input[type=checkbox][required]").all())
     await checkbox.check();
-  await page.getByRole("button", { name: "Review sample details", exact: true }).click();
+  await page.getByRole("button", { name: "Review details", exact: true }).click();
   await page.getByRole("button", { name: "Continue to payment", exact: true }).click();
   await pay.waitFor({ timeout: 45000 });
   assert.equal(
@@ -118,8 +114,8 @@ try {
     host.shadowRoot.appendChild(receipt);
   });
   await page.waitForURL("**/booking/confirmation?**");
-  await page.getByRole("heading", { name: "Test payment completed", exact: true }).waitFor();
-  await page.locator('[aria-current="step"]').filter({ hasText: "Confirmation" }).waitFor();
+  await page.getByRole("heading", { name: "Thank you for choosing us.", exact: true }).waitFor();
+  assert.equal(await page.getByRole("navigation", { name: "Booking steps" }).count(), 0);
   await page.evaluate(() => sessionStorage.clear());
   await page.goto(checkoutUrl.replace("/booking/checkout?", "/booking/payment?"), {
     waitUntil: "domcontentloaded",
@@ -155,14 +151,15 @@ try {
     host.shadowRoot.appendChild(receipt);
   });
   await page.waitForURL("**/booking/confirmation?**");
-  await page.getByRole("heading", { name: "Test payment completed", exact: true }).waitFor();
-  await page.locator('[aria-current="step"]').filter({ hasText: "Confirmation" }).waitFor();
-  assert.match(await page.locator("main").innerText(), /No hotel reservation was created/);
+  await page.getByRole("heading", { name: "Thank you for choosing us.", exact: true }).waitFor();
+  assert.equal(await page.getByRole("navigation", { name: "Booking steps" }).count(), 0);
+  assert.match(
+    await page.locator("main").innerText(),
+    /only after the hotel provides a booking reference/,
+  );
   await page.evaluate(() => sessionStorage.clear());
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page
-    .getByRole("heading", { name: "No test payment result to display", exact: true })
-    .waitFor();
+  await page.getByRole("heading", { name: "No payment summary to display", exact: true }).waitFor();
   console.log(
     "Guest review → checkout widget passed: guest prefill, locked USD 498 amount, HMS styling and mobile layout. No payment submitted.",
   );

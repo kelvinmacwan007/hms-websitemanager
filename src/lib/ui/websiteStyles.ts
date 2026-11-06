@@ -231,12 +231,8 @@ const styles: Record<string, Array<[string, number, string]>> = {
       93,
       "[&_label:focus-within]:[border-color:var(--color-brand)]",
     ],
-    [
-      "|& label:focus-within|box-shadow",
-      94,
-      "[&_label:focus-within]:[box-shadow:0_0_0_3px_var(--color-brand-glow)]",
-    ],
-    ["|& label:focus-within|transform", 95, "[&_label:focus-within]:[transform:translateY(-2px)]"],
+    ["|& label:focus-within|box-shadow", 94, "[&_label:focus-within]:[box-shadow:none]"],
+    ["|& label:focus-within|transform", 95, "[&_label:focus-within]:[transform:none]"],
   ],
   eyebrow: [
     ["|&|display", 101, "[&]:inline-flex"],

@@ -56,6 +56,18 @@ try {
             rooms: ["Suite"],
             iconUrl: "https://icons.example.com/custom.svg",
           },
+          {
+            id: "wifi",
+            label: "Free Wi-Fi",
+            rooms: ["Suite"],
+            iconUrl: "https://icons.example.com/wifi.svg",
+          },
+          {
+            id: "room-service",
+            label: "Room Service",
+            rooms: ["Suite"],
+            iconUrl: "https://icons.example.com/room-service.svg",
+          },
           { id: "missing", label: "Missing icon", rooms: ["Suite"] },
           {
             id: "broken",
@@ -73,7 +85,7 @@ try {
       body: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><circle cx="11" cy="11" r="8" fill="blue"/></svg>',
     }),
   );
-  await page.route("https://icons.example.com/broken.svg", (route) =>
+  await page.route(/https:\/\/icons\.example\.com\/(broken|wifi|room-service)\.svg/, (route) =>
     route.fulfill({ status: 404, body: "missing" }),
   );
   await page.goto(base + "/website-manager", { waitUntil: "networkidle", timeout: 120000 });
@@ -81,7 +93,7 @@ try {
     .getByRole("navigation", { name: "Website editor sections" })
     .getByRole("button", { name: "Amenities", exact: true })
     .click();
-  const items = page.locator(".wm-amenity-item");
+  const items = page.locator('[aria-label="HMS amenities"] li');
   await items.filter({ hasText: "Custom icon" }).locator("img").waitFor();
   assert.equal(
     await items
@@ -92,7 +104,11 @@ try {
   );
   await items.filter({ hasText: "Missing icon" }).locator("svg.lucide-star").waitFor();
   await items.filter({ hasText: "Broken icon" }).locator("svg.lucide-star").waitFor();
-  console.log("Custom HMS icon renders; missing and broken icons show stars.");
+  await items.filter({ hasText: "Free Wi-Fi" }).locator("svg.lucide-wifi").waitFor();
+  await items.filter({ hasText: "Room Service" }).locator("svg.lucide-bed-double").waitFor();
+  console.log(
+    "Custom HMS icons render; unavailable Wi-Fi/room-service files use matching icons; unknown amenities use stars.",
+  );
 } finally {
   await browser.close();
 }

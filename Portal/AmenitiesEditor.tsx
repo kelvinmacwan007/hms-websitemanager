@@ -101,7 +101,7 @@ export function AmenitiesEditor({ path = ["hotel", "amenities"] }: { path?: Cont
             >
               <div className="wm-amenity-row">
                 <span className="wm-amenity-icon">
-                  <AmenityIcon iconUrl={item.iconUrl} iconKey={item.iconKey} />
+                  <AmenityIcon iconUrl={item.iconUrl} iconKey={item.iconKey} label={item.label} />
                 </span>
                 <div>
                   <strong>{item.label || "Custom amenity"}</strong>
