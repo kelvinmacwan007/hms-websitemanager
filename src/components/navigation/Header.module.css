@@ -1,6 +1,6 @@
 .shell {
   position: sticky;
-  top: 0;
+  top: var(--demo-banner-height, 0px);
   z-index: 40;
   height: var(--header-expanded-height, auto);
   pointer-events: none;
@@ -8,6 +8,7 @@
 .overlayShell {
   position: absolute;
   inset: 0 0 auto;
+  top: var(--demo-banner-height, 0px);
   height: 0;
 }
 .header {
@@ -289,6 +290,7 @@
 }
 .overlay[data-compact="true"] {
   position: fixed;
+  top: var(--demo-banner-height, 0px);
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: 0 0.25rem 1.25rem #0001;

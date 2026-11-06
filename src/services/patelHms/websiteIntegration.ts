@@ -55,6 +55,7 @@ export function getHmsConnection(tenant: Tenant): HmsConnection {
   const config = entry && {
     ...entry,
     baseUrl: entry.baseUrl || process.env.PATEL_HMS_API_URL || "https://dev-aiapi.patelhms.com",
+    currency: entry.currency || process.env.PATEL_HMS_DEFAULT_CURRENCY || "USD",
   };
   if (
     !config ||

@@ -133,7 +133,7 @@ export async function POST(request: Request) {
         password: body.password,
         customerCode: body.customerCode.trim(),
         propertyId: property.propertyId,
-        currency: configured.currency || process.env.PATEL_HMS_DEFAULT_CURRENCY || "INR",
+        currency: configured.currency || process.env.PATEL_HMS_DEFAULT_CURRENCY || "USD",
         propertyPackageId: configured.propertyPackageId,
         checkInTime: configured.checkInTime || process.env.PATEL_HMS_DEFAULT_CHECK_IN || "15:00",
         checkOutTime: configured.checkOutTime || process.env.PATEL_HMS_DEFAULT_CHECK_OUT || "12:00",

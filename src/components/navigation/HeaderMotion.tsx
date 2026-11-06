@@ -18,6 +18,21 @@ export function HeaderMotion({ children, className, shellClassName, template }: 
   const preset = useMotionPreset();
 
   useEffect(() => {
+    const site = shellRef.current?.closest<HTMLElement>(".hotel-site");
+    const banner = site?.querySelector<HTMLElement>("[data-demo-banner]");
+    if (!site || !banner) return;
+    const measure = () =>
+      site.style.setProperty("--demo-banner-height", `${banner.getBoundingClientRect().height}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      site.style.removeProperty("--demo-banner-height");
+    };
+  }, []);
+
+  useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
     // Reserve a stable document footprint, including after font or viewport changes.

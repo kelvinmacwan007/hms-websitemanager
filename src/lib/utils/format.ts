@@ -14,7 +14,7 @@ export function formatStayDate(value: string) {
 
 export function formatMoney(money?: Money) {
   if (!money) return "";
-  return new Intl.NumberFormat("en-IN", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: money.currency,
     maximumFractionDigits: 0,

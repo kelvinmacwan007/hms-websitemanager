@@ -29,13 +29,7 @@ export function SiteShell({
     >
       <div className={`${styles.site} hotel-site`}>
         {isDemoPaymentMode() ? (
-          <div
-            data-demo-banner
-            role="note"
-            className={websiteClassName(
-              "bg-brand-dark px-4 py-2 text-center text-xs font-semibold text-white",
-            )}
-          >
+          <div data-demo-banner role="note" className={styles.demoBanner}>
             Demo website - bookings and payments are for demonstration only. No rooms are reserved.
             Use payment-provider test details only.
           </div>
