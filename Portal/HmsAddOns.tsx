@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card, HmsSyncButton } from "./editor-fields";
 import { AddOnList } from "../src/components/extras/AddOnList";
 import type { HotelAddOn } from "../src/types/hotel";
-import { ScrollableHmsList } from "./ScrollableHmsList";
 
 export function HmsAddOns() {
   const [items, setItems] = useState<HotelAddOn[]>([]);
@@ -57,9 +56,9 @@ export function HmsAddOns() {
       ) : error ? (
         <p role="alert">{error}</p>
       ) : items.length ? (
-        <ScrollableHmsList visibleCount={4} label="HMS add-ons">
-          <AddOnList items={items} />
-        </ScrollableHmsList>
+        <div role="region" aria-label="HMS add-ons">
+          <AddOnList items={items} singleColumn />
+        </div>
       ) : (
         <p>No active add-ons found in Patel HMS.</p>
       )}

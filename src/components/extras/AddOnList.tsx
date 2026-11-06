@@ -1,23 +1,25 @@
 import type { HotelAddOn } from "@/types/hotel";
 import { formatMoney } from "@/lib/utils/format";
+import styles from "./AddOnList.module.css";
 
-export function AddOnList({ items }: { items: HotelAddOn[] }) {
+export function AddOnList({
+  items,
+  singleColumn = false,
+}: {
+  items: HotelAddOn[];
+  singleColumn?: boolean;
+}) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className={`${styles.list} ${singleColumn ? styles.singleColumn : ""}`}>
       {items.map((item) => (
-        <article key={item.id} className="rounded-xl border border-line bg-surface p-6">
-          <h3 className="text-lg font-semibold">{item.name}</h3>
-          {item.description && <p className="mt-2 text-sm text-muted">{item.description}</p>}
-          <p className="mt-4 font-semibold">Listed rate: {formatMoney(item.price)}</p>
-          <p className="mt-1 text-sm text-muted">
-            {item.taxFree ? "Tax-free" : "Applicable taxes may apply"}
-          </p>
-          {(item.startDate || item.endDate) && (
-            <p className="mt-2 text-sm text-muted">
-              Available {item.startDate ? `from ${item.startDate}` : ""}
-              {item.endDate ? ` until ${item.endDate}` : ""}
+        <article key={item.id} className={styles.card}>
+          <div className={styles.heading}>
+            <h3>{item.name}</h3>
+            <p className={styles.price} aria-label={`Listed rate: ${formatMoney(item.price)}`}>
+              {formatMoney(item.price)}
             </p>
-          )}
+          </div>
+          {item.description && <p className={styles.description}>{item.description}</p>}
         </article>
       ))}
     </div>
